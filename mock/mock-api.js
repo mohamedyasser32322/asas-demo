@@ -32,10 +32,14 @@
       return jsonRes({ token: window.__DEMO_TOKEN, role: 'Admin', roleId: 1, fullName: 'مدير النظام' });
     }
 
-    // ── Branding (no backend → defaults) ──
+    // ── Branding (must report "configured" so brand.js doesn't redirect to /setup) ──
     if (res === 'brand') {
       if ((seg[1] || '').toLowerCase() === 'logo') return jsonRes({}, 404);
-      return jsonRes({ name: 'أساس', primaryColor: '#0D2142', accent: '#4e8df5' });
+      return jsonRes({
+        configured: true, companyName: 'أساس', name: 'أساس',
+        themeName: 'midnight', logoUrl: null,
+        primaryColor: '#0D2142', accent: '#4e8df5'
+      });
     }
 
     // ── Notifications ──
