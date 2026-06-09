@@ -56,14 +56,31 @@
     if (res === 'warrantydocuments' || res === 'buyerdocuments' || res === 'stageimages' || res === 'floors')
       return jsonRes(method === 'GET' ? (DB()[RESOURCE_MAP[res]] || []) : { success: true });
 
+    const bid = window.__DEMO_BUYER_ID;
+
+    // ── Buyer portal (only the logged-in buyer's units) ──
+    if (res === 'buyer-portal') {
+      if ((seg[1] || '').toLowerCase() === 'my-units')
+        return jsonRes((DB().units || []).filter(u => u.buyerId === bid));
+      return jsonRes([]);
+    }
+
     // ── ConstructionStages/project/{id} ──
     if (res === 'constructionstages' && (seg[1] || '').toLowerCase() === 'project') {
       const pid = +seg[2];
       return jsonRes((DB().stages || []).filter(s => Number(s.projectId) === pid));
     }
-    // ── Projects/my ──
-    if (res === 'projects' && (seg[1] || '').toLowerCase() === 'my')
+    // ── Projects/my (buyer → their projects; staff/engineer → all) ──
+    if (res === 'projects' && (seg[1] || '').toLowerCase() === 'my') {
+      if (bid) {
+        const pids = new Set((DB().units || []).filter(u => u.buyerId === bid).map(u => u.projectId));
+        return jsonRes((DB().projects || []).filter(p => pids.has(p.id)));
+      }
       return jsonRes(DB().projects || []);
+    }
+    // ── Tickets: buyer sees only their own ──
+    if (res === 'maintenancetickets' && method === 'GET' && !seg[1] && bid)
+      return jsonRes((DB().tickets || []).filter(t => t.buyerId === bid));
 
     const coll = RESOURCE_MAP[res];
     if (!coll) return jsonRes([]); // unknown resource → empty, never breaks the UI

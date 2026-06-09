@@ -10,15 +10,27 @@
     return btoa(JSON.stringify(o)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
   const exp = Math.floor(Date.now() / 1000) + 3650 * 86400; // ~10 years
+  const ROLE = window.__DEMO_ROLE || 'Admin';
+  const ROLE_INFO = {
+    Admin:          { roleId: 1, first: 'مدير',  last: 'النظام',  email: 'admin@asas.com' },
+    BookingManager: { roleId: 2, first: 'ماجد',  last: 'الحارثي', email: 'booking@asas.com' },
+    SiteEngineer:   { roleId: 3, first: 'طارق',  last: 'البلوي',  email: 'engineer@asas.com', assignedProjectIds: [1, 2, 3, 4] },
+    Buyer:          { roleId: 0, first: 'أحمد',  last: 'الحربي',  email: 'buyer@example.com', buyerId: 1 }
+  };
+  const ri = ROLE_INFO[ROLE] || ROLE_INFO.Admin;
+  const fullName = ri.first + ' ' + ri.last;
   const TOKEN = b64u({ alg: 'none', typ: 'JWT' }) + '.' +
-                b64u({ sub: '1', role: 'Admin', name: 'Demo Admin', exp }) + '.demo';
-  localStorage.setItem('authData', JSON.stringify({
-    token: TOKEN, role: 'Admin', roleId: 1,
-    name: 'مدير النظام', fullName: 'مدير النظام',
-    firstName: 'مدير', lastName: 'النظام', email: 'admin@asas.com'
-  }));
+                b64u({ sub: String(ri.buyerId || 1), role: ROLE, name: 'Demo User', exp }) + '.demo';
+  const authData = {
+    token: TOKEN, role: ROLE, roleId: ri.roleId,
+    name: fullName, fullName, firstName: ri.first, lastName: ri.last, email: ri.email
+  };
+  if (ri.buyerId) { authData.buyerId = ri.buyerId; authData.id = ri.buyerId; }
+  if (ri.assignedProjectIds) authData.assignedProjectIds = ri.assignedProjectIds;
+  localStorage.setItem('authData', JSON.stringify(authData));
   localStorage.setItem('token', TOKEN);
   window.__DEMO_TOKEN = TOKEN;
+  window.__DEMO_BUYER_ID = ri.buyerId || null;
 
   // ── Helpers ──
   const now = Date.now(), DAY = 86400000;
@@ -143,15 +155,20 @@
     });
   });
 
-  // ── Maintenance tickets ──
+  // ── Maintenance tickets (prioritise the demo buyer #1 so the Buyer panel isn't empty) ──
   const tStatus = ['Open', 'InProgress', 'Resolved', 'Closed'];
-  DB.units.filter(u => u.status === 3).slice(0, 8).forEach((u, idx) => {
+  const ticketUnits = [
+    ...DB.units.filter(u => u.buyerId === 1).slice(0, 3),
+    ...DB.units.filter(u => u.buyerId && u.buyerId !== 1).slice(0, 5)
+  ];
+  ticketUnits.forEach((u, idx) => {
     const by = DB.buyers.find(b => b.id === u.buyerId) || DB.buyers[idx];
     DB.tickets.push({
-      id: idx + 1, ticketNumber: 'TK-' + (1000 + idx), unitNumber: u.unitNumber,
-      floorNumber: u.floorNumber, buildingName: u.buildingName, projectName: u.projectName,
-      buyerFullName: by.fullName, buyerPhone: by.phoneNumber, categoryName: pick(catNames, idx),
-      status: pick(tStatus, idx), isActive: true, description: 'بلاغ صيانة في الوحدة بحاجة للمتابعة.',
+      id: idx + 1, ticketNumber: 'TK-' + (1000 + idx), unitId: u.id, buyerId: u.buyerId,
+      unitNumber: u.unitNumber, floorNumber: u.floorNumber, buildingName: u.buildingName,
+      projectName: u.projectName, buyerFullName: by.fullName, buyerPhone: by.phoneNumber,
+      categoryName: pick(catNames, idx), status: pick(tStatus, idx), isActive: true,
+      description: 'بلاغ صيانة في الوحدة بحاجة للمتابعة.',
       createdAt: ago(rnd(1, 60)), updatedAt: ago(rnd(0, 3))
     });
   });

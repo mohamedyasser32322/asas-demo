@@ -1,0 +1,380 @@
+/* ════════════════════════════════════════════════════
+   light-overrides.css — طبقة تنعيم الثيم الفاتح (pearl)
+   ─────────────────────────────────────────────────────
+   الأسطح والحدود والـ tints بتتقلب تلقائيًا عبر --fg-rgb
+   (شوف themes.js). الملف ده بيغطّي بس اللي --fg-rgb ما بيوصلهوش:
+   • نص مكتوب solid #fff في المصدر (labels/inputs/toast...)
+   • تخفيف الظلال على الخلفية الفاتحة
+   • ضبط الـ accent/native controls في الوضع الفاتح
+   ════════════════════════════════════════════════════ */
+
+:root[data-mode="light"] {
+  color-scheme: light;
+}
+
+/* ═══════ BODY & GENERAL ═══════ */
+:root[data-mode="light"] body,
+:root[data-mode="light"] html {
+  color: var(--light);
+  background:
+    radial-gradient(ellipse 66% 52% at 100% -8%, rgba(37,99,235,0.09), transparent 60%),
+    radial-gradient(ellipse 58% 54% at -8% 108%, rgba(139,92,246,0.07), transparent 60%),
+    radial-gradient(ellipse 70% 45% at 50% 60%, rgba(20,184,166,0.035), transparent 72%),
+    var(--primary) !important;
+  background-attachment: fixed !important;
+}
+
+/* ═══════ CARDS — off-white ناعم بتدرّج + ظل أزرق هادي (روح + راحة للعين) ═══════ */
+:root[data-mode="light"] .stat-card,
+:root[data-mode="light"] .panel,
+:root[data-mode="light"] .mu-card,
+:root[data-mode="light"] .mu-stat,
+:root[data-mode="light"] .dash-fin-chip,
+:root[data-mode="light"] .nd-trend {
+  background: linear-gradient(180deg, #FCFDFF 0%, #F4F7FD 100%) !important;
+  border: 1px solid rgba(37,99,235,0.08) !important;
+  box-shadow: 0 1px 2px rgba(30,41,59,0.04), 0 16px 34px -16px rgba(37,99,235,0.16) !important;
+}
+:root[data-mode="light"] .stat-card:hover,
+:root[data-mode="light"] .mu-card:hover,
+:root[data-mode="light"] .mu-stat:hover,
+:root[data-mode="light"] .panel:hover {
+  border-color: rgba(37,99,235,0.22) !important;
+  box-shadow: 0 2px 6px rgba(30,41,59,0.05), 0 26px 50px -18px rgba(37,99,235,0.24) !important;
+}
+
+/* ═══════ FORM INPUTS — solid bg, dark text, visible border ═══════ */
+:root[data-mode="light"] input,
+:root[data-mode="light"] textarea,
+:root[data-mode="light"] select,
+:root[data-mode="light"] .inp {
+  color: var(--light) !important;
+  background: #DDE4EE !important;
+  border-color: rgba(30,41,59,0.11) !important;
+  box-shadow: inset 0 1px 2px rgba(30,41,59,0.05) !important;
+}
+:root[data-mode="light"] input:focus,
+:root[data-mode="light"] textarea:focus,
+:root[data-mode="light"] select:focus,
+:root[data-mode="light"] .inp:focus {
+  border-color: var(--accent) !important;
+  background: #E7EDF5 !important;
+  box-shadow: inset 0 1px 2px rgba(30,41,59,0.04), 0 0 0 3px rgba(var(--accent-rgb), 0.12) !important;
+}
+
+/* ═══════ LOGIN — كارت زجاجي بلمسة رمادية خفيفة (أوضح، مش ناصع) ═══════ */
+:root[data-mode="light"] #mainCard {
+  background: rgba(214,221,233,0.62) !important;
+  border: 1px solid rgba(30,41,59,0.09) !important;
+  box-shadow: 0 1px 2px rgba(30,41,59,0.04), 0 24px 50px -20px rgba(30,41,59,0.18) !important;
+}
+:root[data-mode="light"] #mainCard > .panel,
+:root[data-mode="light"] .wrapper .panel {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ═══════ صفحة الواجهة — كارت الفلاتر فاتح ناعم (بدل الرمادي الغامق) ═══════ */
+:root[data-mode="light"] .filter-card {
+  background: rgba(255,255,255,0.5) !important;
+  border: 1px solid rgba(30,41,59,0.07) !important;
+  box-shadow: 0 1px 2px rgba(30,41,59,0.04), 0 12px 28px -16px rgba(30,41,59,0.13) !important;
+}
+
+/* ═══════ صفحات الصيانة + طلبات البيع — فلاتر أوضح (مش باهتة) ═══════ */
+:root[data-mode="light"] .tk-filters {
+  background: rgba(30,41,59,0.035) !important;
+  border-color: rgba(30,41,59,0.09) !important;
+}
+:root[data-mode="light"] .tk-pill,
+:root[data-mode="light"] .sr-filter-btn,
+:root[data-mode="light"] .sr-sel-filter {
+  color: var(--text-muted) !important;
+  background: rgba(30,41,59,0.05) !important;
+  border-color: rgba(30,41,59,0.12) !important;
+}
+:root[data-mode="light"] .tk-pill:hover,
+:root[data-mode="light"] .sr-filter-btn:hover,
+:root[data-mode="light"] .sr-sel-filter:hover {
+  color: var(--light) !important;
+  background: rgba(30,41,59,0.08) !important;
+}
+:root[data-mode="light"] .tk-pill.on,
+:root[data-mode="light"] .sr-filter-btn.active,
+:root[data-mode="light"] .sr-sel-filter:focus {
+  background: rgba(var(--accent-rgb),0.13) !important;
+  color: var(--accent) !important;
+  border-color: rgba(var(--accent-rgb),0.4) !important;
+}
+:root[data-mode="light"] input::placeholder,
+:root[data-mode="light"] textarea::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
+}
+:root[data-mode="light"] select option {
+  background: #ffffff !important;
+  color: var(--light) !important;
+}
+
+/* ═══════ LABELS, TITLES, GENERIC TEXT ═══════ */
+:root[data-mode="light"] label,
+:root[data-mode="light"] h1,
+:root[data-mode="light"] h2,
+:root[data-mode="light"] h3,
+:root[data-mode="light"] h4,
+:root[data-mode="light"] th,
+:root[data-mode="light"] td {
+  color: var(--light) !important;
+}
+
+/* ═══════ BUTTONS WITH ACCENT BG (always white text) ═══════ */
+:root[data-mode="light"] .btn-primary,
+:root[data-mode="light"] [class*="btn-primary"],
+:root[data-mode="light"] [class*="-btn-primary"],
+:root[data-mode="light"] .pg-btn.on {
+  color: #ffffff !important;
+}
+
+/* ═══════ MODALS & DRAWERS ═══════ */
+:root[data-mode="light"] [class*="-modal"],
+:root[data-mode="light"] [class*="modal-content"],
+:root[data-mode="light"] [class*="-drawer"],
+:root[data-mode="light"] [id*="drawer"] {
+  background: var(--card-bg) !important;
+  color: var(--light) !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.12) !important;
+}
+:root[data-mode="light"] [class*="-modal"] [class*="-mhead"],
+:root[data-mode="light"] [class*="-modal"] [class*="-head"] {
+  background: var(--card-bg) !important;
+  border-bottom: 1px solid rgba(0,0,0,0.08) !important;
+}
+
+/* ═══════ HEADER ═══════ */
+:root[data-mode="light"] #app-header,
+:root[data-mode="light"] header,
+:root[data-mode="light"] .by-bar,
+:root[data-mode="light"] [class*="-toolbar"] {
+  background: var(--card-bg) !important;
+  border-bottom: 1px solid rgba(0,0,0,0.08) !important;
+  color: var(--light) !important;
+}
+:root[data-mode="light"] .header-logo,
+:root[data-mode="light"] .header-page-title,
+:root[data-mode="light"] .user-name {
+  color: var(--light) !important;
+}
+
+/* ظل ناعم تحت الناف بار بدل الغامق */
+:root[data-mode="light"] #app-header {
+  box-shadow: 0 1px 0 rgba(30,41,59,0.04), 0 12px 26px -18px rgba(30,41,59,0.16) !important;
+}
+:root[data-mode="light"] #app-header::after { opacity: .5 !important; }
+
+/* شريط فلاتر الداشبورد ليس toolbar بخلفية — يفضل شفّاف بدون صندوق */
+:root[data-mode="light"] .nd-toolbar {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ═══════ MODAL FOOTERS — سطح يطابق الكارت + ظل ناعم (بدل الرمادي الغامق) ═══════ */
+:root[data-mode="light"] .res-modal-footer,
+:root[data-mode="light"] [class*="modal-footer"],
+:root[data-mode="light"] [class*="mfoot"],
+:root[data-mode="light"] [class*="m-foot"],
+:root[data-mode="light"] .snd-foot {
+  background: var(--card-bg) !important;
+  border-top: 1px solid rgba(30,41,59,0.07) !important;
+  box-shadow: 0 -2px 14px rgba(30,41,59,0.05) !important;
+}
+
+/* ═══════ NAV TABS ═══════ */
+:root[data-mode="light"] .nav-tab {
+  color: var(--text-muted) !important;
+}
+:root[data-mode="light"] .nav-tab:hover {
+  color: var(--light) !important;
+  background: var(--hover-tint) !important;
+}
+:root[data-mode="light"] .nav-tab.active {
+  color: var(--accent) !important;
+  background: rgba(var(--accent-rgb), 0.1) !important;
+  border-color: rgba(var(--accent-rgb), 0.25) !important;
+}
+
+/* ═══════ ICON BUTTONS (settings, bell) ═══════ */
+:root[data-mode="light"] .header-icon-btn,
+:root[data-mode="light"] .notif-bell-btn {
+  background: var(--surface-tint) !important;
+  border-color: rgba(0,0,0,0.1) !important;
+  color: var(--light) !important;
+}
+
+/* ═══════ USER AVATAR — keep white text on accent gradient ═══════ */
+:root[data-mode="light"] .user-avatar {
+  color: #ffffff !important;
+}
+
+/* ═══════ DIVIDERS, BORDERS, SEPARATORS ═══════ */
+:root[data-mode="light"] .header-divider-v,
+:root[data-mode="light"] .header-divider {
+  background: rgba(0,0,0,0.1) !important;
+}
+
+/* ═══════ TABLES ═══════ */
+:root[data-mode="light"] table {
+  background: var(--card-bg) !important;
+}
+:root[data-mode="light"] table tr {
+  border-bottom: 1px solid rgba(0,0,0,0.06) !important;
+}
+
+/* ═══════ DROPDOWN MENUS ═══════ */
+:root[data-mode="light"] .nav-dd,
+:root[data-mode="light"] .header-icon-dd {
+  background: #ffffff !important;
+  border: 1px solid rgba(0,0,0,0.1) !important;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.04), 0 20px 50px rgba(0,0,0,.12), 0 4px 14px rgba(0,0,0,.06) !important;
+}
+:root[data-mode="light"] .nav-dd-item,
+:root[data-mode="light"] .header-icon-dd-item {
+  color: var(--light) !important;
+}
+:root[data-mode="light"] .nav-dd-item:hover,
+:root[data-mode="light"] .header-icon-dd-item:hover {
+  background: rgba(0,0,0,0.04) !important;
+}
+
+/* ═══════ COMMAND PALETTE ═══════ */
+:root[data-mode="light"] #cmd-panel {
+  background: #ffffff !important;
+  border: 1px solid rgba(0,0,0,0.1) !important;
+}
+:root[data-mode="light"] #cmd-input {
+  color: var(--light) !important;
+  background: transparent !important;
+}
+:root[data-mode="light"] .cmd-item-ttl { color: var(--light) !important; }
+:root[data-mode="light"] .cmd-item:hover, :root[data-mode="light"] .cmd-item.active {
+  background: rgba(var(--accent-rgb), 0.08) !important;
+}
+
+/* ═══════ NOTIFICATION PANEL ═══════ */
+:root[data-mode="light"] .notif-panel {
+  background: #ffffff !important;
+  border: 1px solid rgba(0,0,0,0.1) !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.18) !important;
+}
+:root[data-mode="light"] .notif-item:hover {
+  background: rgba(0,0,0,0.03) !important;
+}
+:root[data-mode="light"] .notif-item.unread {
+  background: rgba(var(--accent-rgb), 0.05) !important;
+}
+:root[data-mode="light"] .notif-msg { color: var(--light) !important; }
+
+/* ═══════ LOGIN PAGE ═══════ */
+:root[data-mode="light"] .bg {
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(var(--accent-rgb),0.10) 0%, transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(var(--accent-rgb),0.06) 0%, transparent 60%) !important;
+}
+:root[data-mode="light"] .login-card,
+:root[data-mode="light"] [class*="login"] [class*="card"] {
+  background: #ffffff !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.08) !important;
+}
+:root[data-mode="light"] .login-card label,
+:root[data-mode="light"] .login-card .title,
+:root[data-mode="light"] .login-card h1,
+:root[data-mode="light"] .login-card h2,
+:root[data-mode="light"] .login-card .subtitle {
+  color: var(--light) !important;
+}
+
+/* ═══════ LOGIN: back button + toggle tabs ═══════ */
+:root[data-mode="light"] .back-btn {
+  color: var(--text-muted) !important;
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+:root[data-mode="light"] .back-btn:hover {
+  color: var(--light) !important;
+  background: rgba(0,0,0,0.07) !important;
+}
+:root[data-mode="light"] .toggle-wrap {
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+:root[data-mode="light"] .toggle-btn {
+  color: var(--text-muted) !important;
+}
+:root[data-mode="light"] .toggle-btn:hover {
+  color: var(--light) !important;
+}
+:root[data-mode="light"] .toggle-btn.active {
+  color: #ffffff !important;
+}
+:root[data-mode="light"] .toggle-slider {
+  background: var(--accent) !important;
+  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.25) !important;
+}
+:root[data-mode="light"] .header p,
+:root[data-mode="light"] .wrapper p {
+  color: var(--text-muted) !important;
+}
+:root[data-mode="light"] .lbl {
+  color: var(--light) !important;
+}
+
+/* ═══════ LOGOUT BUTTON ═══════ */
+:root[data-mode="light"] .header-left .logout-btn,
+:root[data-mode="light"] .logout-btn {
+  background: rgba(220,38,38,0.08) !important;
+  border-color: rgba(220,38,38,0.25) !important;
+  color: #dc2626 !important;
+}
+:root[data-mode="light"] .logout-btn:hover {
+  background: rgba(220,38,38,0.16) !important;
+  color: #dc2626 !important;
+}
+
+/* ═══════ USER PILL ═══════ */
+:root[data-mode="light"] .header-user {
+  background: var(--surface-tint) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+:root[data-mode="light"] .header-user:hover {
+  background: rgba(0,0,0,0.05) !important;
+}
+
+/* ═══════ DATE/NUMBER INPUTS + native controls ═══════ */
+/* يتجاوز أي color-scheme:dark مكتوب inline حتى تظهر التقويمات/القوائم فاتحة */
+:root[data-mode="light"] input,
+:root[data-mode="light"] select,
+:root[data-mode="light"] textarea,
+:root[data-mode="light"] [style*="color-scheme:dark"],
+:root[data-mode="light"] [style*="color-scheme: dark"] {
+  color-scheme: light !important;
+}
+
+/* ═══════ TOAST NOTIFICATIONS ═══════ */
+:root[data-mode="light"] .g-toast,
+:root[data-mode="light"] [class*="toast"] {
+  background: #ffffff !important;
+  color: var(--light) !important;
+  border: 1px solid rgba(0,0,0,0.1) !important;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.15) !important;
+}
+
+/* ═══════ DASH/KPI CARD overlays (gradient backgrounds use rgba accent) ═══════ */
+:root[data-mode="light"] .stat-chip,
+:root[data-mode="light"] [class*="kpi"],
+:root[data-mode="light"] [class*="db-kpi"] {
+  background: var(--card-bg) !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  color: var(--light) !important;
+}

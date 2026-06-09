@@ -1,0 +1,147 @@
+/* ════════════════════════════════════════════════════════════
+   ASAS DEMO — fetch interceptor (no backend)
+   Routes every /api/* call to the in-memory window.__MOCK_DB.
+   Mutations persist in memory until page reload.
+   ════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  const RESOURCE_MAP = {
+    projects: 'projects', buildings: 'buildings', floors: 'floors', units: 'units',
+    buyers: 'buyers', bookings: 'bookings', maintenancetickets: 'tickets',
+    maintenancecategories: 'categories', sellrequests: 'sellRequests', users: 'users',
+    activitylogs: 'logs', constructionstages: 'stages', notifications: 'notifications'
+  };
+
+  const DB = () => window.__MOCK_DB || {};
+  const jsonRes = (data, status = 200) =>
+    new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } });
+  const okRes = (data) => jsonRes(data || { success: true });
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+  const safeParse = b => { try { return typeof b === 'string' ? JSON.parse(b) : null; } catch { return null; } };
+  const nextId = coll => (DB()[coll] || []).reduce((m, x) => Math.max(m, x.id || 0), 0) + 1;
+
+  function route(method, seg, body) {
+    const res = (seg[0] || '').toLowerCase();
+
+    // ── Auth ──
+    if (res === 'auth') {
+      if ((seg[1] || '').toLowerCase() === 'refresh')
+        return jsonRes({ token: window.__DEMO_TOKEN });
+      // login/staff | login/buyer
+      return jsonRes({ token: window.__DEMO_TOKEN, role: 'Admin', roleId: 1, fullName: 'مدير النظام' });
+    }
+
+    // ── Branding (must report "configured" so brand.js doesn't redirect to /setup) ──
+    if (res === 'brand') {
+      if ((seg[1] || '').toLowerCase() === 'logo') return jsonRes({}, 404);
+      return jsonRes({
+        configured: true, companyName: 'أساس', name: 'أساس',
+        themeName: 'midnight', logoUrl: null,
+        primaryColor: '#0D2142', accent: '#4e8df5'
+      });
+    }
+
+    // ── Notifications ──
+    if (res === 'notifications') {
+      const sub = (seg[1] || '').toLowerCase();
+      if (sub === 'unread-count') return jsonRes(0);
+      if (sub === 'read-all') return okRes();
+      if (method === 'POST' || method === 'PUT') return okRes();
+      return jsonRes([]);
+    }
+
+    // ── Endpoints with no demo data → safe empties ──
+    if (res === 'webhooks') return jsonRes(seg[1] ? { success: true } : []);
+    if (res === 'warrantydocuments' || res === 'buyerdocuments' || res === 'stageimages' || res === 'floors')
+      return jsonRes(method === 'GET' ? (DB()[RESOURCE_MAP[res]] || []) : { success: true });
+
+    const bid = window.__DEMO_BUYER_ID;
+
+    // ── Buyer portal (only the logged-in buyer's units) ──
+    if (res === 'buyer-portal') {
+      if ((seg[1] || '').toLowerCase() === 'my-units')
+        return jsonRes((DB().units || []).filter(u => u.buyerId === bid));
+      return jsonRes([]);
+    }
+
+    // ── ConstructionStages/project/{id} ──
+    if (res === 'constructionstages' && (seg[1] || '').toLowerCase() === 'project') {
+      const pid = +seg[2];
+      return jsonRes((DB().stages || []).filter(s => Number(s.projectId) === pid));
+    }
+    // ── Projects/my (buyer → their projects; staff/engineer → all) ──
+    if (res === 'projects' && (seg[1] || '').toLowerCase() === 'my') {
+      if (bid) {
+        const pids = new Set((DB().units || []).filter(u => u.buyerId === bid).map(u => u.projectId));
+        return jsonRes((DB().projects || []).filter(p => pids.has(p.id)));
+      }
+      return jsonRes(DB().projects || []);
+    }
+    // ── Tickets: buyer sees only their own ──
+    if (res === 'maintenancetickets' && method === 'GET' && !seg[1] && bid)
+      return jsonRes((DB().tickets || []).filter(t => t.buyerId === bid));
+
+    const coll = RESOURCE_MAP[res];
+    if (!coll) return jsonRes([]); // unknown resource → empty, never breaks the UI
+
+    const list = DB()[coll] || (DB()[coll] = []);
+    const id = seg[1] && /^\d+$/.test(seg[1]) ? +seg[1] : null;
+    const hasAction = seg.length > 1 && id == null; // e.g. /Units/{id}/reservation handled below
+
+    if (method === 'GET') {
+      if (id != null) {
+        const item = list.find(x => x.id === id);
+        return item ? jsonRes(item) : jsonRes({ message: 'غير موجود' }, 404);
+      }
+      return jsonRes(list);
+    }
+
+    if (method === 'POST') {
+      if (id != null || hasAction) return okRes();         // sub-action (status, reset-password…)
+      const item = Object.assign({ id: nextId(coll), createdAt: new Date().toISOString() }, body || {});
+      list.push(item);
+      return jsonRes(item, 201);
+    }
+
+    if (method === 'PUT' || method === 'PATCH') {
+      if (id != null) {
+        const item = list.find(x => x.id === id);
+        if (item) Object.assign(item, body || {}, { updatedAt: new Date().toISOString() });
+        return item ? jsonRes(item) : okRes();
+      }
+      return okRes();
+    }
+
+    if (method === 'DELETE') {
+      if (id != null) {
+        const i = list.findIndex(x => x.id === id);
+        if (i > -1) list.splice(i, 1);
+      }
+      return okRes();
+    }
+
+    return jsonRes([]);
+  }
+
+  const origFetch = window.fetch ? window.fetch.bind(window) : null;
+
+  window.fetch = async function (input, init = {}) {
+    const url = typeof input === 'string' ? input : (input && input.url) || '';
+    let path;
+    try { path = new URL(url, location.origin).pathname; } catch { path = String(url); }
+
+    if (!/\/api\//i.test(path)) return origFetch ? origFetch(input, init) : Promise.reject(new Error('no fetch'));
+
+    const method = ((init && init.method) || 'GET').toUpperCase();
+    const ep = path.replace(/^.*?\/api\//i, '');
+    const seg = ep.split('/').filter(Boolean);
+    const body = init && init.body ? safeParse(init.body) : null;
+
+    await delay(140 + Math.random() * 160); // simulate network latency
+    try { return route(method, seg, body); }
+    catch (e) { return jsonRes({ message: 'mock error', error: String(e) }, 500); }
+  };
+
+  console.info('%c[ASAS DEMO]', 'color:#4e8df5;font-weight:bold', 'Static demo mode — all data is mock, no backend.');
+})();
