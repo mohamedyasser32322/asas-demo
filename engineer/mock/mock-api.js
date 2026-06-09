@@ -53,15 +53,19 @@
 
     // ── Endpoints with no demo data → safe empties ──
     if (res === 'webhooks') return jsonRes(seg[1] ? { success: true } : []);
-    if (res === 'warrantydocuments' || res === 'buyerdocuments' || res === 'stageimages' || res === 'floors')
+    if (res === 'warrantydocuments') {
+      if (method === 'GET' && (seg[1] || '').toLowerCase() === 'building') return jsonRes(DB().warrantyDocs || []);
+      return jsonRes(method === 'GET' ? [] : { success: true });
+    }
+    if (res === 'buyerdocuments' || res === 'stageimages' || res === 'floors')
       return jsonRes(method === 'GET' ? (DB()[RESOURCE_MAP[res]] || []) : { success: true });
 
     const bid = window.__DEMO_BUYER_ID;
 
-    // ── Buyer portal (only the logged-in buyer's units) ──
+    // ── Buyer portal (enriched units with warranties) ──
     if (res === 'buyer-portal') {
       if ((seg[1] || '').toLowerCase() === 'my-units')
-        return jsonRes((DB().units || []).filter(u => u.buyerId === bid));
+        return jsonRes(DB().myUnits || []);
       return jsonRes([]);
     }
 

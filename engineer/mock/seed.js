@@ -104,7 +104,11 @@
       DB.stages.push({
         id: stId, projectId: pid, stageName: key, order: si + 1,
         isCompleted: done, status: done ? 'Completed' : 'Pending',
-        startDate: done ? ago(220 - si * 25) : null, endDate: done ? ago(200 - si * 25) : null
+        startDate: done ? ago(220 - si * 25) : null, endDate: done ? ago(200 - si * 25) : null,
+        images: done ? [
+          { id: stId * 10 + 1, imageUrl: `https://picsum.photos/seed/asas${stId}a/640/420` },
+          { id: stId * 10 + 2, imageUrl: `https://picsum.photos/seed/asas${stId}b/640/420` }
+        ] : []
       });
     });
     const nB = rnd(2, 3);
@@ -191,6 +195,48 @@
     id: i, action: pick(acts, i), userName: pick(DB.users, i).fullName,
     entityType: 'System', createdAt: ago(rnd(0, 30)), details: 'تمت العملية بنجاح.'
   });
+
+  // ── Buyer portal: enriched units for the demo buyer (#1) with warranties ──
+  const WARRANTY_SCOPES = [
+    { scope: 'Structural', totalYears: 10 },
+    { scope: 'Elevator', totalYears: 3 },
+    { scope: 'Plumbing', totalYears: 3 },
+    { scope: 'Electrical', totalYears: 3 }
+  ];
+  function buildWarranties(startISO) {
+    const start = new Date(startISO).getTime();
+    return WARRANTY_SCOPES.map(s => {
+      const end = start + s.totalYears * 365 * DAY;
+      const elapsed = Math.min(100, Math.max(0, Math.round((now - start) / (end - start) * 100)));
+      const isActive = now < end;
+      return {
+        scope: s.scope, scopeAr: s.scope, totalYears: s.totalYears,
+        startDate: new Date(start).toISOString(), endDate: new Date(end).toISOString(),
+        isActive, daysRemaining: Math.max(0, Math.round((end - now) / DAY)),
+        daysExpired: isActive ? 0 : Math.round((now - end) / DAY), elapsedPercent: elapsed
+      };
+    });
+  }
+  DB.myUnits = DB.units.filter(u => u.buyerId === 1).map((u, i) => {
+    const ready = i < 3;              // first 3 → delivered, warranty active
+    const reserved = !ready && i < 5; // next 2 → reserved
+    const warrantyStartDate = ready ? ago(rnd(150, 900)) : null;
+    return {
+      unitId: u.id, unitNumber: u.unitNumber, buildingId: u.buildingId, buildingName: u.buildingName,
+      projectId: u.projectId, projectName: u.projectName, floorNumber: u.floorNumber,
+      unitArea: u.unitArea, unitType: u.unitType, price: u.price,
+      isReserved: reserved, warrantyStarted: ready,
+      saleDate: ago(rnd(120, 500)), warrantyStartDate,
+      warranties: ready ? buildWarranties(warrantyStartDate) : []
+    };
+  });
+
+  // ── Sample warranty documents (returned for any building) ──
+  DB.warrantyDocs = [
+    { id: 1, fileName: 'شهادة ضمان الهيكل الإنشائي.pdf', fileUrl: 'https://www.africau.edu/images/default/sample.pdf', fileSizeBytes: 482000 },
+    { id: 2, fileName: 'ضمان الأعمال الكهربائية.pdf', fileUrl: 'https://www.africau.edu/images/default/sample.pdf', fileSizeBytes: 311000 },
+    { id: 3, fileName: 'ضمان السباكة والصرف.pdf', fileUrl: 'https://www.africau.edu/images/default/sample.pdf', fileSizeBytes: 268000 }
+  ];
 
   window.__MOCK_DB = DB;
 })();

@@ -27,8 +27,9 @@
     .mu-hero p  { color:var(--text-muted); font-size:.9rem; }
 
     /* ── Stats ──────────────────────────── */
-    .mu-stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:14px; margin-bottom:20px; }
-    .mu-stat { background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:18px 20px; display:flex; align-items:center; gap:14px; transition:all .3s; }
+    .mu-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin-bottom:20px; }
+    .mu-stat { background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:18px 20px; display:flex; align-items:center; gap:14px; transition:all .3s; animation:mu-fade .5s ease both; }
+    .mu-stat:nth-child(2){animation-delay:.06s} .mu-stat:nth-child(3){animation-delay:.12s} .mu-stat:nth-child(4){animation-delay:.18s}
     .mu-stat:hover { transform:translateY(-3px); border-color:var(--border-hover); box-shadow:0 14px 34px rgba(0,0,0,.22); }
     .mu-stat-icon { width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
     .mu-stat-icon.accent { background:rgba(var(--accent-rgb),.15); color:var(--accent); }
@@ -45,7 +46,8 @@
     @media(max-width:680px){ .mu-grid { grid-template-columns:1fr; } }
 
     /* ── Card ──────────────────────────── */
-    .mu-card { background:linear-gradient(165deg,var(--card-hover),var(--card-bg)); border:1px solid var(--border); border-radius:20px; overflow:hidden; transition:all .3s; box-shadow:0 6px 20px rgba(0,0,0,.16); }
+    .mu-card { background:linear-gradient(165deg,var(--card-hover),var(--card-bg)); border:1px solid var(--border); border-radius:20px; overflow:hidden; transition:all .3s; box-shadow:0 6px 20px rgba(0,0,0,.16); animation:mu-fade .5s ease both; }
+    .mu-card:nth-child(2){animation-delay:.05s} .mu-card:nth-child(3){animation-delay:.1s} .mu-card:nth-child(4){animation-delay:.15s} .mu-card:nth-child(5){animation-delay:.2s} .mu-card:nth-child(6){animation-delay:.25s}
     .mu-card:hover { transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.28); border-color:rgba(var(--accent-rgb),.3); }
 
     /* ── Collapsible header (collapsed = unit number only) ── */
