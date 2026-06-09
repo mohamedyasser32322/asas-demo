@@ -129,6 +129,13 @@ function initLayout() {
       <a class="header-logo" onclick="navigate('my-units')">${logoContent}</a>
     </div>
 
+    <nav class="header-nav">
+      ${NAV.map(n => `
+        <button class="nav-tab" data-page="${n.id}" onclick="navigate('${n.id}')">
+          <i class="${n.icon}"></i><span>${n.label}</span>
+        </button>`).join('')}
+    </nav>
+
     <div class="header-left">
       <!-- جرس الإشعارات يُحقن هنا تلقائياً -->
       <button class="hamburger" aria-label="القائمة" onclick="openDrawer()">

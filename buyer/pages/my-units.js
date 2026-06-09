@@ -41,7 +41,7 @@
     .mu-banner { background:linear-gradient(135deg,rgba(var(--accent-rgb),.14),rgba(var(--accent-rgb),.04)); border:1px solid rgba(var(--accent-rgb),.25); border-radius:14px; padding:13px 17px; color:var(--text-muted); font-size:.86rem; margin-bottom:20px; display:flex; align-items:flex-start; gap:10px; line-height:1.7; }
     .mu-banner i { color:var(--accent); font-size:1.15rem; margin-top:2px; }
 
-    .mu-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(420px,1fr)); gap:20px; }
+    .mu-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(420px,1fr)); gap:20px; align-items:start; }
     @media(max-width:680px){ .mu-grid { grid-template-columns:1fr; } }
 
     /* ── Card ──────────────────────────── */
