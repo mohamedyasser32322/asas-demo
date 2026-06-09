@@ -64,8 +64,9 @@
     .mu-card-caret { color:var(--text-muted); font-size:1.5rem; flex-shrink:0; transition:transform .25s ease; }
     .mu-card.open .mu-card-caret { transform:rotate(180deg); color:var(--accent); }
 
-    .mu-card-body { display:none; border-top:1px solid var(--border); }
-    .mu-card.open .mu-card-body { display:block; animation:mu-fade .25s ease; }
+    /* Smooth open/close via max-height transition (reliable across browsers) */
+    .mu-card-body { max-height:0; overflow:hidden; transition:max-height .4s cubic-bezier(.4,0,.2,1); }
+    .mu-card.open .mu-card-body { max-height:1600px; border-top:1px solid var(--border); }
 
     /* ── Detail sections inside body ── */
     .mu-sec { padding:14px 18px; border-bottom:1px solid var(--border); }
