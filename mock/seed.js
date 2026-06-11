@@ -135,13 +135,14 @@
           // status is a STRING enum (what the backend returns & the public interface expects);
           // Admin pages normalise via toStatus() which accepts both.
           const statusEn = { 1: 'Available', 2: 'Reserved', 3: 'Sold', 4: 'Closed' }[statusNum];
-          const area = rnd(90, 260), price = rnd(450, 1600) * 1000;
+          const area = rnd(90, 260), price = rnd(450, 1600) * 1000, rooms = rnd(1, 5);
           const unitNo = `${f}0${u}`;
           DB.units.push({
             id: uId, floorId: fid, floorNumber: f, buildingId: bId, buildingName: bname,
             projectId: pid, projectName: pm.name, unitNumber: unitNo, unitCode: `${bcode}-${unitNo}`,
-            status: statusEn, realStatus: statusAr[statusNum], price, unitArea: area,
-            unitType: pick(unitTypes, uId), bedrooms: rnd(1, 5),
+            status: statusEn, realStatus: statusAr[statusNum], price,
+            unitArea: area, area, unitType: pick(unitTypes, uId), type: 1,
+            bedrooms: rooms, rooms, facing: rnd(0, 3),
             createdAt: ago(rnd(10, 250)), expectedDeliveryDate: ahead(rnd(60, 500)), buyerId: null
           });
         }
