@@ -79,9 +79,13 @@
       isActive: idx !== 4, createdAt: ago(rnd(50, 400))
     }));
 
-  // ── Maintenance categories ──
+  // ── Maintenance categories (page renders nameAr + warrantyScope) ──
+  const catScopes = ['Plumbing', 'Electrical', 'None', 'Structural', 'Structural', 'None'];
+  const catDescs = ['أعمال السباكة والصرف الصحي', 'الأعمال الكهربائية والإنارة', 'صيانة التكييف والتبريد', 'الدهانات والتشطيبات الداخلية', 'الأرضيات والبلاط', 'الأبواب والنوافذ والزجاج'];
   catNames.forEach((c, idx) => DB.categories.push({
-    id: idx + 1, name: c, categoryName: c, isActive: true, createdAt: ago(rnd(100, 400))
+    id: idx + 1, name: c, categoryName: c, nameAr: c,
+    warrantyScope: catScopes[idx % catScopes.length], description: catDescs[idx % catDescs.length],
+    isActive: idx !== 5, ticketsCount: 0, createdAt: ago(rnd(100, 400))
   }));
 
   // ── Projects → Buildings → Stages → Floors → Units ──
@@ -161,21 +165,41 @@
 
   // ── Maintenance tickets (prioritise the demo buyer #1 so the Buyer panel isn't empty) ──
   const tStatus = ['Open', 'InProgress', 'Resolved', 'Closed'];
+  const STATUS_AR = { Open: 'مفتوحة', InProgress: 'قيد المعالجة', Resolved: 'تم الحل', Closed: 'مغلقة', Reopened: 'أُعيد فتحها' };
+  const STATUS_CHAIN = {
+    Open: ['Open'], InProgress: ['Open', 'InProgress'],
+    Resolved: ['Open', 'InProgress', 'Resolved'], Closed: ['Open', 'InProgress', 'Resolved', 'Closed']
+  };
+  function buildHistory(status, createdDays, buyerName) {
+    const chain = STATUS_CHAIN[status] || ['Open'];
+    return chain.map((s, i) => ({
+      fromStatusAr: i > 0 ? STATUS_AR[chain[i - 1]] : null,
+      toStatus: s, statusAr: STATUS_AR[s],
+      changedByName: i === 0 ? buyerName : 'مدير النظام',
+      changedAt: ago(Math.max(0, createdDays - i * 3)),
+      note: i === 0 ? 'تم فتح التذكرة من المشتري' : (s === 'Resolved' ? 'تمت معالجة البلاغ' : null)
+    }));
+  }
   const ticketUnits = [
     ...DB.units.filter(u => u.buyerId === 1).slice(0, 3),
     ...DB.units.filter(u => u.buyerId && u.buyerId !== 1).slice(0, 5)
   ];
   ticketUnits.forEach((u, idx) => {
     const by = DB.buyers.find(b => b.id === u.buyerId) || DB.buyers[idx];
+    const status = pick(tStatus, idx);
+    const createdDays = rnd(5, 60);
     DB.tickets.push({
       id: idx + 1, ticketNumber: 'TK-' + (1000 + idx), unitId: u.id, buyerId: u.buyerId,
       unitNumber: u.unitNumber, floorNumber: u.floorNumber, buildingName: u.buildingName,
       projectName: u.projectName, buyerFullName: by.fullName, buyerPhone: by.phoneNumber,
-      categoryName: pick(catNames, idx), status: pick(tStatus, idx), isActive: true,
+      categoryName: pick(catNames, idx), status, isActive: true,
       description: 'بلاغ صيانة في الوحدة بحاجة للمتابعة.',
-      createdAt: ago(rnd(1, 60)), updatedAt: ago(rnd(0, 3))
+      createdAt: ago(createdDays), updatedAt: ago(rnd(0, 3)),
+      history: buildHistory(status, createdDays, by.fullName)
     });
   });
+  // category ticket counts
+  DB.categories.forEach(c => { c.ticketsCount = DB.tickets.filter(t => t.categoryName === c.name).length; });
 
   // ── Sell requests ──
   DB.units.filter(u => u.status === 3).slice(2, 7).forEach((u, idx) => {

@@ -106,6 +106,26 @@
     if (res === 'maintenancetickets' && method === 'GET' && !seg[1] && bid)
       return jsonRes((DB().tickets || []).filter(t => t.buyerId === bid));
 
+    // ── Ticket status change / reopen → update status + append to history ──
+    if (res === 'maintenancetickets' && /^\d+$/.test(seg[1] || '') && seg[2]) {
+      const action = seg[2].toLowerCase();
+      const t = (DB().tickets || []).find(x => x.id === +seg[1]);
+      if (t && (action === 'status' || action === 'reopen')) {
+        const AR = { Open: 'مفتوحة', InProgress: 'قيد المعالجة', Resolved: 'تم الحل', Closed: 'مغلقة', Reopened: 'أُعيد فتحها' };
+        const newStatus = action === 'reopen' ? 'Reopened' : (body && body.status);
+        if (newStatus) {
+          t.history = t.history || [];
+          t.history.push({
+            fromStatusAr: AR[t.status] || t.status, toStatus: newStatus, statusAr: AR[newStatus],
+            changedByName: 'مدير النظام', changedAt: new Date().toISOString(), note: (body && body.note) || null
+          });
+          t.status = newStatus;
+          t.updatedAt = new Date().toISOString();
+        }
+        return jsonRes(t);
+      }
+    }
+
     const coll = RESOURCE_MAP[res];
     if (!coll) return jsonRes([]); // unknown resource → empty, never breaks the UI
 
