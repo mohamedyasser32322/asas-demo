@@ -84,10 +84,10 @@
     .bld-fg label{display:block;font-size:.72rem;font-weight:700;margin-bottom:5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
     .bld-fi,.bld-fsel,.bld-fta{width:100%;padding:9px 12px;border-radius:var(--r-sm);background:rgba(var(--fg-rgb), 0.05);border:1px solid rgba(var(--fg-rgb), 0.1);color:var(--text)!important;font-family:inherit;font-size:.88rem;transition:var(--tr)}
     .bld-fi::placeholder{color:var(--muted2)}
-    .bld-fsel{appearance:none;cursor:pointer;color-scheme:dark;color:#dde8ff}
+    .bld-fsel{appearance:none;cursor:pointer;color:var(--text)}
     .bld-fta{resize:vertical;min-height:72px;line-height:1.6}
     .bld-fi:focus,.bld-fsel:focus,.bld-fta:focus{outline:none;background:var(--accent-dim);border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,180,216,0.12)}
-    .bld-fsel option{background:var(--card-bg);color:#dde8ff!important}
+    .bld-fsel option{background:var(--card-bg);color:var(--text)}
     .bld-tg{display:flex;border-radius:var(--r-xs);overflow:hidden;border:1px solid rgba(var(--fg-rgb), 0.09)}
     .bld-tgb{flex:1;padding:9px;background:transparent;border:none;color:var(--muted);font-family:inherit;font-size:.83rem;font-weight:700;cursor:pointer;transition:var(--tr)}
     .bld-tgb+.bld-tgb{border-right:1px solid rgba(var(--fg-rgb), 0.07)}
@@ -117,8 +117,8 @@
     .bld-sel-card-top{padding:8px 12px 5px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--border)}
     .bld-sel-card-top i{color:var(--accent);font-size:.85rem}
     .bld-sel-card-top span{font-size:.67rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-    .bld-sel-card select{width:100%;padding:9px 12px 11px;background:transparent;border:none;outline:none;color:#dde8ff!important;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;appearance:none;color-scheme:dark}
-    .bld-sel-card select option{background:var(--card-bg);color:#dde8ff!important}
+    .bld-sel-card select{width:100%;padding:9px 12px 11px;background:transparent;border:none;outline:none;color:var(--text);font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;appearance:none}
+    .bld-sel-card select option{background:var(--card-bg);color:var(--text)}
     .bld-prog-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;gap:20px;animation:bld-fadeUp .32s ease both}
     .bld-prog-num{text-align:center;min-width:56px}
     .bld-prog-pct{font-size:2rem;font-weight:800;color:var(--accent);letter-spacing:-.04em;line-height:1}
