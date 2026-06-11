@@ -49,9 +49,21 @@
       return jsonRes({ token: makeToken(u.role), id: 1, role: u.role, email, firstName: u.firstName, lastName: u.lastName, assignedProjectIds: u.assignedProjectIds });
     }
 
-    // ── Branding (must report "configured" so brand.js doesn't redirect to /setup) ──
+    // ── Branding: persist the chosen theme/name in localStorage so it survives
+    //    the setup → login → dashboard page navigations (mock DB rebuilds per page). ──
     if (res === 'brand') {
-      if ((seg[1] || '').toLowerCase() === 'logo') return jsonRes({}, 404);
+      const sub = (seg[1] || '').toLowerCase();
+      if (sub === 'logo') return jsonRes(method === 'POST' ? { logoUrl: null } : {}, method === 'POST' ? 200 : 404);
+      if (method === 'POST' || method === 'PUT') {
+        const saved = Object.assign({ configured: true }, body || {});
+        try { localStorage.setItem('__demo_brand', JSON.stringify(saved)); } catch (e) {}
+        return jsonRes(saved);
+      }
+      let saved = null;
+      try { saved = JSON.parse(localStorage.getItem('__demo_brand') || 'null'); } catch (e) {}
+      if (saved && saved.companyName) {
+        return jsonRes(Object.assign({ configured: true, name: saved.companyName }, saved));
+      }
       return jsonRes({
         configured: true, companyName: 'أساس', name: 'أساس',
         themeName: 'midnight', logoUrl: null,
