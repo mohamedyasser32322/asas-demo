@@ -30,6 +30,12 @@
       --r:12px;--r-sm:8px;--r-xs:6px;
       --tr:all 0.2s ease;
     }
+    /* Light theme: adapt the page's palette instead of staying dark */
+    :root[data-mode="light"]{
+      --bg:#eef2f8;--surface:#ffffff;--surface2:#f1f5fb;
+      --border:rgba(13,33,66,0.10);--border-h:rgba(13,33,66,0.20);
+      --text:#16233b;--text2:#43577a;--muted:#7e93b0;--muted2:#aab8cc;
+    }
     @keyframes bld-spin{to{transform:rotate(360deg)}}
     @keyframes bld-fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
     @keyframes bld-fadeIn{from{opacity:0}to{opacity:1}}
