@@ -131,13 +131,16 @@
         for (let u = 1; u <= 4; u++) {
           uId++;
           const r = Math.random();
-          const status = r < 0.40 ? 1 : r < 0.65 ? 2 : r < 0.95 ? 3 : 4;
+          const statusNum = r < 0.40 ? 1 : r < 0.65 ? 2 : r < 0.95 ? 3 : 4;
+          // status is a STRING enum (what the backend returns & the public interface expects);
+          // Admin pages normalise via toStatus() which accepts both.
+          const statusEn = { 1: 'Available', 2: 'Reserved', 3: 'Sold', 4: 'Closed' }[statusNum];
           const area = rnd(90, 260), price = rnd(450, 1600) * 1000;
           const unitNo = `${f}0${u}`;
           DB.units.push({
             id: uId, floorId: fid, floorNumber: f, buildingId: bId, buildingName: bname,
             projectId: pid, projectName: pm.name, unitNumber: unitNo, unitCode: `${bcode}-${unitNo}`,
-            status, realStatus: statusAr[status], price, unitArea: area,
+            status: statusEn, realStatus: statusAr[statusNum], price, unitArea: area,
             unitType: pick(unitTypes, uId), bedrooms: rnd(1, 5),
             createdAt: ago(rnd(10, 250)), expectedDeliveryDate: ahead(rnd(60, 500)), buyerId: null
           });
@@ -148,7 +151,7 @@
 
   // ── Bookings for reserved/sold units ──
   let bkId = 0;
-  DB.units.filter(u => u.status === 2 || u.status === 3).forEach((u, idx) => {
+  DB.units.filter(u => u.status === 'Reserved' || u.status === 'Sold').forEach((u, idx) => {
     const by = DB.buyers[idx % DB.buyers.length];
     u.buyerId = by.id;
     bkId++;
@@ -158,7 +161,7 @@
       buildingName: u.buildingName, projectName: u.projectName, projectId: u.projectId,
       price: u.price, totalPrice: u.price, bookingDate: ago(rnd(5, 200)),
       createdAt: ago(rnd(5, 200)), updatedAt: ago(rnd(0, 4)),
-      status: u.status === 3 ? 'مباع' : 'محجوز', realStatus: u.status === 3 ? 'مباع' : 'محجوز',
+      status: u.status === 'Sold' ? 'مباع' : 'محجوز', realStatus: u.status === 'Sold' ? 'مباع' : 'محجوز',
       expectedDeliveryDate: u.expectedDeliveryDate
     });
   });
@@ -202,7 +205,7 @@
   DB.categories.forEach(c => { c.ticketsCount = DB.tickets.filter(t => t.categoryName === c.name).length; });
 
   // ── Sell requests ──
-  DB.units.filter(u => u.status === 3).slice(2, 7).forEach((u, idx) => {
+  DB.units.filter(u => u.status === 'Sold').slice(2, 7).forEach((u, idx) => {
     const by = DB.buyers.find(b => b.id === u.buyerId) || DB.buyers[idx];
     DB.sellRequests.push({
       id: idx + 1, projectName: u.projectName, buildingName: u.buildingName, floorNumber: u.floorNumber,
