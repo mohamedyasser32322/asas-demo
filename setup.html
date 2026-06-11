@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<script src="mock/mock-api.js?v=11"></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>إعداد النظام</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&display=swap"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"/>
+  <link rel="stylesheet" href="config/light-overrides.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a1628;
+      --card:      rgba(var(--fg-rgb), 0.04);
+      --card2:     rgba(var(--fg-rgb), 0.08);
+      --border:    rgba(var(--fg-rgb), 0.08);
+      --border2:   rgba(var(--fg-rgb), 0.14);
+      --text:      #ffffff;
+      --muted:     #8fa3c0;
+      --success:   #34c759;
+      --danger:    #ff3b30;
+      --accent:    #4e8df5;
+      --accent-dk: #3a7ae0;
+    }
+    :root[data-mode="light"] {
+      --card:      rgba(0,0,0,0.04);
+      --card2:     rgba(0,0,0,0.07);
+      --border:    rgba(0,0,0,0.08);
+      --border2:   rgba(0,0,0,0.14);
+      --text:      #1f2937;
+      --muted:     #6b7280;
+    }
+
+    html { scrollbar-gutter: stable; }
+    html, body {
+      min-height: 100vh;
+      background: var(--primary, var(--bg));
+      font-family: 'Tajawal', sans-serif;
+      color: var(--light, var(--text));
+      direction: rtl;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    body {
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px 16px;
+      background-image:
+        radial-gradient(ellipse 60% 40% at 20% 20%, rgba(var(--accent-rgb, 78,141,245),0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 35% at 80% 80%, rgba(var(--accent-rgb, 78,141,245),0.05) 0%, transparent 55%);
+    }
+
+    .setup-wrap { position: relative; z-index: 100001; width: 100%; max-width: 640px; animation: setupReveal .6s cubic-bezier(.22,1,.36,1) 2.8s both; }
+    @keyframes setupReveal { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* مسافة بعد عنوان الكارت لما يبقى من غير وصف */
+    .setup-card h2 + .field { margin-top: 16px; }
+
+    .setup-header { text-align: center; margin-bottom: 28px; }
+    .setup-icon {
+      width: 60px; height: 60px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dk));
+      border-radius: 18px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; margin-bottom: 14px;
+      box-shadow: 0 8px 32px rgba(78,141,245,0.3);
+    }
+    .setup-header h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 6px; }
+    .setup-header p  { color: var(--muted); font-size: 0.92rem; line-height: 1.5; }
+
+    .setup-steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 24px; }
+    .step-dot {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--card2); border: 2px solid var(--border2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 800; color: var(--muted);
+      flex-shrink: 0; transition: all .3s;
+    }
+    .step-dot.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .step-dot.done   { background: var(--success); border-color: var(--success); color: #fff; }
+    .step-line { flex: 1; height: 2px; background: var(--border2); max-width: 60px; }
+
+    .setup-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 28px; margin-bottom: 14px;
+      transition: background 0.35s ease, border-color 0.35s ease;
+    }
+    .setup-card h2 {
+      font-size: 1.05rem; font-weight: 800; margin-bottom: 4px;
+      display: flex; align-items: center; gap: 8px;
+      color: var(--light, var(--text));
+    }
+    .setup-card h2 i { color: var(--accent); font-size: 1.1rem; }
+    .setup-card .card-desc { color: var(--muted); font-size: 0.85rem; margin-bottom: 20px; line-height: 1.5; }
+
+    .steps-viewport { position: relative; will-change: height; }
+    .step-content { display: none; }
+    .step-content.active { display: block; }
+    /* أثناء النقلة: الخطوتان فوق بعض داخل الـ viewport */
+    .steps-viewport.animating .step-content { position: absolute; top: 0; left: 0; right: 0; }
+    .steps-viewport.animating .step-content.active { will-change: transform, opacity; }
+
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--light, var(--text)); opacity: 0.85; margin-bottom: 7px; }
+    .field input[type="text"], .field input[type="tel"], .field select {
+      width: 100%; background: var(--card2);
+      border: 1px solid var(--border2); border-radius: 10px;
+      padding: 11px 14px; color: var(--light, var(--text)); font-family: 'Tajawal',sans-serif;
+      font-size: 0.95rem; font-weight: 600; transition: border-color .2s, background .2s; outline: none;
+    }
+    .field input[type="text"]:focus, .field input[type="tel"]:focus, .field select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(var(--accent-rgb, 78,141,245), 0.12); }
+    .field input[type="text"]::placeholder, .field input[type="tel"]::placeholder { color: var(--muted); font-weight: 400; }
+
+    /* صف رقم الواتساب: مفتاح الدولة + الرقم */
+    .wa-row { display: flex; flex-direction: row-reverse; gap: 8px; align-items: stretch; }
+    .wa-row .wa-num { flex: 1 1 auto; min-width: 0; direction: ltr; text-align: right; }
+
+    /* قائمة مفتاح الدولة المخصّصة */
+    .wa-cc-wrap { position: relative; flex: 0 0 auto; }
+    .wa-cc-btn {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      min-width: 152px; height: 100%;
+      background: var(--card2); border: 1px solid var(--border2); border-radius: 10px;
+      padding: 11px 12px; color: var(--light, var(--text));
+      font-family: 'Tajawal', sans-serif; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; transition: border-color .2s, background .2s, box-shadow .2s; outline: none;
+    }
+    .wa-cc-btn:hover { background: rgba(var(--fg-rgb), 0.1); }
+    .wa-cc-btn i { color: var(--muted); font-size: 1.15rem; transition: transform .2s; flex-shrink: 0; }
+    .wa-cc-val b { color: var(--muted); font-weight: 700; margin-right: 5px; }
+    .wa-cc-wrap.open .wa-cc-btn { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(var(--accent-rgb, 78,141,245), 0.12); }
+    .wa-cc-wrap.open .wa-cc-btn i { transform: rotate(180deg); }
+
+    .wa-cc-menu {
+      position: absolute; top: calc(100% + 6px); left: 0;
+      min-width: 232px; z-index: 60;
+      background: var(--primary, #0D2142); border: 1px solid var(--border2);
+      border-radius: 12px; box-shadow: 0 18px 44px rgba(0,0,0,.55);
+      max-height: 272px; overflow-y: auto; padding: 6px; display: none;
+    }
+    .wa-cc-wrap.open .wa-cc-menu { display: block; animation: ccIn .16s ease; }
+    @keyframes ccIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+    .wa-cc-opt {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      width: 100%; text-align: right;
+      background: transparent; border: none; border-radius: 8px;
+      padding: 9px 11px; color: var(--light, var(--text));
+      font-family: 'Tajawal', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      transition: background .15s;
+    }
+    .wa-cc-opt:hover { background: rgba(var(--accent-rgb, 78,141,245), .15); }
+    .wa-cc-opt.sel  { background: rgba(var(--accent-rgb, 78,141,245), .22); }
+    .wa-cc-opt b { color: var(--muted); font-weight: 700; }
+    .wa-cc-menu::-webkit-scrollbar { width: 8px; }
+    .wa-cc-menu::-webkit-scrollbar-thumb { background: rgba(var(--fg-rgb), .16); border-radius: 8px; }
+    .field select {
+      appearance: none; -webkit-appearance: none; cursor: pointer;
+      color-scheme: dark;
+      padding-left: 40px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238fa3c0' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: left 14px center;
+    }
+    .field select option { background: var(--primary, #0D2142); color: #ffffff; }
+    :root[data-mode="light"] .field select { color-scheme: light; }
+    :root[data-mode="light"] .field select option { background: #ffffff; color: #1f2937; }
+
+    /* Logo upload */
+    .logo-upload-area {
+      border: 2px dashed var(--border2); border-radius: 14px;
+      padding: 26px 20px; text-align: center; cursor: pointer;
+      transition: all .22s; position: relative; overflow: hidden;
+    }
+    .logo-upload-area:hover, .logo-upload-area.drag {
+      border-color: var(--accent); background: rgba(78,141,245,0.05);
+    }
+    .logo-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .logo-upload-icon { font-size: 2rem; color: var(--accent); margin-bottom: 10px; display: block; }
+    .logo-upload-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 5px; }
+    .logo-upload-hint  { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+    .logo-preview-wrap { display: none; flex-direction: column; align-items: center; gap: 12px; }
+    .logo-preview-wrap.show { display: flex; }
+    .logo-preview {
+      max-height: 60px; max-width: 220px; object-fit: contain;
+      border-radius: 8px; background: rgba(var(--fg-rgb), 0.04); padding: 8px;
+    }
+    .logo-remove {
+      background: rgba(255,59,48,0.12); border: 1px solid rgba(255,59,48,0.25); color: #ff6b62;
+      border-radius: 8px; padding: 5px 14px; font-family: inherit; font-size: 0.8rem; font-weight: 700;
+      cursor: pointer; transition: all .18s;
+    }
+    .logo-remove:hover { background: rgba(255,59,48,0.22); }
+
+    .dim-guide {
+      display: flex; align-items: flex-start; gap: 10px; margin-top: 14px;
+      background: rgba(78,141,245,0.07); border: 1px solid rgba(78,141,245,0.18);
+      border-radius: 10px; padding: 11px 14px;
+    }
+    .dim-guide i { color: var(--accent); font-size: 1rem; margin-top: 1px; flex-shrink: 0; }
+    .dim-guide-text { font-size: 0.8rem; color: rgba(var(--fg-rgb), 0.7); line-height: 1.6; }
+    .dim-guide-text strong { color: #fff; }
+
+    /* ════════════════════════════════════════
+       THEME CARDS — مفصلة احترافية
+       ════════════════════════════════════════ */
+    .theme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+    .theme-card {
+      position: relative; cursor: pointer;
+      background: rgba(var(--fg-rgb), 0.03);
+      border: 2px solid var(--border2); border-radius: 14px;
+      padding: 12px; transition: all .22s;
+      display: flex; flex-direction: column; align-items: stretch; text-align: center; gap: 10px;
+    }
+    .theme-card:hover { border-color: rgba(var(--fg-rgb), 0.25); transform: translateY(-2px); }
+    .theme-card.selected {
+      border-color: var(--accent);
+      background: rgba(78,141,245,0.07);
+      box-shadow: 0 0 0 4px rgba(78,141,245,0.12);
+    }
+    .theme-card.selected::after {
+      content: '✓'; position: absolute; top: 10px; left: 10px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 900;
+    }
+    .theme-preview {
+      flex-shrink: 0; width: 100%; height: 64px;
+      border-radius: 10px; overflow: hidden;
+      position: relative; border: 1px solid var(--border2);
+    }
+    .theme-preview-bg    { position: absolute; inset: 0; }
+    .theme-preview-card  { position: absolute; top: 12px; right: 8px; left: 22px; bottom: 12px; border-radius: 5px; }
+    .theme-preview-accent { position: absolute; bottom: 18px; left: 28px; width: 22px; height: 8px; border-radius: 2px; }
+    .theme-info { flex: 1; min-width: 0; }
+    .theme-info-title {
+      font-size: 0.92rem; font-weight: 800; margin-bottom: 2px;
+      display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap;
+    }
+    .theme-mode-tag {
+      font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 8px;
+      text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .theme-mode-tag.dark  { background: rgba(78,141,245,0.18); color: #7ab3ff; }
+    .theme-mode-tag.light { background: rgba(245,200,66,0.18); color: #ffd84d; }
+    .theme-info-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+    /* Buttons */
+    .btn-row { display: flex; gap: 10px; justify-content: flex-start; margin-top: 22px; }
+    .btn-primary {
+      padding: 12px 28px; border-radius: 11px;
+      background: var(--accent, #4e8df5); color: #fff;
+      font-family: 'Tajawal',sans-serif; font-size: 0.95rem; font-weight: 800;
+      border: none; cursor: pointer; transition: all .2s;
+      display: inline-flex; align-items: center; gap: 7px;
+    }
+    .btn-primary:hover { background: var(--accent-dark, var(--accent-dk)); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+    .btn-secondary {
+      padding: 12px 22px; border-radius: 11px;
+      background: var(--card2); border: 1px solid var(--border2);
+      color: var(--light, var(--text));
+      font-family: 'Tajawal',sans-serif; font-size: 0.9rem; font-weight: 700;
+      cursor: pointer; transition: all .2s;
+    }
+    .btn-secondary:hover {
+      background: var(--border2);
+      color: var(--light, var(--text));
+    }
+    /* Light theme: explicit overrides */
+    :root[data-mode="light"] .btn-secondary {
+      background: #ffffff;
+      border-color: rgba(0,0,0,0.12);
+      color: var(--light);
+    }
+    :root[data-mode="light"] .btn-secondary:hover {
+      background: #f4f5f7;
+      border-color: rgba(0,0,0,0.2);
+    }
+
+    /* Toast */
+    .setup-toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #1a2f4a; border: 1px solid var(--border2);
+      border-radius: 12px; padding: 12px 20px;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.9rem; font-weight: 600;
+      box-shadow: 0 8px 32px rgba(0,0,0,.5);
+      z-index: 9999; opacity: 0; pointer-events: none;
+      transition: opacity .3s; white-space: nowrap;
+    }
+    .setup-toast.show { opacity: 1; pointer-events: auto; }
+    .setup-toast.error   { border-color: rgba(255,59,48,.4); }
+    .setup-toast.error i { color: var(--danger); }
+    .setup-toast.success   { border-color: rgba(52,199,89,.4); }
+    .setup-toast.success i { color: var(--success); }
+
+    .success-screen { display: none; text-align: center; padding: 20px 0; }
+    .success-screen.show { display: block; }
+    .success-check {
+      width: 72px; height: 72px;
+      background: rgba(52,199,89,0.15); border: 2px solid rgba(52,199,89,0.4); border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 2rem; color: var(--success); margin-bottom: 20px;
+    }
+    .success-screen h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
+    .success-screen p  { color: var(--muted); font-size: 0.9rem; margin-bottom: 24px; }
+
+    @media (max-width: 480px) {
+      .setup-card { padding: 20px 16px; }
+      .btn-row { flex-direction: column; }
+      .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+      .theme-card { flex-direction: column; align-items: stretch; text-align: center; }
+      .theme-preview { width: 100%; height: 80px; }
+    }
+
+    /* ════════════════════════════════════════
+       FULL PREVIEW MODAL
+       ════════════════════════════════════════ */
+    #pv-mask {
+      position: fixed; inset: 0; z-index: 99998;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+      display: none; align-items: center; justify-content: center;
+      padding: 20px;
+      animation: pv-fade .2s ease;
+    }
+    #pv-mask.show { display: flex; }
+    @keyframes pv-fade { from{opacity:0} to{opacity:1} }
+    @keyframes pv-pop  { from{opacity:0;transform:translateY(20px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+
+    #pv-panel {
+      width: 100%; max-width: 1100px; max-height: 92vh;
+      background: var(--primary, #0D2142);
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,.6);
+      animation: pv-pop .25s cubic-bezier(.4,0,.2,1);
+      display: flex; flex-direction: column;
+      color: var(--light, #fff);
+    }
+    .pv-topbar {
+      padding: 12px 20px; background: var(--card-bg, #112952);
+      border-bottom: 1px solid var(--border, rgba(var(--fg-rgb), .08));
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .pv-topbar-ttl {
+      font-size: .92rem; font-weight: 800; color: var(--light, #fff);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .pv-topbar-ttl i { color: var(--accent, #4e8df5); }
+    .pv-close {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(var(--fg-rgb), .06); border: 1px solid var(--border, rgba(var(--fg-rgb), .1));
+      color: var(--light, #fff); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; transition: all .18s;
+    }
+    .pv-close:hover { background: rgba(255,59,48,.15); border-color: rgba(255,59,48,.4); color: #ff7066; }
+
+    .pv-body {
+      flex: 1; overflow-y: auto;
+      background: var(--primary, #0D2142);
+      padding: 0;
+    }
+
+    /* Mock header */
+    .pv-mock-header {
+      background: var(--card-bg, #112952);
+      border-bottom: 1px solid var(--border, rgba(var(--fg-rgb), .08));
+      padding: 12px 22px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .pv-mh-logo {
+      font-size: 1rem; font-weight: 800;
+      color: var(--light, #fff);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .pv-mh-logo .dot {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent, #4e8df5), var(--accent-dark, #3a7ae0));
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: .9rem;
+    }
+    .pv-mh-nav { display: flex; gap: 18px; align-items: center; }
+    .pv-mh-nav span {
+      font-size: .82rem; font-weight: 600;
+      color: var(--text-muted, #8fa3c0);
+      padding: 7px 11px; border-radius: 8px;
+      cursor: pointer;
+    }
+    .pv-mh-nav span.active {
+      color: var(--accent, #4e8df5);
+      background: rgba(var(--accent-rgb, 78,141,245), 0.12);
+    }
+    .pv-mh-actions { display: flex; gap: 8px; align-items: center; }
+    .pv-mh-icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: var(--surface-tint, rgba(var(--fg-rgb), .05));
+      border: 1px solid var(--border, rgba(var(--fg-rgb), .08));
+      display: flex; align-items: center; justify-content: center;
+      color: var(--light, #fff); font-size: .95rem;
+    }
+    .pv-mh-user {
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 12px 0 4px; height: 34px;
+      background: var(--surface-tint, rgba(var(--fg-rgb), .05));
+      border: 1px solid var(--border, rgba(var(--fg-rgb), .08));
+      border-radius: 17px;
+    }
+    .pv-mh-user .av {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent, #4e8df5), var(--accent-dark, #3a7ae0));
+      color: #fff; font-size: .68rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pv-mh-user .nm { font-size: .78rem; font-weight: 700; color: var(--light, #fff); }
+
+    /* Mock content area */
+    .pv-mock-content { padding: 24px; }
+    .pv-mock-title {
+      font-size: 1.15rem; font-weight: 800; color: var(--light, #fff);
+      margin-bottom: 4px; display: flex; align-items: center; gap: 8px;
+    }
+    .pv-mock-title i { color: var(--accent, #4e8df5); }
+    .pv-mock-sub { font-size: .82rem; color: var(--text-muted, #8fa3c0); margin-bottom: 18px; }
+
+    .pv-kpis {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+      gap: 12px; margin-bottom: 18px;
+    }
+    .pv-kpi {
+      background: var(--card-bg, #112952);
+      border: 1px solid var(--border, rgba(var(--fg-rgb), .08));
+      border-radius: 14px; padding: 14px 16px;
+    }
+    .pv-kpi-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.05rem; margin-bottom: 10px;
+    }
+    .pv-kpi.blue   .pv-kpi-icon { background: rgba(78,141,245,.15); color: #5fa0ff; }
+    .pv-kpi.green  .pv-kpi-icon { background: rgba(52,199,89,.15);  color: #52d96f; }
+    .pv-kpi.orange .pv-kpi-icon { background: rgba(255,149,0,.15);  color: #ff9f33; }
+    .pv-kpi.red    .pv-kpi-icon { background: rgba(255,59,48,.15);  color: #ff7066; }
+    .pv-kpi-val { font-size: 1.5rem; font-weight: 900; color: var(--light, #fff); }
+    .pv-kpi-lbl { font-size: .77rem; color: var(--text-muted, #8fa3c0); margin-top: 2px; }
+
+    /* Mock buttons */
+    .pv-btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+    .pv-btn-pri {
+      padding: 9px 18px; border-radius: 10px;
+      background: var(--accent, #4e8df5); color: #fff;
+      font-size: .85rem; font-weight: 700; border: none;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .pv-btn-sec {
+      padding: 9px 18px; border-radius: 10px;
+      background: var(--surface-tint, rgba(var(--fg-rgb), .05));
+      border: 1px solid var(--border, rgba(var(--fg-rgb), .1));
+      color: var(--light, #fff);
+      font-size: .85rem; font-weight: 700;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .pv-btn-tag {
+      padding: 5px 12px; border-radius: 20px;
+      background: rgba(var(--accent-rgb, 78,141,245), 0.15);
+      color: var(--accent, #4e8df5);
+      font-size: .75rem; font-weight: 800;
+    }
+
+    /* Mock card with form */
+    .pv-form-card {
+      background: var(--card-bg, #112952);
+      border: 1px solid var(--border, rgba(var(--fg-rgb), .08));
+      border-radius: 14px; padding: 18px;
+    }
+    .pv-form-card h3 {
+      font-size: .95rem; font-weight: 800; color: var(--light, #fff);
+      margin-bottom: 14px;
+    }
+    .pv-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pv-fld label { display: block; font-size: .78rem; font-weight: 700; color: var(--light, #fff); margin-bottom: 6px; opacity: .85; }
+    .pv-fld input {
+      width: 100%; padding: 9px 12px; border-radius: 9px;
+      background: var(--surface-tint, rgba(var(--fg-rgb), .05));
+      border: 1px solid var(--border, rgba(var(--fg-rgb), .1));
+      color: var(--light, #fff); font-family: 'Tajawal', sans-serif;
+      font-size: .85rem;
+    }
+    .pv-fld input::placeholder { color: var(--text-muted, #8fa3c0); }
+    /* Light theme inputs */
+    :root[data-mode="light"] .pv-fld input {
+      background: #ffffff;
+      border-color: rgba(0,0,0,0.12);
+      color: var(--light);
+    }
+
+    .pv-footer-info {
+      padding: 12px 22px; background: var(--card-bg, #112952);
+      border-top: 1px solid var(--border, rgba(var(--fg-rgb), .08));
+      font-size: .78rem; color: var(--text-muted, #8fa3c0);
+      text-align: center;
+    }
+    .pv-footer-info strong { color: var(--accent, #4e8df5); }
+
+    @media (max-width: 700px) {
+      .pv-mh-nav { display: none; }
+      .pv-form-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════ LIGHT THEME OVERRIDES for the preview ═══════ */
+    :root[data-mode="light"] #pv-panel,
+    :root[data-mode="light"] .pv-body { background: var(--primary); }
+
+    :root[data-mode="light"] .pv-topbar,
+    :root[data-mode="light"] .pv-mock-header,
+    :root[data-mode="light"] .pv-footer-info {
+      background: #ffffff;
+      border-color: rgba(0,0,0,0.08);
+    }
+
+    :root[data-mode="light"] .pv-topbar-ttl,
+    :root[data-mode="light"] .pv-mh-logo,
+    :root[data-mode="light"] .pv-mh-user .nm,
+    :root[data-mode="light"] .pv-mock-title,
+    :root[data-mode="light"] .pv-kpi-val,
+    :root[data-mode="light"] .pv-form-card h3,
+    :root[data-mode="light"] .pv-fld label {
+      color: var(--light);
+    }
+
+    :root[data-mode="light"] .pv-mh-icon,
+    :root[data-mode="light"] .pv-mh-user {
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.10);
+      color: var(--light);
+    }
+
+    :root[data-mode="light"] .pv-kpi,
+    :root[data-mode="light"] .pv-form-card {
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    :root[data-mode="light"] .pv-btn-sec {
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.12);
+      color: var(--light);
+    }
+    :root[data-mode="light"] .pv-btn-pri { color: #ffffff; }
+
+    :root[data-mode="light"] .pv-mh-nav span { color: var(--text-muted); }
+    :root[data-mode="light"] .pv-mh-nav span.active {
+      color: var(--accent);
+      background: rgba(var(--accent-rgb), 0.10);
+    }
+
+    :root[data-mode="light"] .pv-fld input {
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.12);
+      color: var(--light);
+    }
+    :root[data-mode="light"] .pv-fld input::placeholder { color: #9ca3af; opacity: 1; }
+
+    :root[data-mode="light"] .pv-close {
+      background: rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.1);
+      color: var(--light);
+    }
+    :root[data-mode="light"] .pv-close:hover {
+      background: rgba(220,38,38,0.1);
+      border-color: rgba(220,38,38,0.3);
+      color: #dc2626;
+    }
+    /* ════════════════════════════════════════
+       INTRO ANIMATION — أفق مدينة عقاري
+       ════════════════════════════════════════ */
+    #intro {
+      position: fixed; inset: 0; z-index: 100000;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 120%, rgba(var(--accent-rgb, 78,141,245), 0.18) 0%, transparent 60%),
+        var(--primary, var(--bg, #0a1628));
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      will-change: opacity; backface-visibility: hidden;
+      animation: introOut .5s ease forwards 2.35s;
+    }
+    @keyframes introOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    .intro-glow {
+      position: absolute; bottom: -10%; left: 50%; transform: translateX(-50%);
+      width: 70vw; height: 70vw; max-width: 720px; max-height: 720px;
+      border-radius: 50%; pointer-events: none;
+      background: radial-gradient(circle, rgba(var(--accent-rgb, 78,141,245), 0.22) 0%, transparent 65%);
+      filter: blur(18px); will-change: transform;
+      animation: introGlow 2.35s ease-in-out forwards;
+    }
+    @keyframes introGlow {
+      0%, 100% { opacity: .55; transform: translateX(-50%) scale(1); }
+      50%      { opacity: 1;   transform: translateX(-50%) scale(1.08); }
+    }
+
+    /* صف المباني */
+    .intro-skyline {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 46vh; min-height: 220px;
+      display: flex; align-items: flex-end; justify-content: center;
+      gap: 10px; padding: 0 4vw;
+    }
+    .intro-horizon {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb, 78,141,245), 0.9), transparent);
+      box-shadow: 0 0 24px 4px rgba(var(--accent-rgb, 78,141,245), 0.45);
+      opacity: 0; animation: horizonOn .8s ease .15s forwards;
+    }
+    @keyframes horizonOn { to { opacity: 1; } }
+
+    .bld {
+      position: relative; flex-shrink: 0;
+      width: clamp(34px, 6vw, 60px);
+      border-radius: 6px 6px 0 0;
+      background: linear-gradient(180deg,
+        rgba(var(--accent-rgb, 78,141,245), 0.16) 0%,
+        rgba(var(--fg-rgb, 255,255,255), 0.05) 45%,
+        rgba(var(--fg-rgb, 255,255,255), 0.02) 100%);
+      border: 1px solid rgba(var(--accent-rgb, 78,141,245), 0.18);
+      border-bottom: none;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 9px; gap: 6px 7px;
+      align-content: end; justify-items: center;
+      padding: 12px 7px 0;
+      transform: translateY(115%);
+      will-change: transform; backface-visibility: hidden;
+      animation: bldRise .5s cubic-bezier(.16,1,.3,1) forwards;
+      box-shadow: 0 -8px 40px rgba(var(--accent-rgb, 78,141,245), 0.08);
+    }
+    @keyframes bldRise { to { transform: translateY(0); } }
+
+    .bld .w {
+      width: 9px; height: 9px; border-radius: 2px;
+      background: rgba(var(--fg-rgb, 255,255,255), 0.07);
+      opacity: 0;
+      animation: winOn .5s ease forwards;
+    }
+    @keyframes winOn {
+      0%   { opacity: 0; background: rgba(var(--fg-rgb, 255,255,255), 0.07); }
+      100% { opacity: 1; background: rgba(var(--accent-rgb, 78,141,245), 0.85); }
+    }
+
+    /* اللوجو والعنوان في النص */
+    .intro-center {
+      position: relative; z-index: 2; text-align: center;
+      transform: translate3d(0, -6vh, 0);
+      will-change: opacity; backface-visibility: hidden;
+    }
+    .intro-brand {
+      font-size: clamp(3.2rem, 13vw, 6rem); font-weight: 900; line-height: 1;
+      background: linear-gradient(135deg, var(--light, #fff) 0%, var(--accent, #4e8df5) 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      opacity: 0; transform: translateY(24px) scale(.92);
+      animation: brandIn .8s cubic-bezier(.22,1,.36,1) .35s forwards;
+      text-shadow: 0 8px 40px rgba(var(--accent-rgb, 78,141,245), 0.25);
+    }
+    @keyframes brandIn {
+      from { opacity: 0; transform: translateY(24px) scale(.92); letter-spacing: 14px; }
+      to   { opacity: 1; transform: translateY(0) scale(1);     letter-spacing: 2px; }
+    }
+    .intro-brand-line {
+      width: 0; height: 3px; margin: 16px auto 0; border-radius: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent, #4e8df5), transparent);
+      box-shadow: 0 0 14px rgba(var(--accent-rgb, 78,141,245), 0.6);
+      animation: lineGrow .6s cubic-bezier(.22,1,.36,1) .75s forwards;
+    }
+    @keyframes lineGrow { to { width: min(240px, 62vw); } }
+    .intro-slogan {
+      margin-top: 16px; font-size: clamp(.95rem, 3vw, 1.3rem); font-weight: 600;
+      color: var(--muted, #8fa3c0);
+      opacity: 0; animation: introUp .6s ease .95s forwards;
+    }
+    @keyframes introUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ════════════════════════════════════════
+       LAUNCH — انتقال الإطلاق بعد التخصيص
+       ════════════════════════════════════════ */
+    #launch {
+      position: fixed; inset: 0; z-index: 100002;
+      background:
+        radial-gradient(ellipse 80% 55% at 50% 38%, rgba(var(--accent-rgb, 78,141,245), 0.20) 0%, transparent 60%),
+        var(--primary, var(--bg, #0a1628));
+      display: none; align-items: center; justify-content: center;
+    }
+    #launch.show { display: flex; }
+    /* في الآخر: الخلفية تفضل مغطّية، والمحتوى بس يعمل zoom-out → تسليم متصل للّوجين */
+    #launch.zoom .launch-center { animation: launchContentOut .55s cubic-bezier(.5,0,.75,0) forwards; }
+    @keyframes launchContentOut {
+      to { opacity: 0; transform: translate3d(0, -6vh, 0) scale(1.35); }
+    }
+
+    .launch-glow {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 60vw; height: 60vw; max-width: 640px; max-height: 640px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(var(--accent-rgb, 78,141,245), 0.18), transparent 65%);
+      filter: blur(20px); animation: introGlow 3s ease-in-out infinite; pointer-events: none;
+    }
+    .launch-center { position: relative; z-index: 2; text-align: center; padding: 24px; }
+
+    .launch-check { width: 92px; height: 92px; margin: 0 auto 22px; }
+    .launch-check svg { width: 100%; height: 100%; }
+    .lc-ring {
+      fill: none; stroke: var(--accent, #4e8df5); stroke-width: 3;
+      stroke-dasharray: 151; stroke-dashoffset: 151;
+      animation: lcRing .6s cubic-bezier(.22,1,.36,1) .15s forwards;
+    }
+    @keyframes lcRing { to { stroke-dashoffset: 0; } }
+    .lc-tick {
+      fill: none; stroke: var(--accent, #4e8df5); stroke-width: 4;
+      stroke-linecap: round; stroke-linejoin: round;
+      stroke-dasharray: 40; stroke-dashoffset: 40;
+      animation: lcTick .35s cubic-bezier(.22,1,.36,1) .62s forwards;
+    }
+    @keyframes lcTick { to { stroke-dashoffset: 0; } }
+
+    .launch-title {
+      font-size: clamp(1.05rem, 3.5vw, 1.45rem); font-weight: 700;
+      color: var(--muted, #8fa3c0);
+      opacity: 0; animation: introUp .6s ease .75s forwards;
+    }
+    .launch-company {
+      margin-top: 6px; font-size: clamp(2rem, 8vw, 3.4rem); font-weight: 900; line-height: 1.12;
+      background: linear-gradient(135deg, var(--light, #fff) 0%, var(--accent, #4e8df5) 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      opacity: 0; animation: introUp .7s cubic-bezier(.22,1,.36,1) .95s forwards;
+    }
+    .launch-sub {
+      margin-top: 14px; font-size: clamp(.85rem, 2.4vw, 1rem); font-weight: 600;
+      color: var(--muted, #8fa3c0);
+      opacity: 0; animation: introUp .6s ease 1.25s forwards;
+    }
+    .launch-bar {
+      width: min(260px, 70vw); height: 4px; margin: 24px auto 0; border-radius: 3px;
+      background: rgba(var(--fg-rgb, 255,255,255), 0.08); overflow: hidden;
+      opacity: 0; animation: introUp .5s ease 1.35s forwards;
+    }
+    .launch-bar span {
+      display: block; height: 100%; width: 0; border-radius: 3px;
+      background: linear-gradient(90deg, var(--accent, #4e8df5), var(--accent-dk, #3a7ae0));
+      box-shadow: 0 0 12px rgba(var(--accent-rgb, 78,141,245), 0.7);
+      animation: launchBar 1.25s cubic-bezier(.4,0,.2,1) 1.4s forwards;
+    }
+    @keyframes launchBar { to { width: 100%; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      #intro { display: none; }
+      .setup-wrap { animation: none; }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- ════════════ INTRO — أفق مدينة عقاري يظهر عند فتح الصفحة ════════════ -->
+<div id="intro" aria-hidden="true">
+  <div class="intro-glow"></div>
+  <div class="intro-skyline" id="intro-skyline"></div>
+  <div class="intro-horizon"></div>
+  <div class="intro-center">
+    <div class="intro-brand">Asas</div>
+    <div class="intro-brand-line"></div>
+    <div class="intro-slogan">الأساس المتين لإدارة عقاراتك</div>
+  </div>
+</div>
+<script>
+  (function buildIntro() {
+    const sky = document.getElementById('intro-skyline');
+    if (!sky) return;
+    /* ارتفاعات متدرجة تكوّن شكل أفق مدينة */
+    const heights = [140, 200, 170, 245, 200, 260, 185, 225, 160];
+    heights.forEach((h, i) => {
+      const b = document.createElement('div');
+      b.className = 'bld';
+      b.style.height = h + 'px';
+      b.style.animationDelay = (i * 0.035).toFixed(3) + 's';
+      const rows = Math.max(2, Math.floor((h - 14) / 24));
+      const winCount = rows * 3;
+      for (let k = 0; k < winCount; k++) {
+        const w = document.createElement('span');
+        w.className = 'w';
+        /* الشبابيك تضيء بعد ما المبنى يطلع، بترتيب عشوائي مبهر */
+        w.style.animationDelay = (0.3 + Math.random() * 0.55).toFixed(2) + 's';
+        b.appendChild(w);
+      }
+      sky.appendChild(b);
+    });
+    /* إزالة الانترو من الـ DOM بعد ما يخلص علشان ميعطلش التفاعل */
+    setTimeout(() => document.getElementById('intro')?.remove(), 2850);
+  })();
+</script>
+
+<div class="setup-wrap">
+
+  <div class="setup-header">
+    <div class="setup-icon"><i class="ri-settings-3-line"></i></div>
+    <h1>إعداد هوية النظام</h1>
+  </div>
+
+  <div class="setup-steps">
+    <div class="step-dot active" id="dot-1">١</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="dot-2">٢</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="dot-3">٣</div>
+  </div>
+
+  <div class="steps-viewport" id="steps-viewport">
+
+  <!-- Step 1: Company Name -->
+  <div class="step-content active" id="step-1">
+    <div class="setup-card">
+      <h2><i class="ri-building-4-line"></i> اسم الشركة</h2>
+      <div class="field">
+        <label>اسم الشركة</label>
+        <input type="text" id="company-name" placeholder="" maxlength="80" autocomplete="off"/>
+      </div>
+      <div class="field">
+        <label>رقم واتساب الشركة</label>
+        <div class="wa-row">
+          <div class="wa-cc-wrap" id="waCC">
+            <button type="button" class="wa-cc-btn" onclick="toggleCC(event)" aria-label="مفتاح الدولة">
+              <span class="wa-cc-val" id="waCCval">السعودية <b dir="ltr">+966</b></span>
+              <i class="ri-arrow-down-s-line"></i>
+            </button>
+            <div class="wa-cc-menu" id="waCCmenu">
+              <button type="button" class="wa-cc-opt sel" data-code="966" data-name="السعودية" onclick="pickCC(this)">السعودية <b dir="ltr">+966</b></button>
+              <button type="button" class="wa-cc-opt" data-code="20"  data-name="مصر"        onclick="pickCC(this)">مصر <b dir="ltr">+20</b></button>
+              <button type="button" class="wa-cc-opt" data-code="971" data-name="الإمارات"   onclick="pickCC(this)">الإمارات <b dir="ltr">+971</b></button>
+              <button type="button" class="wa-cc-opt" data-code="965" data-name="الكويت"     onclick="pickCC(this)">الكويت <b dir="ltr">+965</b></button>
+              <button type="button" class="wa-cc-opt" data-code="974" data-name="قطر"        onclick="pickCC(this)">قطر <b dir="ltr">+974</b></button>
+              <button type="button" class="wa-cc-opt" data-code="973" data-name="البحرين"    onclick="pickCC(this)">البحرين <b dir="ltr">+973</b></button>
+              <button type="button" class="wa-cc-opt" data-code="968" data-name="عُمان"      onclick="pickCC(this)">عُمان <b dir="ltr">+968</b></button>
+              <button type="button" class="wa-cc-opt" data-code="962" data-name="الأردن"     onclick="pickCC(this)">الأردن <b dir="ltr">+962</b></button>
+              <button type="button" class="wa-cc-opt" data-code="961" data-name="لبنان"      onclick="pickCC(this)">لبنان <b dir="ltr">+961</b></button>
+              <button type="button" class="wa-cc-opt" data-code="964" data-name="العراق"     onclick="pickCC(this)">العراق <b dir="ltr">+964</b></button>
+              <button type="button" class="wa-cc-opt" data-code="963" data-name="سوريا"      onclick="pickCC(this)">سوريا <b dir="ltr">+963</b></button>
+              <button type="button" class="wa-cc-opt" data-code="967" data-name="اليمن"      onclick="pickCC(this)">اليمن <b dir="ltr">+967</b></button>
+              <button type="button" class="wa-cc-opt" data-code="970" data-name="فلسطين"     onclick="pickCC(this)">فلسطين <b dir="ltr">+970</b></button>
+              <button type="button" class="wa-cc-opt" data-code="249" data-name="السودان"    onclick="pickCC(this)">السودان <b dir="ltr">+249</b></button>
+              <button type="button" class="wa-cc-opt" data-code="218" data-name="ليبيا"      onclick="pickCC(this)">ليبيا <b dir="ltr">+218</b></button>
+              <button type="button" class="wa-cc-opt" data-code="216" data-name="تونس"       onclick="pickCC(this)">تونس <b dir="ltr">+216</b></button>
+              <button type="button" class="wa-cc-opt" data-code="213" data-name="الجزائر"    onclick="pickCC(this)">الجزائر <b dir="ltr">+213</b></button>
+              <button type="button" class="wa-cc-opt" data-code="212" data-name="المغرب"     onclick="pickCC(this)">المغرب <b dir="ltr">+212</b></button>
+              <button type="button" class="wa-cc-opt" data-code="90"  data-name="تركيا"      onclick="pickCC(this)">تركيا <b dir="ltr">+90</b></button>
+              <button type="button" class="wa-cc-opt" data-code="44"  data-name="بريطانيا"   onclick="pickCC(this)">بريطانيا <b dir="ltr">+44</b></button>
+              <button type="button" class="wa-cc-opt" data-code="1"   data-name="أمريكا"     onclick="pickCC(this)">أمريكا <b dir="ltr">+1</b></button>
+            </div>
+          </div>
+          <input type="hidden" id="wa-country" value="966">
+          <input type="tel" id="company-whatsapp" class="wa-num" placeholder="" inputmode="numeric" maxlength="15" autocomplete="off"/>
+        </div>
+      </div>
+      <script>
+        function toggleCC(e) { e.stopPropagation(); document.getElementById('waCC').classList.toggle('open'); }
+        function pickCC(btn) {
+          document.getElementById('wa-country').value = btn.dataset.code;
+          document.getElementById('waCCval').innerHTML = `${btn.dataset.name} <b dir="ltr">+${btn.dataset.code}</b>`;
+          document.querySelectorAll('#waCCmenu .wa-cc-opt').forEach(o => o.classList.toggle('sel', o === btn));
+          document.getElementById('waCC').classList.remove('open');
+        }
+        document.addEventListener('click', e => {
+          const w = document.getElementById('waCC');
+          if (w && !w.contains(e.target)) w.classList.remove('open');
+        });
+      </script>
+      <div class="field">
+        <label>العملة</label>
+        <select id="setup-currency" autocomplete="off">
+          <option value="ر.س|en-US">ريال سعودي (ر.س)</option>
+          <option value="ج.م|en-US">جنيه مصري (ج.م)</option>
+          <option value="د.إ|en-US">درهم إماراتي (د.إ)</option>
+          <option value="د.ك|en-US">دينار كويتي (د.ك)</option>
+          <option value="د.ب|en-US">دينار بحريني (د.ب)</option>
+          <option value="ر.ق|en-US">ريال قطري (ر.ق)</option>
+          <option value="ر.ع|en-US">ريال عُماني (ر.ع)</option>
+          <option value="د.أ|en-US">دينار أردني (د.أ)</option>
+          <option value="$|en-US">دولار أمريكي ($)</option>
+          <option value="€|en-US">يورو (€)</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="goStep(2)">التالي <i class="ri-arrow-left-line"></i></button>
+    </div>
+  </div>
+
+  <!-- Step 2: Logo -->
+  <div class="step-content" id="step-2">
+    <div class="setup-card">
+      <h2><i class="ri-image-line"></i> شعار الشركة</h2>
+
+      <div class="logo-upload-area" id="upload-area">
+        <input type="file" id="logo-file" accept=".png,.jpg,.jpeg,.svg,.webp"/>
+        <i class="ri-upload-cloud-2-line logo-upload-icon"></i>
+        <div class="logo-upload-title">اضغط لاختيار الشعار أو اسحبه هنا</div>
+        <div class="logo-upload-hint">PNG · SVG · JPG · WebP · حد أقصى 5 MB</div>
+      </div>
+
+      <div class="logo-preview-wrap" id="logo-preview-wrap">
+        <img id="logo-preview-img" src="" alt="preview" class="logo-preview"/>
+        <button class="logo-remove" onclick="removeLogo()">
+          <i class="ri-delete-bin-line"></i> إزالة الشعار
+        </button>
+      </div>
+
+      <div class="dim-guide">
+        <i class="ri-information-line"></i>
+        <div class="dim-guide-text">
+          <strong>الأبعاد المثالية:</strong> 180×50 أو 60×60 بكسل، ويُفضَّل خلفية شفافة (PNG / SVG)
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="goStep(1)"><i class="ri-arrow-right-line"></i> السابق</button>
+      <button class="btn-primary" onclick="goStep(3)">التالي <i class="ri-arrow-left-line"></i></button>
+    </div>
+  </div>
+
+  <!-- Step 3: Theme Selection (الأخير) -->
+  <div class="step-content" id="step-3">
+    <div class="setup-card">
+      <h2><i class="ri-palette-line"></i> اختر هوية النظام</h2>
+      <div class="theme-grid" id="theme-grid"></div>
+      <button class="btn-secondary" onclick="openPreview()" style="width:100%;margin-top:14px;justify-content:center">
+        <i class="ri-eye-line"></i> معاينة كاملة للنظام بهذا الثيم
+      </button>
+    </div>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="goStep(2)"><i class="ri-arrow-right-line"></i> السابق</button>
+      <button class="btn-primary" id="save-btn" onclick="saveAll()">
+        <i class="ri-rocket-line"></i> حفظ وإطلاق النظام
+      </button>
+    </div>
+  </div>
+
+  </div><!-- /steps-viewport -->
+
+  <!-- Success -->
+  <div class="success-screen" id="success-screen">
+    <div class="setup-card">
+      <div class="success-check"><i class="ri-check-line"></i></div>
+      <h2>تم إعداد النظام بنجاح!</h2>
+      <p>سجّل دخول بالبيانات الافتراضية وغيّر كلمة المرور من لوحة التحكم</p>
+      <button class="btn-primary" onclick="window.location.href='login.html'" style="margin: 0 auto; display: inline-flex;">
+        <i class="ri-login-box-line"></i> الانتقال لتسجيل الدخول
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════ FULL PREVIEW MODAL ════════════════ -->
+<div id="pv-mask" onclick="closePreview()">
+  <div id="pv-panel" onclick="event.stopPropagation()">
+    <div class="pv-topbar">
+      <div class="pv-topbar-ttl">
+        <i class="ri-eye-line"></i>
+        <span id="pv-theme-name">معاينة كاملة</span>
+      </div>
+      <button class="pv-close" onclick="closePreview()" title="إغلاق (ESC)">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+
+    <div class="pv-body">
+      <!-- Mock Header -->
+      <div class="pv-mock-header">
+        <div class="pv-mh-logo">
+          <span class="dot"><i class="ri-building-4-line"></i></span>
+          <span id="pv-company">شركتك</span>
+        </div>
+        <div class="pv-mh-nav">
+          <span>الرئيسية</span>
+          <span class="active">العمليات</span>
+          <span>المبيعات</span>
+          <span>المستخدمين</span>
+          <span>الصيانة</span>
+        </div>
+        <div class="pv-mh-actions">
+          <div class="pv-mh-icon"><i class="ri-settings-3-line"></i></div>
+          <div class="pv-mh-icon"><i class="ri-notification-3-line"></i></div>
+          <div class="pv-mh-user">
+            <span class="av">SA</span>
+            <span class="nm">المدير</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content area -->
+      <div class="pv-mock-content">
+        <h1 class="pv-mock-title"><i class="ri-dashboard-3-line"></i> لوحة التحكم</h1>
+        <p class="pv-mock-sub">ملخص أداء النظام لهذا الشهر</p>
+
+        <div class="pv-kpis">
+          <div class="pv-kpi blue">
+            <div class="pv-kpi-icon"><i class="ri-building-4-line"></i></div>
+            <div class="pv-kpi-val">12</div>
+            <div class="pv-kpi-lbl">إجمالي المشاريع</div>
+          </div>
+          <div class="pv-kpi green">
+            <div class="pv-kpi-icon"><i class="ri-home-4-line"></i></div>
+            <div class="pv-kpi-val">86</div>
+            <div class="pv-kpi-lbl">الوحدات المتاحة</div>
+          </div>
+          <div class="pv-kpi orange">
+            <div class="pv-kpi-icon"><i class="ri-calendar-check-line"></i></div>
+            <div class="pv-kpi-val">24</div>
+            <div class="pv-kpi-lbl">حجوزات الشهر</div>
+          </div>
+          <div class="pv-kpi red">
+            <div class="pv-kpi-icon"><i class="ri-customer-service-2-line"></i></div>
+            <div class="pv-kpi-val">7</div>
+            <div class="pv-kpi-lbl">بلاغات مفتوحة</div>
+          </div>
+        </div>
+
+        <div class="pv-btn-row">
+          <button class="pv-btn-pri"><i class="ri-add-line"></i> مشروع جديد</button>
+          <button class="pv-btn-sec"><i class="ri-filter-3-line"></i> تصفية</button>
+          <span class="pv-btn-tag">قيد المراجعة</span>
+        </div>
+
+        <div class="pv-form-card">
+          <h3>نموذج إضافة عميل</h3>
+          <div class="pv-form-grid">
+            <div class="pv-fld">
+              <label>الاسم الرباعي</label>
+              <input type="text" placeholder="مثال: محمد أحمد العتيبي">
+            </div>
+            <div class="pv-fld">
+              <label>رقم الجوال</label>
+              <input type="text" placeholder="05XXXXXXXX">
+            </div>
+            <div class="pv-fld">
+              <label>البريد الإلكتروني</label>
+              <input type="text" placeholder="email@company.com">
+            </div>
+            <div class="pv-fld">
+              <label>المدينة</label>
+              <input type="text" placeholder="الرياض">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pv-footer-info">
+        لو الثيم عجبك اضغط <strong>إغلاق</strong> ثم <strong>حفظ وإطلاق النظام</strong>. لو مش عاجبك، اختار ثيم تاني من القائمة.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ LAUNCH — انتقال الإطلاق بعد التخصيص ════════════ -->
+<div id="launch" aria-hidden="true">
+  <div class="launch-glow"></div>
+  <div class="launch-center">
+    <div class="launch-check">
+      <svg viewBox="0 0 52 52">
+        <circle class="lc-ring" cx="26" cy="26" r="24"/>
+        <path class="lc-tick" d="M15 27 l7 7 l15 -15"/>
+      </svg>
+    </div>
+    <div class="launch-title">تم تخصيص نظامك بنجاح</div>
+    <div class="launch-company" id="launch-company">شركتك</div>
+    <div class="launch-sub">جارٍ تجهيز لوحة التحكم…</div>
+    <div class="launch-bar"><span></span></div>
+  </div>
+</div>
+
+<div class="setup-toast" id="setup-toast">
+  <i class="ri-information-line" id="toast-icon"></i>
+  <span id="toast-msg"></span>
+</div>
+
+  <script src="config/themes.js"></script>
+
+<script>
+  /* Check if already configured */
+  (async function () {
+    try {
+      const r = await fetch('/api/Brand');
+      const cfg = await r.json();
+      /* DEMO: don't auto-skip setup — let visitors see the customization step */
+      if (false && cfg.configured) window.location.href = 'admin/';
+    } catch {}
+  })();
+
+  /* ─── Steps ─── */
+  let currentStep = 1;
+  const TOTAL = 3;
+
+  let isAnimating = false;
+
+  function updateDots(n) {
+    for (let i = 1; i <= TOTAL; i++) {
+      const dot = document.getElementById(`dot-${i}`);
+      dot.classList.remove('active','done');
+      if (i < n)        dot.classList.add('done');
+      else if (i === n) dot.classList.add('active');
+    }
+  }
+
+  function goStep(n) {
+    if (n === currentStep || isAnimating) return;
+    if (currentStep === 1 && n > 1 && !validateStep1()) return;
+
+    const vp   = document.getElementById('steps-viewport');
+    const cur  = document.getElementById(`step-${currentStep}`);
+    const next = document.getElementById(`step-${n}`);
+    if (!vp || !cur || !next) return;
+
+    const forward  = n > currentStep;
+    const enterX   = forward ? 40 : -40;   // الخطوة الجديدة تدخل من هنا
+    const leaveX   = forward ? -40 : 40;    // الخطوة القديمة تخرج للاتجاه المعاكس
+    const DUR      = 480;
+    const EASE     = 'cubic-bezier(.33,1,.68,1)';
+
+    isAnimating = true;
+    updateDots(n);
+
+    /* قِس ارتفاع البداية، ثبّته، وحوّل الخطوتين لوضع متراكب */
+    const startH = vp.offsetHeight;
+    vp.style.height = startH + 'px';
+    vp.classList.add('animating');
+
+    next.classList.add('active');
+    next.style.transition = 'none';
+    next.style.opacity = '0';
+    next.style.transform = `translateX(${enterX}px)`;
+
+    const endH = next.offsetHeight;   // ارتفاع الخطوة الجديدة بعد ما بقت ظاهرة
+    void next.offsetWidth;            // إجبار reflow قبل الأنيميشن
+
+    cur.style.transition  = `opacity ${DUR}ms ${EASE}, transform ${DUR}ms ${EASE}`;
+    next.style.transition = `opacity ${DUR}ms ${EASE}, transform ${DUR}ms ${EASE}`;
+    vp.style.transition   = `height ${DUR}ms ${EASE}`;
+
+    requestAnimationFrame(() => {
+      cur.style.opacity = '0';
+      cur.style.transform = `translateX(${leaveX}px)`;
+      next.style.opacity = '1';
+      next.style.transform = 'translateX(0)';
+      vp.style.height = endH + 'px';
+    });
+
+    setTimeout(() => {
+      cur.classList.remove('active');
+      [cur, next].forEach(el => {
+        el.style.transition = '';
+        el.style.opacity = '';
+        el.style.transform = '';
+      });
+      vp.classList.remove('animating');
+      vp.style.height = '';
+      vp.style.transition = '';
+      currentStep = n;
+      isAnimating = false;
+    }, DUR + 20);
+
+    if (window.scrollY > 4) window.scrollTo(0, 0);
+  }
+
+  function validateStep1() {
+    const name = document.getElementById('company-name').value.trim();
+    if (!name) {
+      showToast('يرجى إدخال اسم الشركة', 'error');
+      document.getElementById('company-name').focus();
+      return false;
+    }
+    return true;
+  }
+
+  /* ─── Logo ─── */
+  let logoFile = null;
+
+  document.getElementById('logo-file').addEventListener('change', function () {
+    const file = this.files[0]; if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { showToast('حجم الملف يتجاوز 5 MB', 'error'); return; }
+    logoFile = file;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('logo-preview-img').src = e.target.result;
+      document.getElementById('upload-area').style.display = 'none';
+      document.getElementById('logo-preview-wrap').classList.add('show');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  const uploadArea = document.getElementById('upload-area');
+  uploadArea.addEventListener('dragover',  e => { e.preventDefault(); uploadArea.classList.add('drag'); });
+  uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag'));
+  uploadArea.addEventListener('drop', e => {
+    e.preventDefault(); uploadArea.classList.remove('drag');
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      document.getElementById('logo-file').files = e.dataTransfer.files;
+      document.getElementById('logo-file').dispatchEvent(new Event('change'));
+    }
+  });
+
+  function removeLogo() {
+    logoFile = null;
+    document.getElementById('logo-file').value = '';
+    document.getElementById('logo-preview-wrap').classList.remove('show');
+    document.getElementById('upload-area').style.display = '';
+  }
+
+  /* ════════════════════════════════════
+     THEME CARDS
+     ════════════════════════════════════ */
+  let selectedTheme = 'midnight';
+  const themeGrid = document.getElementById('theme-grid');
+
+  function renderThemes() {
+    Object.entries(window.THEMES).forEach(([key, theme]) => {
+      const [bgColor, cardColor, accentColor] = theme.previewColors;
+      const card = document.createElement('div');
+      card.className = 'theme-card' + (key === selectedTheme ? ' selected' : '');
+      card.dataset.theme = key;
+      card.innerHTML = `
+        <div class="theme-preview">
+          <div class="theme-preview-bg" style="background:${bgColor}"></div>
+          <div class="theme-preview-card" style="background:${cardColor}"></div>
+          <div class="theme-preview-accent" style="background:${accentColor}"></div>
+        </div>
+        <div class="theme-info">
+          <div class="theme-info-title">
+            ${theme.nameAr}
+            <span class="theme-mode-tag ${theme.isDark ? 'dark' : 'light'}">
+              ${theme.isDark ? 'داكن' : 'فاتح'}
+            </span>
+          </div>
+        </div>
+      `;
+      card.onclick = () => selectTheme(key);
+      themeGrid.appendChild(card);
+    });
+  }
+
+  function selectTheme(key) {
+    selectedTheme = key;
+    document.querySelectorAll('.theme-card').forEach(c =>
+      c.classList.toggle('selected', c.dataset.theme === key));
+    /* Apply the chosen theme live to the setup page */
+    if (window.applyTheme) window.applyTheme(key);
+  }
+
+  renderThemes();
+  selectTheme('midnight');
+
+  /* ════════════════════════════════════
+     FULL PREVIEW MODAL
+     ════════════════════════════════════ */
+  window.openPreview = function () {
+    const theme = window.THEMES[selectedTheme];
+    if (theme) {
+      document.getElementById('pv-theme-name').textContent = 'معاينة: ' + theme.nameAr;
+      const company = document.getElementById('company-name').value.trim() || 'شركتك';
+      document.getElementById('pv-company').textContent = company;
+    }
+    document.getElementById('pv-mask').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closePreview = function () {
+    document.getElementById('pv-mask').classList.remove('show');
+    document.body.style.overflow = '';
+  };
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('pv-mask')?.classList.contains('show')) {
+      closePreview();
+    }
+  });
+
+  /* ════════════════════════════════════
+     SAVE
+     ════════════════════════════════════ */
+  async function saveAll() {
+    if (!validateStep1()) { goStep(1); return; }
+
+    const saveBtn = document.getElementById('save-btn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="ri-loader-4-line" style="animation:spin .7s linear infinite"></i> جاري الحفظ...';
+
+    try {
+      let logoUrl = null;
+
+      if (logoFile) {
+        const fd = new FormData();
+        fd.append('file', logoFile);
+        const lr = await fetch('/api/Brand/logo', { method: 'POST', body: fd });
+        if (!lr.ok) {
+          const err = await lr.json().catch(() => ({}));
+          throw new Error(err.message || 'فشل رفع الشعار');
+        }
+        const ld = await lr.json();
+        logoUrl = ld.logoUrl;
+      }
+
+      const curVal = (document.getElementById('setup-currency')?.value || 'ر.س|en-US').split('|');
+      const waCC     = (document.getElementById('wa-country')?.value || '966').replace(/\D/g, '');
+      const waLocal  = (document.getElementById('company-whatsapp')?.value || '').replace(/\D/g, '').replace(/^0+/, '');
+      const waNumber = waLocal ? (waCC + waLocal) : '';
+      const payload = {
+        companyName: document.getElementById('company-name').value.trim(),
+        themeName:   selectedTheme,
+        logoUrl,
+        currencySymbol: curVal[0] || 'ر.س',
+        currencyLocale: curVal[1] || 'en-US',
+        whatsappNumber: waNumber,
+      };
+
+      const sr = await fetch('/api/Brand', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!sr.ok) {
+        const err = await sr.json().catch(() => ({}));
+        throw new Error(err.message || 'فشل حفظ الإعدادات');
+      }
+
+      /* انتقال إطلاق فخم ← لوحة الدخول (تسليم متصل) */
+      localStorage.setItem('asas_theme', selectedTheme);   // تطبّقه صفحة الدخول فورًا
+      document.getElementById('launch-company').textContent = payload.companyName || 'نظامك';
+      document.getElementById('launch').classList.add('show');
+      setTimeout(() => document.getElementById('launch').classList.add('zoom'), 2700);
+      setTimeout(() => { window.location.href = 'login.html'; }, 3300);
+
+    } catch (e) {
+      showToast(e.message || 'حدث خطأ غير متوقع', 'error');
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = '<i class="ri-rocket-line"></i> حفظ وإطلاق النظام';
+    }
+  }
+
+  /* Toast */
+  let _toastTimer;
+  function showToast(msg, type = 'info') {
+    const el = document.getElementById('setup-toast');
+    const icon = document.getElementById('toast-icon');
+    document.getElementById('toast-msg').textContent = msg;
+    el.className = `setup-toast ${type} show`;
+    icon.className = type === 'error' ? 'ri-error-warning-line' : 'ri-check-line';
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+  }
+</script>
+
+<style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+</body>
+</html>

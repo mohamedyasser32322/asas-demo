@@ -3,88 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>أساس — النسخة التجريبية | اختر الدور</title>
-  <meta name="description" content="نسخة تجريبية تفاعلية لمنصة أساس العقارية — جرّب كل دور من أدوار النظام." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" />
+  <title>أساس — النسخة التجريبية</title>
   <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{--bg:#081830;--card:#0D2142;--card2:#112952;--border:rgba(255,255,255,.09);--accent:#4e8df5;--light:#fff;--muted:#8fa3c0}
-    html,body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--light);min-height:100vh}
-    body{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;
-      background:radial-gradient(700px 480px at 80% -8%,rgba(78,141,245,.18),transparent 60%),
-                 radial-gradient(700px 480px at 10% 6%,rgba(52,199,89,.10),transparent 60%),
-                 linear-gradient(180deg,#081830,#06101f)}
-    .wrap{width:100%;max-width:1000px}
-    .head{text-align:center;margin-bottom:14px}
-    .logo{display:inline-flex;align-items:center;gap:10px;font-size:1.8rem;font-weight:800;letter-spacing:-.5px}
-    .logo .mark{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:1.3rem;color:#04140f;
-      background:linear-gradient(135deg,#4e8df5,#34c7be)}
-    .badge{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:7px 16px;border-radius:999px;
-      background:rgba(78,141,245,.12);border:1px solid rgba(78,141,245,.35);color:#9cc1ff;font-size:.82rem;font-weight:700}
-    .sub{margin:16px auto 0;max-width:560px;color:var(--muted);font-size:1rem;line-height:1.7}
-    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:38px}
-    @media(max-width:720px){.grid{grid-template-columns:1fr}}
-    .card{display:flex;flex-direction:column;gap:14px;padding:26px;border-radius:18px;text-decoration:none;color:inherit;
-      background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--border);
-      transition:transform .25s,border-color .25s,box-shadow .25s;position:relative;overflow:hidden}
-    .card::after{content:'';position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,transparent,var(--c),transparent);opacity:.8}
-    .card:hover{transform:translateY(-6px);border-color:rgba(78,141,245,.5);box-shadow:0 24px 50px rgba(0,0,0,.45)}
-    .card .ico{width:54px;height:54px;border-radius:15px;display:grid;place-items:center;font-size:1.7rem;
-      background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c)}
-    .card h2{font-size:1.25rem;font-weight:800}
-    .card p{color:var(--muted);font-size:.9rem;line-height:1.7;flex:1}
-    .card .enter{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:var(--accent);font-size:.92rem}
-    .card:hover .enter{gap:11px}
-    .foot{margin-top:34px;text-align:center;color:var(--muted);font-size:.85rem;line-height:1.9}
-    .foot a{color:var(--accent);text-decoration:none;font-weight:700}
-    .foot .note{display:inline-flex;align-items:center;gap:6px}
+    body{margin:0;font-family:system-ui,"Segoe UI",sans-serif;background:#081830;color:#eaf0fb;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;padding:24px}
+    .spin{width:40px;height:40px;border:3px solid rgba(255,255,255,.12);border-top-color:#4e8df5;border-radius:50%;animation:s .8s linear infinite}
+    @keyframes s{to{transform:rotate(360deg)}}
+    a{color:#9cc1ff;font-weight:700}
   </style>
+  <script>
+    // Start the demo like the real system: setup (branding) → login → role.
+    setTimeout(function () { location.replace('setup.html'); }, 50);
+  </script>
 </head>
 <body>
-  <div class="wrap">
-    <div class="head">
-      <div class="logo"><span class="mark">أ</span> أساس</div>
-      <div class="badge"><i class="ri-flask-line"></i> نسخة تجريبية تفاعلية — بيانات وهمية</div>
-      <p class="sub">منصة عقارية متعددة الأدوار. اختر دوراً لتجربة لوحة التحكم الخاصة به — كل البيانات تجريبية وتعمل بالكامل بدون تسجيل دخول.</p>
-    </div>
-
-    <div class="grid">
-      <a class="card" href="admin/" style="--c:#4e8df5">
-        <div class="ico"><i class="ri-shield-star-line"></i></div>
-        <h2>مدير النظام</h2>
-        <p>تحكّم كامل: لوحة معلومات بمؤشرات مالية، المشاريع والمباني والوحدات، المشترين، الحجوزات، المستخدمين، والصيانة.</p>
-        <span class="enter">ادخل كـ مدير النظام <i class="ri-arrow-left-line"></i></span>
-      </a>
-
-      <a class="card" href="booking/" style="--c:#34c759">
-        <div class="ico"><i class="ri-calendar-check-line"></i></div>
-        <h2>مدير الحجوزات</h2>
-        <p>إدارة الحجوزات والمبيعات، ملفات المشترين، طلبات البيع، ومتابعة تذاكر الصيانة.</p>
-        <span class="enter">ادخل كـ مدير الحجوزات <i class="ri-arrow-left-line"></i></span>
-      </a>
-
-      <a class="card" href="buyer/" style="--c:#ffcc00">
-        <div class="ico"><i class="ri-user-3-line"></i></div>
-        <h2>المشتري</h2>
-        <p>عرض وحداتي، متابعة مراحل الإنشاء لمشروعي، ومستندات الضمان، وفتح تذاكر الصيانة.</p>
-        <span class="enter">ادخل كـ مشتري <i class="ri-arrow-left-line"></i></span>
-      </a>
-
-      <a class="card" href="engineer/" style="--c:#af52de">
-        <div class="ico"><i class="ri-hammer-line"></i></div>
-        <h2>مهندس الموقع</h2>
-        <p>متابعة وتحديث مراحل الإنشاء للمشاريع المسندة، ورفع صور التقدّم لكل مرحلة.</p>
-        <span class="enter">ادخل كـ مهندس الموقع <i class="ri-arrow-left-line"></i></span>
-      </a>
-    </div>
-
-    <div class="foot">
-      <div class="note"><i class="ri-information-line"></i> هذه نسخة عرض — لا حاجة لتسجيل الدخول، وأي تعديل يرجع لأصله عند تحديث الصفحة.</div>
-      <div style="margin-top:8px">من تطوير <a href="https://mohamedyasser32322.github.io" target="_blank" rel="noopener">محمد ياسر</a></div>
-    </div>
-  </div>
+  <div class="spin"></div>
+  <p>جارٍ فتح أساس… إن لم يتم التحويل <a href="setup.html">اضغط هنا</a></p>
 </body>
 </html>

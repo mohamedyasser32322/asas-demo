@@ -21,15 +21,32 @@
   const safeParse = b => { try { return typeof b === 'string' ? JSON.parse(b) : null; } catch { return null; } };
   const nextId = coll => (DB()[coll] || []).reduce((m, x) => Math.max(m, x.id || 0), 0) + 1;
 
+  function makeToken(role) {
+    const b64u = o => btoa(JSON.stringify(o)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    const exp = Math.floor(Date.now() / 1000) + 3650 * 86400;
+    return b64u({ alg: 'none', typ: 'JWT' }) + '.' + b64u({ sub: '1', role, exp }) + '.demo';
+  }
+  // Demo staff accounts → role
+  const STAFF = {
+    'admin@asas.com':    { role: 'Admin',          firstName: 'مدير',  lastName: 'النظام',  assignedProjectIds: null },
+    'booking@asas.com':  { role: 'BookingManager', firstName: 'ماجد',  lastName: 'الحارثي', assignedProjectIds: null },
+    'engineer@asas.com': { role: 'SiteEngineer',   firstName: 'طارق',  lastName: 'البلوي',  assignedProjectIds: [1, 2, 3, 4] }
+  };
+
   function route(method, seg, body) {
     const res = (seg[0] || '').toLowerCase();
 
     // ── Auth ──
     if (res === 'auth') {
-      if ((seg[1] || '').toLowerCase() === 'refresh')
-        return jsonRes({ token: window.__DEMO_TOKEN });
-      // login/staff | login/buyer
-      return jsonRes({ token: window.__DEMO_TOKEN, role: 'Admin', roleId: 1, fullName: 'مدير النظام' });
+      const sub = (seg[1] || '').toLowerCase();
+      if (sub === 'refresh') return jsonRes({ token: window.__DEMO_TOKEN || makeToken('Admin') });
+      const kind = (seg[2] || '').toLowerCase(); // login/staff | login/buyer
+      if (kind === 'buyer') {
+        return jsonRes({ token: makeToken('Buyer'), id: 1, role: 'Buyer', firstName: 'أحمد', lastName: 'الحربي', email: 'buyer@example.com' });
+      }
+      const email = ((body && body.email) || '').toLowerCase();
+      const u = STAFF[email] || STAFF['admin@asas.com'];
+      return jsonRes({ token: makeToken(u.role), id: 1, role: u.role, email, firstName: u.firstName, lastName: u.lastName, assignedProjectIds: u.assignedProjectIds });
     }
 
     // ── Branding (must report "configured" so brand.js doesn't redirect to /setup) ──

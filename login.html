@@ -1,0 +1,981 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<script src="mock/mock-api.js?v=11"></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>نظام إدارة العقارات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --accent:     #4e8df5;
+    --accent-dark:#3a7ae0;
+    --accent-rgb: 78, 141, 245;
+    --primary:    #0D2142;
+    --primary-deep:#081830;
+    --bg-rgb:     8, 24, 48;
+    --danger:     #ff3b30;
+    --muted:      #8fa3c0;
+    --card:       rgba(var(--bg-rgb), 0.6);
+    --border:     rgba(var(--fg-rgb), 0.1);
+    --bg:         var(--primary-deep);
+    --ease:       all 0.38s cubic-bezier(0.23,1,0.32,1);
+  }
+
+  html, body {
+    width: 100%; min-height: 100%;
+    background: var(--bg);
+    font-family: 'Tajawal', sans-serif;
+    color: #fff; direction: rtl; overflow-x: hidden;
+  }
+  body {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100svh; padding: 20px 16px; position: relative;
+    /* Start invisible — JS will fade in */
+    opacity: 0;
+  }
+
+  /* ══ PAGE TRANSITION OVERLAY ══ */
+  #pageOverlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.42s cubic-bezier(0.4,0,0.2,1);
+  }
+  #pageOverlay.show { opacity: 1; pointer-events: all; }
+
+  /* ══ BG ══ */
+  .bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse 65% 45% at 60% 25%, var(--primary) 0%, var(--bg) 70%);
+  }
+  .blob {
+    position: absolute; filter: blur(80px); opacity: .12; border-radius: 50%;
+    animation: blobFloat 22s ease-in-out infinite;
+  }
+  .b1 { width: clamp(200px,50vw,460px); height: clamp(200px,50vw,460px); background: #fff; top: -20%; right: -15%; animation-delay: 0s; }
+  .b2 { width: clamp(150px,38vw,340px); height: clamp(150px,38vw,340px); background: var(--accent); bottom: -15%; left: -10%; animation-delay: -11s; animation-direction: reverse; }
+  .b3 { width: clamp(160px,40vw,360px); height: clamp(160px,40vw,360px); background: var(--accent); opacity: .09; top: 35%; left: 50%; animation-delay: -6s; }
+
+  @keyframes blobFloat {
+    0%,100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(50px,30px) scale(1.06); }
+    66% { transform: translate(-30px,50px) scale(0.97); }
+  }
+
+  /* ══ BACK BTN ══ */
+  .back-btn {
+    position: fixed; top: 20px; right: 20px;
+    display: flex; align-items: center; gap: 7px;
+    color: var(--muted); text-decoration: none;
+    font-weight: 600; font-size: .85rem;
+    padding: 8px 14px;
+    background: rgba(var(--fg-rgb), .04);
+    border: 1px solid rgba(var(--fg-rgb), .08);
+    border-radius: 11px;
+    transition: var(--ease); z-index: 200;
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  }
+  .back-btn svg { width: 14px; height: 14px; transition: transform .28s ease; flex-shrink: 0; }
+  .back-btn:hover { color:#fff; background:rgba(var(--fg-rgb), .09); border-color:rgba(var(--fg-rgb), .16); }
+  .back-btn:hover svg { transform: translateX(3px); }
+
+  /* ══ WRAPPER ══ */
+  .wrapper { position: relative; z-index: 10; width: 100%; max-width: 430px; padding-top: 8px; }
+
+  /* ══ HEADER ══ */
+  .header { text-align: center; margin-bottom: 22px; animation: slideDown .6s cubic-bezier(0.23,1,0.32,1) .1s both; }
+  @keyframes slideDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+
+  .logo-mark {
+    width: 54px; height: 54px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border-radius: 16px; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px;
+    box-shadow: 0 8px 22px rgba(var(--accent-rgb),.28);
+  }
+  .logo-mark svg { width: 25px; height: 25px; fill: #fff; }
+  .logo { font-size: clamp(1.35rem,5vw,1.65rem); font-weight: 800; letter-spacing:-.5px; margin-bottom: 5px; }
+  .header p { color: var(--muted); font-size: clamp(.82rem,3vw,.9rem); }
+
+  /* ══ TOGGLE ══ */
+  .toggle-wrap {
+    display: flex; background: rgba(var(--fg-rgb), .05);
+    border: 1px solid rgba(var(--fg-rgb), .09);
+    border-radius: 14px; padding: 5px; margin-bottom: 22px;
+    position: relative; gap: 4px;
+    animation: slideDown .6s cubic-bezier(0.23,1,0.32,1) .2s both;
+  }
+  .toggle-slider {
+    position: absolute; top: 5px; bottom: 5px;
+    width: calc(50% - 7px);
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border-radius: 10px;
+    transition: transform 0.32s cubic-bezier(0.34,1.2,0.64,1);
+    box-shadow: 0 4px 14px rgba(var(--accent-rgb),.28);
+    right: 5px;
+  }
+  .toggle-slider.buyer-side { transform: translateX(calc(-100% - 4px)); }
+
+  .toggle-btn {
+    flex: 1; position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 11px 12px; border: none; background: transparent;
+    color: rgba(var(--fg-rgb), .4); font-family: inherit;
+    font-weight: 700; font-size: .88rem; border-radius: 10px;
+    cursor: pointer; transition: color .28s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .toggle-btn.active { color: #fff; }
+  .toggle-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  /* ══ CARD ══ */
+  .card {
+    background: var(--card); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    border-radius: 22px; border: 1px solid var(--border);
+    padding: clamp(22px,6vw,34px);
+    box-shadow: 0 24px 56px rgba(0,0,0,.38), inset 0 1px 0 rgba(var(--fg-rgb), .06);
+    animation: cardPop .65s cubic-bezier(0.34,1.3,0.64,1) .28s both;
+    transition: border-color .35s ease;
+  }
+  @keyframes cardPop { from{opacity:0;transform:scale(.94) translateY(24px)} to{opacity:1;transform:scale(1) translateY(0)} }
+
+  @keyframes shakeX { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 40%{transform:translateX(7px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+  .card.shake { animation: shakeX 0.42s cubic-bezier(0.36,0.07,0.19,0.97); }
+
+  /* ══ PANELS ══ */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadePanel .3s ease; }
+  @keyframes fadePanel { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ══ FORM FIELDS ══ */
+  .g { margin-bottom: 16px; }
+  label.lbl { display: block; color: rgba(var(--fg-rgb), .78); font-weight: 600; font-size: .82rem; margin-bottom: 7px; }
+
+  .input-wrap { position: relative; }
+  .inp {
+    width: 100%; background: rgba(var(--fg-rgb), .05);
+    border: 1.5px solid rgba(var(--fg-rgb), .09);
+    padding: 13px 15px; border-radius: 12px;
+    color: #fff; font-family: inherit; font-size: max(.92rem,16px);
+    transition: var(--ease);
+  }
+  .inp::placeholder { color: rgba(var(--fg-rgb), .2); }
+  .inp:focus {
+    outline:none; background:rgba(var(--fg-rgb), .08);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb),.16);
+    transform: translateY(-1px);
+  }
+  .inp.inp-error { border-color: rgba(255,59,48,.55); background: rgba(255,59,48,.05); }
+  .inp.inp-error:focus { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(255,59,48,.14); }
+
+  /* Autofill styling */
+  .inp:-webkit-autofill,
+  .inp:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 100px #112952 inset !important;
+    -webkit-text-fill-color: #fff !important;
+    caret-color: #fff;
+  }
+
+  /* Toggle password visibility */
+  .pw-toggle {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    color: rgba(var(--fg-rgb), .35); padding: 4px;
+    transition: color .2s;
+  }
+  .pw-toggle:hover { color: rgba(var(--fg-rgb), .7); }
+  .pw-toggle svg { width: 18px; height: 18px; display: block; }
+  .inp.has-toggle { padding-left: 42px; }
+
+  /* ══ FIELD ERROR ══ */
+  .field-error {
+    display: flex; align-items: center; gap: 6px;
+    margin-top: 6px; font-size: .78rem; color: #ff7b72; font-weight: 600;
+    opacity: 0; max-height: 0; overflow: hidden;
+    transition: opacity .28s ease, max-height .28s ease;
+  }
+  .field-error.show { opacity: 1; max-height: 28px; }
+  .field-error svg { width: 12px; height: 12px; flex-shrink: 0; fill: #ff7b72; }
+
+  /* ══ SUBMIT BUTTON ══ */
+  .btn-wrap { margin-top: 20px; position: relative; }
+
+  .btn {
+    width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: #fff; border: none; padding: 0; border-radius: 13px;
+    cursor: pointer; font-family: inherit; font-weight: 800; font-size: .95rem;
+    position: relative; overflow: hidden;
+    box-shadow: 0 8px 22px rgba(var(--accent-rgb),.26);
+    height: 52px;
+    -webkit-tap-highlight-color: transparent;
+    transition: box-shadow .28s ease, transform .2s ease;
+  }
+  .btn:hover:not(:disabled):not(.loading):not(.btn-success):not(.btn-fail) {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(var(--accent-rgb),.38);
+  }
+  .btn:active:not(:disabled) { transform: scale(.985); }
+
+  /* Shimmer sweep */
+  .btn::before {
+    content:''; position:absolute; top:-50%; left:-70%;
+    width:18%; height:200%;
+    background:rgba(var(--fg-rgb), .16);
+    transform:rotate(25deg);
+    transition:.5s; pointer-events:none;
+  }
+  .btn:hover::before { left:115%; }
+
+  /* Button inner states */
+  .btn-label { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; transition:opacity .22s,transform .22s; }
+  .btn-spinner { position:absolute; top:50%; left:50%; width:24px; height:24px; margin:-12px 0 0 -12px; opacity:0; transition:opacity .2s; pointer-events:none; }
+  .btn-spinner svg { width:100%; height:100%; }
+  .sp-track { stroke:rgba(var(--fg-rgb), .18); }
+  .sp-arc   { stroke:#fff; stroke-linecap:round; stroke-dasharray:56; stroke-dashoffset:56; }
+
+  .btn-check { position:absolute; top:50%; left:50%; width:28px; height:28px; margin:-14px 0 0 -14px; opacity:0; transform:scale(.4); transition:opacity .28s,transform .38s cubic-bezier(0.34,1.5,0.64,1); pointer-events:none; }
+  .btn-check svg { width:100%; height:100%; }
+  .ck-circle { fill:none; stroke:#fff; stroke-width:2.2; stroke-dasharray:66; stroke-dashoffset:66; }
+  .ck-tick   { fill:none; stroke:#fff; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:20; stroke-dashoffset:20; }
+
+  .btn-x { position:absolute; top:50%; left:50%; width:26px; height:26px; margin:-13px 0 0 -13px; opacity:0; transform:scale(.4) rotate(-45deg); transition:opacity .28s,transform .38s cubic-bezier(0.34,1.5,0.64,1); pointer-events:none; }
+  .btn-x svg { width:100%; height:100%; }
+  .xc { fill:none; stroke:#fff; stroke-width:2.2; stroke-dasharray:66; stroke-dashoffset:66; }
+  .xl { fill:none; stroke:#fff; stroke-width:2.5; stroke-linecap:round; stroke-dasharray:20; stroke-dashoffset:20; }
+
+  /* Loading state */
+  .btn.loading { pointer-events:none; }
+  .btn.loading .btn-label { opacity:0; transform:scale(.85); }
+  .btn.loading .btn-spinner { opacity:1; }
+  .btn.loading .btn-spinner svg { animation:spin .75s linear infinite; }
+  .btn.loading .sp-arc { animation:arcPulse 1.3s ease-in-out infinite; }
+
+  @keyframes spin { to{transform:rotate(360deg)} }
+  @keyframes arcPulse { 0%{stroke-dashoffset:56} 50%{stroke-dashoffset:14} 100%{stroke-dashoffset:56} }
+
+  /* Success state */
+  .btn.btn-success {
+    background: linear-gradient(135deg,#1e9e3c,#16772d);
+    box-shadow: 0 8px 28px rgba(30,158,60,.42);
+    pointer-events: none;
+  }
+  .btn.btn-success .btn-label  { opacity:0; transform:scale(.85); }
+  .btn.btn-success .btn-spinner { opacity:0; }
+  .btn.btn-success .btn-check  { opacity:1; transform:scale(1); }
+  .btn.btn-success .ck-circle  { animation: drawC .45s ease forwards; }
+  .btn.btn-success .ck-tick    { animation: drawT .32s ease .42s forwards; }
+  @keyframes drawC { to{stroke-dashoffset:0} }
+  @keyframes drawT { to{stroke-dashoffset:0} }
+
+  /* Fail state */
+  .btn.btn-fail {
+    background: linear-gradient(135deg,#c0392b,#962d22);
+    box-shadow: 0 8px 28px rgba(192,57,43,.38);
+    pointer-events: none;
+  }
+  .btn.btn-fail .btn-label  { opacity:0; transform:scale(.85); }
+  .btn.btn-fail .btn-spinner { opacity:0; }
+  .btn.btn-fail .btn-x      { opacity:1; transform:scale(1) rotate(0deg); }
+  .btn.btn-fail .xc         { animation: drawC .45s ease forwards; }
+  .btn.btn-fail .xl         { animation: drawT .32s ease .42s forwards; }
+
+  /* Glow ring */
+  .btn-glow {
+    position:absolute; inset:-4px; border-radius:17px;
+    opacity:0; pointer-events:none;
+    transition:opacity .35s ease;
+    background:transparent;
+    box-shadow: 0 0 0 2px rgba(var(--accent-rgb),.4), 0 0 18px 3px rgba(var(--accent-rgb),.18);
+  }
+  .btn-wrap.glow-success .btn-glow { opacity:1; }
+  .btn-wrap.glow-fail .btn-glow { box-shadow:0 0 0 2px rgba(255,59,48,.4),0 0 18px 3px rgba(255,59,48,.18); opacity:1; }
+
+  /* Ripple */
+  .btn-ripple { position:absolute; border-radius:50%; background:rgba(var(--fg-rgb), .22); transform:scale(0); pointer-events:none; animation:ripple .55s ease-out forwards; }
+  @keyframes ripple { to{transform:scale(4);opacity:0} }
+
+  @media (max-width: 480px) {
+    .back-btn { top:14px; right:14px; padding:7px 11px; font-size:.8rem; }
+    .wrapper { padding-top: 50px; }
+  }
+
+  /* ══════════════════ PREMIUM POLISH ══════════════════ */
+
+  /* خلفية أورورا دوّارة ناعمة */
+  .bg::after {
+    content:''; position:absolute; inset:-35%;
+    background: conic-gradient(from 0deg at 50% 45%,
+      transparent 0deg,
+      rgba(var(--accent-rgb), .07) 70deg,
+      transparent 150deg,
+      rgba(var(--accent-rgb), .045) 250deg,
+      transparent 330deg);
+    animation: auraSpin 32s linear infinite;
+    will-change: transform; pointer-events: none;
+  }
+  @keyframes auraSpin { to { transform: rotate(360deg); } }
+
+  /* شبكة نقطية خفيفة تدّي إحساس عمق */
+  .bg::before {
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background-image: radial-gradient(rgba(var(--fg-rgb), .05) 1px, transparent 1px);
+    background-size: 26px 26px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 35%, #000 0%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 55% at 50% 35%, #000 0%, transparent 75%);
+    opacity: .6;
+  }
+
+  /* اللوجو: عوم خفيف + نبضة توهّج */
+  .logo-mark { position: relative; animation: logoFloat 4.5s ease-in-out infinite; }
+  .logo-mark::after {
+    content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    animation: logoPulse 2.9s ease-out infinite;
+  }
+  @keyframes logoFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+  @keyframes logoPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), .22); }
+    70%  { box-shadow: 0 0 0 13px rgba(var(--accent-rgb), 0); }
+    100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0); }
+  }
+
+  /* الكارت: هالة لون بتتنفّس + حد دوّار + لمعة */
+  .card {
+    position: relative; overflow: hidden;
+    animation: cardPop .65s cubic-bezier(0.34,1.3,0.64,1) .28s both,
+               cardGlow 5.5s ease-in-out 1.2s infinite;
+  }
+  @keyframes cardGlow {
+    0%,100% { box-shadow: 0 24px 56px rgba(0,0,0,.40), inset 0 1px 0 rgba(var(--fg-rgb), .06); }
+    50%     { box-shadow: 0 24px 60px rgba(0,0,0,.44), inset 0 1px 0 rgba(var(--fg-rgb), .08),
+                          0 0 26px -10px rgba(var(--accent-rgb), .22); }
+  }
+
+  /* حد متدرّج دوّار حوالين الكارت (WOW) */
+  @property --bd-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  .card::after {
+    content:''; position:absolute; inset:0; border-radius:22px; padding:1.6px;
+    pointer-events:none; z-index:3;
+    background: conic-gradient(from var(--bd-angle),
+      transparent 0%, rgba(var(--accent-rgb), .42) 12%,
+      transparent 32%, transparent 68%,
+      rgba(var(--accent-rgb), .42) 88%, transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: bdSpin 5s linear infinite;
+  }
+  @keyframes bdSpin { to { --bd-angle: 360deg; } }
+
+  /* لمعة زجاجية بتعدّي على الكارت */
+  .card::before {
+    content:''; position:absolute; top:0; left:-65%; width:45%; height:100%;
+    background: linear-gradient(105deg, transparent, rgba(var(--fg-rgb), .05), transparent);
+    transform: skewX(-18deg); pointer-events:none; z-index:0;
+    animation: cardShine 9s ease-in-out 3s infinite;
+  }
+  @keyframes cardShine { 0%{left:-65%} 24%{left:165%} 100%{left:165%} }
+
+  .card > .panel { position: relative; z-index: 1; }
+
+  /* دخول متدرّج لحقول النموذج النشط */
+  body.intro .panel.active .g,
+  body.intro .panel.active .btn-wrap { animation: fieldUp .55s cubic-bezier(.23,1,.32,1) both; }
+  body.intro .panel.active .g:nth-of-type(1) { animation-delay: .5s; }
+  body.intro .panel.active .g:nth-of-type(2) { animation-delay: .6s; }
+  body.intro .panel.active .btn-wrap         { animation-delay: .7s; }
+  @keyframes fieldUp { from{opacity:0; transform:translateY(13px)} to{opacity:1; transform:translateY(0)} }
+
+  /* ══════════════════ CRANE + CLOUDS ══════════════════ */
+  /* رافعة بناء — خطوط أنيقة في الزاوية */
+  .crane {
+    position: fixed; bottom: 0; left: 2.5vw; z-index: 0; pointer-events: none;
+    width: clamp(120px, 16vw, 190px);
+    color: rgb(var(--accent-rgb));
+    opacity: .16;
+    filter: drop-shadow(0 0 10px rgba(var(--accent-rgb), .25));
+    animation: craneRise 1.1s cubic-bezier(.22,1,.36,1) .2s both;
+  }
+  .crane svg { width: 100%; height: auto; display: block; }
+  @keyframes craneRise { from { opacity: 0; transform: translateY(40px); } to { opacity: .16; transform: translateY(0); } }
+
+  /* الحمولة بتتمايل زي البندول */
+  .crane-hook {
+    transform-box: view-box;
+    transform-origin: 168px 62px;
+    animation: craneSway 5s ease-in-out infinite;
+  }
+  @keyframes craneSway {
+    0%,100% { transform: rotate(-3.5deg); }
+    50%     { transform: rotate(3.5deg); }
+  }
+
+  /* سحاب خفيف بيعدّي */
+  .cloud {
+    position: absolute; pointer-events: none; z-index: 0;
+    border-radius: 100px;
+    background: rgba(var(--fg-rgb), .05);
+    filter: blur(16px);
+  }
+  .cloud.c1 { width: clamp(160px,24vw,260px); height: 56px; top: 20%; animation: cloudDrift1 70s linear infinite; }
+  .cloud.c2 { width: clamp(120px,18vw,190px); height: 44px; top: 38%; animation: cloudDrift2 95s linear infinite; }
+  @keyframes cloudDrift1 { from { transform: translateX(-280px); } to { transform: translateX(102vw); } }
+  @keyframes cloudDrift2 { from { transform: translateX(102vw);  } to { transform: translateX(-240px); } }
+
+  @media (max-width: 600px) {
+    .crane { opacity: .10; width: 110px; }
+  }
+
+  /* ══════════ WELCOME OVERLAY ══════════ */
+  #welcomeOverlay {
+    position: fixed; inset: 0; z-index: 10000;
+    background:
+      radial-gradient(ellipse 80% 55% at 50% 38%, rgba(var(--accent-rgb), .22) 0%, transparent 60%),
+      var(--primary-deep, #081830);
+    display: none; align-items: center; justify-content: center; padding: 24px;
+  }
+  #welcomeOverlay.show { display: flex; }
+  #welcomeOverlay.zoom .wel-inner { animation: welOut .6s cubic-bezier(.5,0,.75,0) forwards; }
+  @keyframes welOut { to { opacity: 0; transform: scale(1.3); filter: blur(6px); } }
+
+  .wel-inner { text-align: center; }
+  .wel-check { width: 96px; height: 96px; margin: 0 auto 22px; }
+  .wel-check svg { width: 100%; height: 100%; }
+  .wel-ring {
+    fill: none; stroke: var(--accent); stroke-width: 3;
+    stroke-dasharray: 157; stroke-dashoffset: 157;
+    animation: welRing .6s cubic-bezier(.22,1,.36,1) .15s forwards;
+  }
+  .wel-tick {
+    fill: none; stroke: var(--accent); stroke-width: 4;
+    stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 44; stroke-dashoffset: 44;
+    animation: welTick .35s cubic-bezier(.22,1,.36,1) .62s forwards;
+  }
+  @keyframes welRing { to { stroke-dashoffset: 0; } }
+  @keyframes welTick { to { stroke-dashoffset: 0; } }
+
+  .wel-title { font-size: clamp(1rem,3vw,1.3rem); font-weight: 700; color: var(--muted);
+    opacity: 0; animation: welUp .5s ease .7s forwards; }
+  .wel-name {
+    margin-top: 4px; font-size: clamp(1.9rem,7vw,3rem); font-weight: 900; line-height: 1.12;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+    opacity: 0; animation: welUp .6s cubic-bezier(.22,1,.36,1) .9s forwards;
+  }
+  .wel-sub { margin-top: 14px; font-size: .92rem; font-weight: 600; color: var(--muted);
+    opacity: 0; animation: welUp .5s ease 1.2s forwards; }
+  .wel-bar { width: min(260px,70vw); height: 4px; margin: 22px auto 0; border-radius: 3px;
+    background: rgba(255,255,255,.08); overflow: hidden; opacity: 0; animation: welUp .4s ease 1.3s forwards; }
+  .wel-bar span { display: block; height: 100%; width: 0; border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+    box-shadow: 0 0 12px rgba(var(--accent-rgb), .7);
+    animation: welBar 1.2s cubic-bezier(.4,0,.2,1) 1.4s forwards; }
+  @keyframes welBar { to { width: 100%; } }
+  @keyframes welUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bg::after, .blob, .logo-mark, .logo-mark::after,
+    .card, .card::after, .card::before,
+    .crane, .crane-hook, .cloud { animation: none !important; }
+    .crane { opacity: .14 !important; transform: none !important; }
+    body.intro .panel.active .g, body.intro .panel.active .btn-wrap { animation: none !important; }
+  }
+</style>
+  <link rel="stylesheet" href="config/light-overrides.css"/>
+  <link rel="stylesheet" href="config/polish.css"/>
+  <script src="config/themes.js"></script>
+  <script src="config/brand.js"></script>
+</head>
+<body class="intro">
+
+<div id="pageOverlay"></div>
+
+<!-- ════════ WELCOME — انتقال نجاح الدخول ════════ -->
+<div id="welcomeOverlay" aria-hidden="true">
+  <div class="wel-inner">
+    <div class="wel-check">
+      <svg viewBox="0 0 56 56">
+        <circle class="wel-ring" cx="28" cy="28" r="25"/>
+        <path class="wel-tick" d="M16 29 l8 8 l16 -17"/>
+      </svg>
+    </div>
+    <div class="wel-title">مرحبًا بك</div>
+    <div class="wel-name" id="wel-name">—</div>
+    <div class="wel-sub">جارٍ تجهيز لوحة التحكم…</div>
+    <div class="wel-bar"><span></span></div>
+  </div>
+</div>
+
+<div class="bg">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+  <!-- سحاب خفيف بيعدّي -->
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+
+  <!-- رافعة بناء (الحمولة بتتمايل بهدوء) -->
+  <div class="crane" aria-hidden="true">
+    <svg viewBox="0 0 220 240" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- العمود -->
+      <path d="M86 240V62 M98 240V62"/>
+      <path d="M86 80l12 18M98 80l-12 18M86 116l12 18M98 116l-12 18M86 152l12 18M98 152l-12 18M86 188l12 18M98 188l-12 18"/>
+      <!-- الكابينة/القمة -->
+      <path d="M82 62h20l-10-18z"/>
+      <!-- الذراع الأمامية -->
+      <path d="M98 62h104"/>
+      <path d="M92 44l110 16"/>
+      <!-- الذراع الخلفية + الثقل الموازن -->
+      <path d="M86 62H34"/>
+      <path d="M92 44L40 60"/>
+      <rect x="30" y="58" width="14" height="14" rx="1"/>
+      <!-- الكابل + الحمولة (متحركة) -->
+      <g class="crane-hook">
+        <path d="M168 62v44"/>
+        <rect x="158" y="106" width="20" height="13" rx="1"/>
+      </g>
+    </svg>
+  </div>
+</div>
+
+<a href="interface.html" class="back-btn" id="backBtn">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="9 18 15 12 9 6"/>
+  </svg>
+  عودة للرئيسية
+</a>
+
+<div class="wrapper">
+  <div class="header">
+    <div class="logo-mark" id="logoMark">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+        <path d="M9 21V12h6v9" fill="rgba(0,0,0,.2)"/>
+      </svg>
+    </div>
+    <div class="logo" id="logoName">نظام إدارة العقارات</div>
+    <p>مرحباً بك، سجّل دخولك للمتابعة</p>
+  </div>
+
+  <!-- Role toggle -->
+  <div class="toggle-wrap">
+    <div class="toggle-slider" id="toggleSlider"></div>
+    <button class="toggle-btn active" id="btnStaff" onclick="switchMode('staff')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+      موظف
+    </button>
+    <button class="toggle-btn" id="btnBuyer" onclick="switchMode('buyer')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      عميل
+    </button>
+  </div>
+
+  <div class="card" id="mainCard">
+
+    <!-- Staff panel -->
+    <div class="panel active" id="staffPanel">
+      <div class="g">
+        <label class="lbl" for="email">البريد الإلكتروني</label>
+        <div class="input-wrap">
+          <input type="email" id="email" class="inp" placeholder="example@domain.com" autocomplete="email" inputmode="email" oninput="clearErr('emailErr','email')"/>
+        </div>
+        <div class="field-error" id="emailErr">
+          <svg viewBox="0 0 20 20"><path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z"/></svg>
+          <span id="emailErrTxt">يرجى إدخال البريد الإلكتروني</span>
+        </div>
+      </div>
+      <div class="g">
+        <label class="lbl" for="password">كلمة المرور</label>
+        <div class="input-wrap">
+          <input type="password" id="password" class="inp has-toggle" placeholder="••••••••" autocomplete="current-password" oninput="clearErr('passwordErr','password')"/>
+          <button class="pw-toggle" type="button" onclick="togglePw('password',this)" aria-label="إظهار/إخفاء كلمة المرور">
+            <svg id="eyeStaff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+        <div class="field-error" id="passwordErr">
+          <svg viewBox="0 0 20 20"><path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z"/></svg>
+          <span id="passwordErrTxt">يرجى إدخال كلمة المرور</span>
+        </div>
+      </div>
+      <div class="btn-wrap" id="bwStaff">
+        <div class="btn-glow"></div>
+        <button class="btn" id="submitStaff" onclick="handleStaffLogin()">
+          <span class="btn-label">تسجيل الدخول</span>
+          <div class="btn-spinner"><svg viewBox="0 0 24 24" fill="none"><circle class="sp-track" cx="12" cy="12" r="9" stroke-width="2.5"/><circle class="sp-arc" cx="12" cy="12" r="9" stroke-width="2.5" transform="rotate(-90 12 12)"/></svg></div>
+          <div class="btn-check"><svg viewBox="0 0 28 28" fill="none"><circle class="ck-circle" cx="14" cy="14" r="10" transform="rotate(-90 14 14)"/><polyline class="ck-tick" points="9,14 12.5,17.5 19,10"/></svg></div>
+          <div class="btn-x"><svg viewBox="0 0 28 28" fill="none"><circle class="xc" cx="14" cy="14" r="10" transform="rotate(-90 14 14)"/><g class="xl"><line x1="10" y1="10" x2="18" y2="18"/><line x1="18" y1="10" x2="10" y2="18"/></g></svg></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Buyer panel -->
+    <div class="panel" id="buyerPanel">
+      <div class="g">
+        <label class="lbl" for="buyerPhone">رقم الجوال</label>
+        <div class="input-wrap">
+          <input type="tel" id="buyerPhone" class="inp" placeholder="05xxxxxxxx" inputmode="numeric" maxlength="15" oninput="cleanPhoneInput(this); clearErr('buyerPhoneErr','buyerPhone')"/>
+        </div>
+        <div class="field-error" id="buyerPhoneErr">
+          <svg viewBox="0 0 20 20"><path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z"/></svg>
+          <span id="buyerPhoneErrTxt">يرجى إدخال رقم الجوال</span>
+        </div>
+      </div>
+      <div class="g">
+        <label class="lbl" for="buyerPassword">كلمة المرور</label>
+        <div class="input-wrap">
+          <input type="password" id="buyerPassword" class="inp has-toggle" placeholder="••••••••" autocomplete="current-password" oninput="clearErr('buyerPasswordErr','buyerPassword')"/>
+          <button class="pw-toggle" type="button" onclick="togglePw('buyerPassword',this)" aria-label="إظهار/إخفاء كلمة المرور">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+        <div class="field-error" id="buyerPasswordErr">
+          <svg viewBox="0 0 20 20"><path d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z"/></svg>
+          <span id="buyerPasswordErrTxt">يرجى إدخال كلمة المرور</span>
+        </div>
+      </div>
+      <div class="btn-wrap" id="bwBuyer">
+        <div class="btn-glow"></div>
+        <button class="btn" id="submitBuyer" onclick="handleBuyerLogin()">
+          <span class="btn-label">تسجيل الدخول</span>
+          <div class="btn-spinner"><svg viewBox="0 0 24 24" fill="none"><circle class="sp-track" cx="12" cy="12" r="9" stroke-width="2.5"/><circle class="sp-arc" cx="12" cy="12" r="9" stroke-width="2.5" transform="rotate(-90 12 12)"/></svg></div>
+          <div class="btn-check"><svg viewBox="0 0 28 28" fill="none"><circle class="ck-circle" cx="14" cy="14" r="10" transform="rotate(-90 14 14)"/><polyline class="ck-tick" points="9,14 12.5,17.5 19,10"/></svg></div>
+          <div class="btn-x"><svg viewBox="0 0 28 28" fill="none"><circle class="xc" cx="14" cy="14" r="10" transform="rotate(-90 14 14)"/><g class="xl"><line x1="10" y1="10" x2="18" y2="18"/><line x1="18" y1="10" x2="10" y2="18"/></g></svg></div>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ DEMO quick login ══ -->
+  <style>
+    .demo-quick{margin-top:18px;padding:16px;border-radius:18px;background:rgba(var(--fg-rgb),.04);border:1px solid rgba(var(--fg-rgb),.1)}
+    .demo-quick-title{font-size:.8rem;font-weight:700;color:rgba(var(--fg-rgb),.6);text-align:center;margin-bottom:12px;display:flex;align-items:center;gap:7px;justify-content:center}
+    .demo-quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+    .demo-role{display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:.86rem;font-weight:700;color:var(--fg,#eaf0fb);background:rgba(var(--fg-rgb),.05);border:1px solid rgba(var(--fg-rgb),.12);transition:.18s;text-align:right}
+    .demo-role:hover{background:rgba(78,141,245,.16);border-color:rgba(78,141,245,.5);transform:translateY(-2px)}
+    .demo-role .ic{font-size:1.15rem;line-height:1}
+  </style>
+  <div class="demo-quick">
+    <div class="demo-quick-title">🧪 دخول سريع للتجربة — اختر دوراً</div>
+    <div class="demo-quick-grid">
+      <button type="button" class="demo-role" onclick="demoLogin('Admin')"><span class="ic">🛡️</span> مدير النظام</button>
+      <button type="button" class="demo-role" onclick="demoLogin('BookingManager')"><span class="ic">📅</span> مدير الحجوزات</button>
+      <button type="button" class="demo-role" onclick="demoLogin('SiteEngineer')"><span class="ic">🏗️</span> مهندس الموقع</button>
+      <button type="button" class="demo-role" onclick="demoLogin('Buyer')"><span class="ic">👤</span> عميل</button>
+    </div>
+  </div>
+  <script>
+    function demoLogin(role){
+      if(role==='Buyer'){
+        if(window.switchMode) switchMode('buyer');
+        document.getElementById('buyerPhone').value='0544607585';
+        document.getElementById('buyerPassword').value='demo1234';
+        setTimeout(()=>window.handleBuyerLogin&&handleBuyerLogin(), 380);
+      } else {
+        if(window.switchMode) switchMode('staff');
+        const emails={Admin:'admin@asas.com',BookingManager:'booking@asas.com',SiteEngineer:'engineer@asas.com'};
+        document.getElementById('email').value=emails[role];
+        document.getElementById('password').value='demo1234';
+        setTimeout(()=>window.handleStaffLogin&&handleStaffLogin(), 380);
+      }
+    }
+  </script>
+</div>
+
+<script>
+  const API_BASE = window.location.origin;
+  let currentMode = 'staff';
+
+  /* ══ SMOOTH NAVIGATION ══ */
+  function navigateTo(url) {
+    const overlay = document.getElementById('pageOverlay');
+    overlay.classList.add('show');
+    setTimeout(() => { window.location.href = url; }, 430);
+  }
+
+  document.getElementById('backBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    navigateTo(this.getAttribute('href'));
+  });
+
+  /* ══ PAGE ENTER ANIMATION ══ */
+  window.addEventListener('DOMContentLoaded', async () => {
+    /* Apply brand logo / name */
+    const brand = await (window.brandReady || Promise.resolve({}));
+    if (brand && brand.configured) {
+      if (brand.logoUrl) {
+        document.getElementById('logoMark').innerHTML =
+          `<img src="${brand.logoUrl}" alt="logo" style="max-height:42px;max-width:130px;object-fit:contain;">`;
+      }
+      if (brand.companyName) {
+        document.getElementById('logoName').textContent = brand.companyName;
+      }
+    }
+
+    /* Fade in body */
+    document.body.style.transition = 'opacity 0.45s cubic-bezier(0.4,0,0.2,1)';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.body.style.opacity = '1';
+      });
+    });
+
+    /* شيل حالة الدخول بعد انتهاء الحركة عشان التبديل ميعملش stagger تاني */
+    setTimeout(() => document.body.classList.remove('intro'), 1600);
+  });
+
+  /* ══ TOGGLE MODE ══ */
+  function switchMode(mode) {
+    currentMode = mode;
+    const slider = document.getElementById('toggleSlider');
+    if (mode === 'buyer') {
+      slider.classList.add('buyer-side');
+      document.getElementById('btnBuyer').classList.add('active');
+      document.getElementById('btnStaff').classList.remove('active');
+      document.getElementById('staffPanel').classList.remove('active');
+      document.getElementById('buyerPanel').classList.add('active');
+    } else {
+      slider.classList.remove('buyer-side');
+      document.getElementById('btnStaff').classList.add('active');
+      document.getElementById('btnBuyer').classList.remove('active');
+      document.getElementById('buyerPanel').classList.remove('active');
+      document.getElementById('staffPanel').classList.add('active');
+    }
+    // Clear all errors on mode switch
+    ['emailErr','email','passwordErr','password','buyerPhoneErr','buyerPhone','buyerPasswordErr','buyerPassword'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('show','inp-error');
+    });
+  }
+
+  /* ══ PASSWORD VISIBILITY TOGGLE ══ */
+  function togglePw(inputId, btn) {
+    const inp = document.getElementById(inputId);
+    const isHidden = inp.type === 'password';
+    inp.type = isHidden ? 'text' : 'password';
+    btn.querySelector('svg').innerHTML = isHidden
+      ? `<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`
+      : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+    inp.focus();
+  }
+
+  /* ══ PHONE INPUT — ONLY DIGITS + ENGLISH ══ */
+  function cleanPhoneInput(el) {
+    // Convert Arabic/Eastern digits to English, remove non-digits
+    let val = el.value
+      .replace(/[٠-٩]/g, d => String.fromCharCode(d.charCodeAt(0) - 1632 + 48))
+      .replace(/[^\d+\-\s]/g, '');
+    el.value = val;
+  }
+
+  /* ══ ERROR HELPERS ══ */
+  function clearErr(errId, inputId) {
+    document.getElementById(errId)?.classList.remove('show');
+    if (inputId) document.getElementById(inputId)?.classList.remove('inp-error');
+  }
+
+  function showErr(errId, inputId, msg) {
+    const errEl = document.getElementById(errId);
+    const txtEl = document.getElementById(errId + 'Txt');
+    if (txtEl && msg) txtEl.textContent = msg;
+    errEl?.classList.add('show');
+    if (inputId) {
+      const inp = document.getElementById(inputId);
+      inp?.classList.add('inp-error');
+      inp?.focus();
+    }
+    shakeCard();
+  }
+
+  function shakeCard() {
+    const card = document.getElementById('mainCard');
+    card.classList.remove('shake');
+    void card.offsetHeight;
+    card.classList.add('shake');
+    setTimeout(() => card.classList.remove('shake'), 450);
+  }
+
+  /* ══ BUTTON STATES ══ */
+  function setBtn(btnId, wrapId, state) {
+    const btn  = document.getElementById(btnId);
+    const wrap = document.getElementById(wrapId);
+    if (!btn) return;
+    btn.classList.remove('loading','btn-success','btn-fail');
+    wrap.classList.remove('glow-success','glow-fail');
+    btn.disabled = false;
+
+    if (state === 'loading') { btn.classList.add('loading'); btn.disabled = true; }
+    else if (state === 'success') {
+      btn.classList.add('btn-success'); btn.disabled = true;
+      setTimeout(() => wrap.classList.add('glow-success'), 180);
+    } else if (state === 'fail') {
+      btn.classList.add('btn-fail'); btn.disabled = true;
+      setTimeout(() => wrap.classList.add('glow-fail'), 180);
+      setTimeout(() => {
+        btn.classList.remove('btn-fail'); btn.disabled = false;
+        wrap.classList.remove('glow-fail');
+      }, 2200);
+    }
+  }
+
+  /* Ripple effect */
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      if (this.disabled) return;
+      const rect = this.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size/2;
+      const y = e.clientY - rect.top  - size/2;
+      const ripple = document.createElement('span');
+      ripple.className = 'btn-ripple';
+      ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+    });
+  });
+
+  /* ══ VALIDATION ══ */
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function validateSaudiPhone(phone) {
+    // Accept 05xxxxxxxx or +9665xxxxxxxx
+    const cleaned = phone.replace(/\s|-/g, '');
+    return /^(05\d{8}|\+9665\d{8}|009665\d{8})$/.test(cleaned);
+  }
+
+  /* ══ REDIRECT ══ */
+  const ROLE_PAGES = {
+    Admin:          'admin/',
+    BookingManager: 'booking/',
+    SiteEngineer:   'engineer/',
+    Buyer:          'buyer/'
+  };
+
+  let _loggedInName = '';
+  function showWelcome() {
+    const nameEl = document.getElementById('wel-name');
+    if (nameEl) nameEl.textContent = _loggedInName || 'بك';
+    document.getElementById('welcomeOverlay')?.classList.add('show');
+  }
+  function redirectByRole(role) {
+    showWelcome();
+    setTimeout(() => document.getElementById('welcomeOverlay')?.classList.add('zoom'), 2300);
+    setTimeout(() => navigateTo(ROLE_PAGES[role] || 'login.html'), 2700);
+  }
+
+  /* ══ STAFF LOGIN ══ */
+  async function handleStaffLogin() {
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    clearErr('emailErr','email');
+    clearErr('passwordErr','password');
+
+    if (!email) { showErr('emailErr','email','يرجى إدخال البريد الإلكتروني'); return; }
+    if (!validateEmail(email)) { showErr('emailErr','email','صيغة البريد الإلكتروني غير صحيحة'); return; }
+    if (!password) { showErr('passwordErr','password','يرجى إدخال كلمة المرور'); return; }
+    if (password.length < 4) { showErr('passwordErr','password','كلمة المرور قصيرة جداً'); return; }
+
+    setBtn('submitStaff','bwStaff','loading');
+
+    try {
+      const res  = await fetch(`${API_BASE}/api/Auth/login/staff`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.token) {
+        localStorage.setItem('authData', JSON.stringify({
+          id: data.id, email: data.email, role: data.role,
+          firstName: data.firstName, lastName: data.lastName, token: data.token,
+          assignedProjectIds: Array.isArray(data.assignedProjectIds) ? data.assignedProjectIds : null
+        }));
+        _loggedInName = data.firstName || '';
+        setBtn('submitStaff','bwStaff','success');
+        redirectByRole(data.role);
+      } else {
+        setBtn('submitStaff','bwStaff','fail');
+        if (res.status === 429) {
+          showErr('passwordErr', null, 'تم تجاوز عدد المحاولات المسموح بها، انتظر دقيقة ثم حاول مجدداً');
+        } else {
+          showErr('passwordErr', 'password', 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
+        }
+      }
+    } catch {
+      setBtn('submitStaff','bwStaff','fail');
+      showErr('passwordErr', null, 'تعذّر الاتصال بالخادم، تحقق من الاتصال بالإنترنت');
+    }
+  }
+
+  /* ══ BUYER LOGIN ══ */
+  async function handleBuyerLogin() {
+    const phone    = document.getElementById('buyerPhone').value.trim();
+    const password = document.getElementById('buyerPassword').value;
+
+    clearErr('buyerPhoneErr','buyerPhone');
+    clearErr('buyerPasswordErr','buyerPassword');
+
+    if (!phone) { showErr('buyerPhoneErr','buyerPhone','يرجى إدخال رقم الجوال'); return; }
+    if (!validateSaudiPhone(phone)) { showErr('buyerPhoneErr','buyerPhone','يرجى إدخال رقم سعودي صحيح (05xxxxxxxx)'); return; }
+    if (!password) { showErr('buyerPasswordErr','buyerPassword','يرجى إدخال كلمة المرور'); return; }
+    if (password.length < 4) { showErr('buyerPasswordErr','buyerPassword','كلمة المرور قصيرة جداً'); return; }
+
+    setBtn('submitBuyer','bwBuyer','loading');
+
+    try {
+      const res  = await fetch(`${API_BASE}/api/Auth/login/buyer`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phoneNumber: phone, password })
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.token) {
+        localStorage.setItem('authData', JSON.stringify({
+          id: data.id, email: data.email, phoneNumber: data.phoneNumber,
+          role: data.role, firstName: data.firstName, lastName: data.lastName, token: data.token
+        }));
+        _loggedInName = data.firstName || '';
+        setBtn('submitBuyer','bwBuyer','success');
+        redirectByRole('Buyer');
+      } else {
+        setBtn('submitBuyer','bwBuyer','fail');
+        if (res.status === 429) {
+          showErr('buyerPasswordErr', null, 'تم تجاوز عدد المحاولات المسموح بها، انتظر دقيقة ثم حاول مجدداً');
+        } else {
+          showErr('buyerPasswordErr', 'buyerPassword', 'رقم الجوال أو كلمة المرور غير صحيحة');
+        }
+      }
+    } catch {
+      setBtn('submitBuyer','bwBuyer','fail');
+      showErr('buyerPasswordErr', null, 'تعذّر الاتصال بالخادم، تحقق من الاتصال بالإنترنت');
+    }
+  }
+
+  /* ══ KEYBOARD SHORTCUTS ══ */
+  document.getElementById('password')?.addEventListener('keydown', e => { if (e.key === 'Enter') handleStaffLogin(); });
+  document.getElementById('buyerPassword')?.addEventListener('keydown', e => { if (e.key === 'Enter') handleBuyerLogin(); });
+  document.getElementById('buyerPhone')?.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('buyerPassword')?.focus(); });
+  document.getElementById('email')?.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('password')?.focus(); });
+</script>
+</body>
+</html>
