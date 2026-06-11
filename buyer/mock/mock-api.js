@@ -74,8 +74,11 @@
       if (method === 'GET' && (seg[1] || '').toLowerCase() === 'building') return jsonRes(DB().warrantyDocs || []);
       return jsonRes(method === 'GET' ? [] : { success: true });
     }
-    if (res === 'buyerdocuments' || res === 'stageimages' || res === 'floors')
+    if (res === 'buyerdocuments' || res === 'stageimages')
       return jsonRes(method === 'GET' ? (DB()[RESOURCE_MAP[res]] || []) : { success: true });
+    // NOTE: 'floors' intentionally falls through to the generic CRUD handler below,
+    // so POST /api/Floors returns the created floor WITH its id (needed by the
+    // project-creation wizard to then create units on that floor).
 
     const bid = window.__DEMO_BUYER_ID;
 
