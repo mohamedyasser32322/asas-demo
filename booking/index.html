@@ -6,8 +6,8 @@
   <title>مدير الحجوزات</title>
   <!-- ══ DEMO MODE ══ -->
   <script>window.__DEMO_ROLE='BookingManager';</script>
-  <script src="mock/seed.js?v=18"></script>
-  <script src="mock/mock-api.js?v=18"></script>
+  <script src="mock/seed.js?v=19"></script>
+  <script src="mock/mock-api.js?v=19"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap"/>
@@ -477,7 +477,7 @@ window.__bmDashboardHTML = `
       {cls:'green', icon:'ri-checkbox-circle-line', num:avail,      lbl:'متاح',             sub:`${total?Math.round(avail/total*100):0}% من الإجمالي`},
       {cls:'yellow',icon:'ri-time-line',            num:resrv,      lbl:'محجوز',            sub:`${total?Math.round(resrv/total*100):0}% من الإجمالي`},
       {cls:'red',   icon:'ri-price-tag-3-line',     num:sold,       lbl:'مباع',             sub:`${total?Math.round(sold/total*100):0}% من الإجمالي`},
-      {cls:'purple',icon:'ri-group-line',           num:BY.length,  lbl:'إجمالي العملاء',  sub:byF.length?`+${byF.length} في الفترة`:''},
+      {cls:'purple',icon:'ri-group-line',           num:BY.length,  lbl:'إجمالي المشترين',  sub:byF.length?`+${byF.length} في الفترة`:''},
     ];
     statsEl.innerHTML=cards.map((c,i)=>`
       <div class="stat-card ${c.cls}" style="animation-delay:${i*50}ms">

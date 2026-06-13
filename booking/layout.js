@@ -1,4 +1,4 @@
-﻿const API_BASE = window.location.origin;
+const API_BASE = window.location.origin;
 
 /* ══════════════════════════════════════
    1. AUTH CHECK
@@ -6,11 +6,11 @@
 function checkAuth() {
   try {
     const d = JSON.parse(localStorage.getItem('authData') || '{}');
-    if (!getToken())                    { window.location.replace('/login');  return false; }
-    if (d.role !== 'BookingManager')    { window.location.replace('/Unauth'); return false; }
+    if (!getToken())                    { window.location.replace('../login.html');  return false; }
+    if (d.role !== 'BookingManager')    { window.location.replace('../login.html'); return false; }
     return true;
   } catch {
-    window.location.replace('/login');
+    window.location.replace('../login.html');
     return false;
   }
 }
@@ -40,7 +40,7 @@ window.apiFetch = async function(endpoint, options = {}) {
   try {
     const response = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
     if (response.status === 401) { handleLogout(); return null; }
-    if (response.status === 403) { window.location.replace('/Unauth'); return null; }
+    if (response.status === 403) { window.location.replace('../login.html'); return null; }
     return response;
   } catch (err) {
     console.error('API Connection Error:', err);
@@ -63,7 +63,7 @@ const LAYOUT_CONFIG = {
         { id: 'sellrequests', label: 'طلبات البيع', icon: 'ri-hand-coin-line'      },
       ]
     },
-    { id: 'buyers',  label: 'العملاء',  icon: 'ri-group-line'             },
+    { id: 'buyers',  label: 'المشترين',  icon: 'ri-group-line'             },
     { id: 'tickets', label: 'البلاغات', icon: 'ri-customer-service-2-line' },
   ]
 };
@@ -80,7 +80,7 @@ function handleLogout() {
   ['authData', 'token', 'authToken', 'rememberMe', 'savedEmail']
     .forEach(k => localStorage.removeItem(k));
   try { sessionStorage.clear(); } catch {}
-  location.href = '/login';
+  location.href = '../login.html';
 }
 window.handleLogout = handleLogout;
 

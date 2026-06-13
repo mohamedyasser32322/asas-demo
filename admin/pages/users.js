@@ -63,7 +63,7 @@
     .us-count-badge {
       display:inline-flex; align-items:center; justify-content:center;
       min-width:22px; height:22px; padding:0 7px;
-      background:rgba(78,141,245,.22); border:1px solid rgba(78,141,245,.4);
+      background:rgba(var(--accent-rgb),.22); border:1px solid rgba(var(--accent-rgb),.4);
       color:var(--accent); border-radius:20px;
       font-size:.72rem; font-weight:800;
     }
@@ -86,7 +86,7 @@
     .us-search-input::placeholder { color:var(--text-muted); }
     .us-search-input:focus {
       outline:none; background:rgba(var(--fg-rgb), .09);
-      border-color:var(--accent); box-shadow:0 0 0 3px rgba(78,141,245,.13);
+      border-color:var(--accent); box-shadow:0 0 0 3px rgba(var(--accent-rgb),.13);
     }
 
     .us-add-btn {
@@ -96,8 +96,8 @@
       cursor:pointer; transition:var(--transition); white-space:nowrap;
     }
     .us-add-btn:hover {
-      background:#3a7de4; transform:translateY(-1px);
-      box-shadow:0 6px 18px rgba(78,141,245,.35);
+      background:var(--accent-dark); transform:translateY(-1px);
+      box-shadow:0 6px 18px rgba(var(--accent-rgb),.35);
     }
 
     /* ────────────────────────────────────
@@ -118,7 +118,7 @@
       color:var(--text-muted); font-family:inherit; font-size:.78rem; font-weight:700;
       cursor:pointer; transition:var(--transition); white-space:nowrap;
     }
-    .us-pill:hover { border-color:var(--accent); color:var(--accent); background:rgba(78,141,245,.08); }
+    .us-pill:hover { border-color:var(--accent); color:var(--accent); background:rgba(var(--accent-rgb),.08); }
     .us-pill.active { background:var(--accent); border-color:var(--accent); color:#fff; }
     .us-pill.active-status { background:var(--success); border-color:var(--success); color:var(--light); }
     .us-pill.inactive-status { background:var(--danger); border-color:var(--danger); color:var(--light); }
@@ -174,7 +174,7 @@
       cursor:default;
     }
     .us-table tbody tr:last-child { border-bottom:none; }
-    .us-table tbody tr:hover { background:rgba(78,141,245,.055); }
+    .us-table tbody tr:hover { background:rgba(var(--accent-rgb),.055); }
     .us-table tbody td { padding:12px 16px; font-size:.87rem; color:var(--light); vertical-align:middle; }
 
     .us-row-enter {
@@ -191,7 +191,7 @@
       letter-spacing:.5px;
     }
     .us-avatar-admin    { background:linear-gradient(135deg,#f5a623,#e8880a); }
-    .us-avatar-booking  { background:linear-gradient(135deg,#4e8df5,#2a6de0); }
+    .us-avatar-booking  { background:linear-gradient(135deg,var(--accent),var(--accent)); }
     .us-avatar-engineer { background:linear-gradient(135deg,#34c759,#1a9c3e); }
     .us-avatar-default  { background:linear-gradient(135deg,#667eea,#764ba2); }
 
@@ -205,7 +205,7 @@
       font-size:.72rem; font-weight:800; white-space:nowrap;
     }
     .us-role-admin    { background:rgba(255,176,0,.12);  color:#ffb300; border:1px solid rgba(255,176,0,.3); }
-    .us-role-booking  { background:rgba(78,141,245,.12); color:#4e8df5; border:1px solid rgba(78,141,245,.3); }
+    .us-role-booking  { background:rgba(var(--accent-rgb),.12); color:var(--accent); border:1px solid rgba(var(--accent-rgb),.3); }
     .us-role-engineer { background:rgba(52,199,89,.12);  color:#34c759; border:1px solid rgba(52,199,89,.3); }
 
     /* status badge */
@@ -225,7 +225,7 @@
       display:flex; align-items:center; justify-content:center;
       transition:var(--transition);
     }
-    .us-action-btn:hover     { background:rgba(78,141,245,.18); color:var(--accent); border-color:var(--accent); }
+    .us-action-btn:hover     { background:rgba(var(--accent-rgb),.18); color:var(--accent); border-color:var(--accent); }
     .us-action-btn.del:hover { background:rgba(255,59,48,.18);  color:var(--danger);  border-color:var(--danger); }
 
     /* ────────────────────────────────────
@@ -247,7 +247,7 @@
     }
     .us-empty-icon {
       width:64px; height:64px; border-radius:50%;
-      background:rgba(78,141,245,.08); border:1px solid rgba(78,141,245,.15);
+      background:rgba(var(--accent-rgb),.08); border:1px solid rgba(var(--accent-rgb),.15);
       display:flex; align-items:center; justify-content:center;
       margin:0 auto 16px;
     }
@@ -312,14 +312,14 @@
     .us-fi::placeholder { color:var(--text-muted); }
     .us-fi:focus, .us-fsel:focus {
       outline:none; background:rgba(var(--fg-rgb), .08);
-      border-color:var(--accent); box-shadow:0 0 0 3px rgba(78,141,245,.13);
+      border-color:var(--accent); box-shadow:0 0 0 3px rgba(var(--accent-rgb),.13);
     }
     .us-fsel {
-      appearance:none; cursor:pointer; color-scheme:dark; color:#dde8ff;
+      appearance:none; cursor:pointer; color-scheme:dark; color:var(--light);
       background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
       background-repeat:no-repeat; background-position:left 12px center; background-size:15px; padding-left:34px;
     }
-    .us-fsel option { background:var(--card-bg); color:#dde8ff; }
+    .us-fsel option { background:var(--card-bg); color:var(--light); }
 
     .us-fr { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 
@@ -361,7 +361,7 @@
     /* change-password section inside edit modal */
     .us-pw-section {
       margin-top:4px; padding:12px 14px; border-radius:10px;
-      border:1px dashed rgba(78,141,245,.3); background:rgba(78,141,245,.04);
+      border:1px dashed rgba(var(--accent-rgb),.3); background:rgba(var(--accent-rgb),.04);
     }
     .us-pw-section-title {
       font-size:.78rem; font-weight:700; color:var(--accent);
@@ -375,9 +375,9 @@
       display:flex; align-items:center; gap:6px; padding:10px 22px; border-radius:10px;
       background:var(--accent); color:#fff; border:none;
       font-family:inherit; font-size:.88rem; font-weight:700;
-      cursor:pointer; transition:var(--transition); box-shadow:0 4px 14px rgba(78,141,245,.3);
+      cursor:pointer; transition:var(--transition); box-shadow:0 4px 14px rgba(var(--accent-rgb),.3);
     }
-    .btn-submit:hover:not(:disabled) { background:#3a7de4; transform:translateY(-1px); }
+    .btn-submit:hover:not(:disabled) { background:var(--accent-dark); transform:translateY(-1px); }
     .btn-submit:disabled { opacity:.55; cursor:not-allowed; transform:none; }
 
     .btn-cancel {
@@ -1123,7 +1123,7 @@
       function openPasswordModal(uid, uname) {
         openPwModal(`
           <div class="us-modal-body">
-            <div style="margin-bottom:16px;padding:10px 14px;border-radius:10px;background:rgba(78,141,245,.08);border:1px solid rgba(78,141,245,.2);font-size:.82rem;color:var(--text-muted)">
+            <div style="margin-bottom:16px;padding:10px 14px;border-radius:10px;background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.2);font-size:.82rem;color:var(--text-muted)">
               <i class="ri-user-line" style="color:var(--accent);margin-left:4px"></i>
               تغيير كلمة مرور: <strong style="color:var(--light)">${esc(uname)}</strong>
             </div>

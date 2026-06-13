@@ -15,7 +15,7 @@ function getToken() {
 function handleLogout() {
   localStorage.removeItem('authData');
   try { sessionStorage.clear(); } catch {}
-  window.location.href = '/login';
+  window.location.href = '../login.html';
 }
 window.handleLogout = handleLogout;
 
@@ -138,6 +138,13 @@ function initLayout() {
 
     <div class="header-left">
       <!-- جرس الإشعارات يُحقن هنا تلقائياً -->
+      <div class="header-user">
+        <span class="user-avatar">${initials}</span>
+        <span class="user-name">${name}</span>
+      </div>
+      <button class="logout-btn" onclick="handleLogout()">
+        <i class="ri-logout-box-r-line"></i><span>خروج</span>
+      </button>
       <button class="hamburger" aria-label="القائمة" onclick="openDrawer()">
         <span></span><span></span><span></span>
       </button>

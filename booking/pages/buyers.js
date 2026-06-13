@@ -36,7 +36,7 @@
       border-radius:9px; color:var(--light); font-family:inherit; font-size:.86rem;
       transition:var(--tr); direction:rtl;
     }
-    .by-search:focus { outline:none; background:rgba(var(--fg-rgb), 0.1); border-color:var(--accent); box-shadow:0 0 0 3px rgba(78,141,245,.12); }
+    .by-search:focus { outline:none; background:rgba(var(--fg-rgb), 0.1); border-color:var(--accent); box-shadow:0 0 0 3px rgba(var(--accent-rgb),.12); }
     .by-search::placeholder { color:var(--text-muted); }
     .by-s-clr { position:absolute; left:9px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); font-size:.88rem; cursor:pointer; opacity:0; pointer-events:none; transition:opacity .18s,color .18s; padding:2px; line-height:1; }
     .by-s-clr.vis { opacity:.6; pointer-events:all; }
@@ -47,7 +47,7 @@
       font-family:inherit; font-size:.84rem; font-weight:700; cursor:pointer; transition:var(--tr); border:none; white-space:nowrap;
     }
     .by-btn-primary { background:var(--accent); color:#fff; }
-    .by-btn-primary:hover { background:#3a7de4; transform:translateY(-1px); box-shadow:0 5px 16px rgba(78,141,245,.3); }
+    .by-btn-primary:hover { background:var(--accent-dark); transform:translateY(-1px); box-shadow:0 5px 16px rgba(var(--accent-rgb),.3); }
     .by-btn-ghost { background:rgba(var(--fg-rgb), .06); color:var(--light); border:1.5px solid var(--border); }
     .by-btn-ghost:hover { background:rgba(var(--fg-rgb), .11); border-color:var(--border-hover); }
     .by-btn-csv { background:rgba(52,199,89,.1); color:var(--success); border:1.5px solid rgba(52,199,89,.25); }
@@ -81,13 +81,13 @@
     .by-pill.on-g    { background:rgba(52,199,89,.12);   border-color:rgba(52,199,89,.5);    color:#34c759; }
     .by-pill.on-a    { background:rgba(255,204,0,.1);    border-color:rgba(255,204,0,.5);    color:#ffcc00; }
     .by-pill.on-r    { background:rgba(255,59,48,.1);    border-color:rgba(255,59,48,.5);    color:#ff3b30; }
-    .by-pill.on-b    { background:rgba(78,141,245,.12);  border-color:rgba(78,141,245,.5);   color:#4e8df5; }
+    .by-pill.on-b    { background:rgba(var(--accent-rgb),.12);  border-color:rgba(var(--accent-rgb),.5);   color:var(--accent); }
     .by-pill.on-t    { background:rgba(45,212,191,.1);   border-color:rgba(45,212,191,.5);   color:#2dd4bf; }
     .by-pill.on-p    { background:rgba(175,82,222,.12);  border-color:rgba(175,82,222,.5);   color:#af52de; }
     .by-pill.on-c    { background:rgba(255,149,0,.1);    border-color:rgba(255,149,0,.5);    color:#ff9500; }
     .by-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
     .dg{background:#34c759} .da{background:#ffcc00} .dr{background:#ff3b30}
-    .db{background:#4e8df5} .dt{background:#2dd4bf} .dp{background:#af52de} .dc{background:#ff9500}
+    .db{background:var(--accent)} .dt{background:#2dd4bf} .dp{background:#af52de} .dc{background:#ff9500}
     .by-fp-foot { display:flex; align-items:center; justify-content:flex-end; padding:8px 16px 12px; }
     .by-clear { font-size:.74rem; color:var(--accent); background:none; border:none; font-family:inherit; cursor:pointer; font-weight:700; }
     .by-clear:hover { text-decoration:underline; }
@@ -113,8 +113,8 @@
     .by-card:hover { border-color:var(--border-hover); background:var(--card-hover); transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.2); }
     .by-card.st-sold { border-right:3px solid rgba(255,59,48,.55); }
     .by-card.st-res  { border-right:3px solid rgba(255,204,0,.5); }
-    .by-card.st-new  { border-right:3px solid rgba(78,141,245,.35); }
-    .by-av { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#4e8df5,#3a7de4); display:flex; align-items:center; justify-content:center; font-size:.8rem; font-weight:800; color:#fff; flex-shrink:0; }
+    .by-card.st-new  { border-right:3px solid rgba(var(--accent-rgb),.35); }
+    .by-av { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-dark)); display:flex; align-items:center; justify-content:center; font-size:.8rem; font-weight:800; color:#fff; flex-shrink:0; }
     .by-info { flex:1; min-width:0; }
     .by-name { font-size:.88rem; font-weight:700; color:var(--light); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .by-meta { font-size:.7rem; color:var(--text-muted); margin-top:2px; display:flex; align-items:center; gap:5px; flex-wrap:wrap; }
@@ -131,7 +131,7 @@
     .by-acts { display:flex; gap:3px; flex-shrink:0; }
     .by-ib { width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); background:rgba(var(--fg-rgb), .03); color:var(--text-muted); cursor:pointer; font-size:.86rem; transition:var(--tr); }
     .by-ib.v:hover  { background:rgba(52,199,89,.15);  color:var(--success); border-color:var(--success); }
-    .by-ib.e:hover  { background:rgba(78,141,245,.15); color:var(--accent);  border-color:var(--accent); }
+    .by-ib.e:hover  { background:rgba(var(--accent-rgb),.15); color:var(--accent);  border-color:var(--accent); }
     .by-ib.d:hover  { background:rgba(255,59,48,.15);  color:var(--danger);  border-color:var(--danger); }
     .by-ib.lk:hover { background:rgba(175,82,222,.15); color:#af52de; border-color:#af52de; }
 
@@ -168,15 +168,15 @@
       color:var(--light); font-family:inherit; font-size:.87rem; transition:var(--tr);
     }
     .fi::placeholder { color:var(--text-muted); }
-    .fi:focus, .fsel:focus { outline:none; background:rgba(var(--fg-rgb), .09); border-color:var(--accent); box-shadow:0 0 0 3px rgba(78,141,245,.12); }
-    .fsel { appearance:none; cursor:pointer; color-scheme:dark; color:#dde8ff; background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238fa3c0' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat:no-repeat; background-position:left 10px center; background-size:15px; padding-left:32px; }
-    .fsel option { background:var(--card-bg); color:#dde8ff; }
+    .fi:focus, .fsel:focus { outline:none; background:rgba(var(--fg-rgb), .09); border-color:var(--accent); box-shadow:0 0 0 3px rgba(var(--accent-rgb),.12); }
+    .fsel { appearance:none; cursor:pointer; color-scheme:dark; color:var(--light); background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238fa3c0' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat:no-repeat; background-position:left 10px center; background-size:15px; padding-left:32px; }
+    .fsel option { background:var(--card-bg); color:var(--light); }
     .fsel:disabled { opacity:.4; cursor:not-allowed; }
     .fr  { display:grid; grid-template-columns:1fr 1fr; gap:11px; }
     .fr3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:11px; }
     @media(max-width:520px){ .fr,.fr3{ grid-template-columns:1fr; } }
     .btn-primary { display:flex; align-items:center; gap:5px; padding:9px 20px; border-radius:9px; background:var(--accent); color:#fff; border:none; font-family:inherit; font-size:.87rem; font-weight:700; cursor:pointer; transition:var(--tr); }
-    .btn-primary:hover:not(:disabled) { background:#3a7de4; transform:translateY(-1px); }
+    .btn-primary:hover:not(:disabled) { background:var(--accent-dark); transform:translateY(-1px); }
     .btn-primary:disabled { opacity:.55; cursor:not-allowed; }
     .btn-ghost { padding:9px 18px; border-radius:9px; background:rgba(var(--fg-rgb), .06); color:var(--light); border:1px solid rgba(var(--fg-rgb), .12); font-family:inherit; font-size:.87rem; font-weight:600; cursor:pointer; transition:var(--tr); }
     .btn-ghost:hover { background:rgba(var(--fg-rgb), .1); }
@@ -187,8 +187,8 @@
     .ferr { font-size:.73rem; color:var(--danger); margin-top:4px; display:none; align-items:center; gap:3px; }
     .ferr.show { display:flex; }
 
-    .bh { display:flex; align-items:center; gap:12px; padding:14px; background:rgba(78,141,245,.07); border-radius:12px; border:1px solid rgba(78,141,245,.18); margin-bottom:14px; }
-    .bh-av { width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,#4e8df5,#3a7de4); display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:800; color:#fff; flex-shrink:0; }
+    .bh { display:flex; align-items:center; gap:12px; padding:14px; background:rgba(var(--accent-rgb),.07); border-radius:12px; border:1px solid rgba(var(--accent-rgb),.18); margin-bottom:14px; }
+    .bh-av { width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-dark)); display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:800; color:#fff; flex-shrink:0; }
     .bh-name { font-size:.98rem; font-weight:800; color:var(--light); }
     .bh-sub  { font-size:.74rem; color:var(--text-muted); margin-top:2px; }
     .dg-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:13px; }
@@ -197,7 +197,7 @@
     .db-label { font-size:.67rem; color:var(--text-muted); margin-bottom:3px; text-transform:uppercase; letter-spacing:.3px; }
     .db-val   { font-size:.9rem; font-weight:700; color:var(--light); }
     @media(max-width:520px){ .dg-grid{ grid-template-columns:1fr; } }
-    .uc { background:rgba(var(--bg-rgb),.5); border:1px solid rgba(78,141,245,.15); border-radius:11px; padding:12px; margin-bottom:8px; }
+    .uc { background:rgba(var(--bg-rgb),.5); border:1px solid rgba(var(--accent-rgb),.15); border-radius:11px; padding:12px; margin-bottom:8px; }
     .uc-h { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; padding-bottom:8px; border-bottom:1px dashed rgba(var(--fg-rgb), .07); }
     .uc-g { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
     .uc-c { background:rgba(var(--fg-rgb), .05); border:1px solid var(--border); padding:7px 10px; border-radius:8px; }
@@ -212,9 +212,9 @@
     .lu-ab.sel-res  { background:rgba(255,204,0,.1);  border-color:var(--warning); color:var(--warning); }
     .lu-ab.sel-sale { background:rgba(255,59,48,.1);  border-color:var(--danger);  color:var(--danger);  }
     .unit-tbadge { font-size:.66rem; font-weight:700; padding:2px 7px; border-radius:7px; }
-    .unit-tbadge.apt  { background:rgba(78,141,245,.12); color:var(--accent); border:1px solid rgba(78,141,245,.25); }
+    .unit-tbadge.apt  { background:rgba(var(--accent-rgb),.12); color:var(--accent); border:1px solid rgba(var(--accent-rgb),.25); }
     .unit-tbadge.roof { background:rgba(175,82,222,.12); color:#af52de; border:1px solid rgba(175,82,222,.25); }
-    .lu-preview { margin-top:8px; background:rgba(78,141,245,.05); border:1px solid rgba(78,141,245,.15); border-radius:9px; padding:11px 13px; display:none; }
+    .lu-preview { margin-top:8px; background:rgba(var(--accent-rgb),.05); border:1px solid rgba(var(--accent-rgb),.15); border-radius:9px; padding:11px 13px; display:none; }
 
     .cfm { text-align:center; padding:6px 0; }
     .cfm-icon { font-size:2.6rem; margin-bottom:12px; }
@@ -247,11 +247,11 @@
     .doc-item-name { font-size:.82rem; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--light); }
     .doc-item-date { font-size:.68rem; color:var(--text-muted); margin-top:1px; }
     .doc-item-acts { display:flex; gap:5px; flex-shrink:0; }
-    .doc-btn-view { font-size:.73rem; color:var(--accent); text-decoration:none; padding:3px 9px; border-radius:7px; border:1px solid rgba(78,141,245,.25); background:rgba(78,141,245,.07); transition:var(--tr); }
-    .doc-btn-view:hover { background:rgba(78,141,245,.15); }
+    .doc-btn-view { font-size:.73rem; color:var(--accent); text-decoration:none; padding:3px 9px; border-radius:7px; border:1px solid rgba(var(--accent-rgb),.25); background:rgba(var(--accent-rgb),.07); transition:var(--tr); }
+    .doc-btn-view:hover { background:rgba(var(--accent-rgb),.15); }
     .doc-btn-del { width:26px; height:26px; border-radius:7px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,59,48,.2); background:rgba(255,59,48,.05); color:rgba(255,59,48,.5); cursor:pointer; font-size:.8rem; transition:var(--tr); }
     .doc-btn-del:hover { background:rgba(255,59,48,.15); color:var(--danger); border-color:var(--danger); }
-    .doc-uploading { display:flex; align-items:center; gap:8px; padding:9px 12px; background:rgba(78,141,245,.05); border:1px solid rgba(78,141,245,.15); border-radius:9px; font-size:.8rem; color:var(--text-muted); margin-bottom:6px; }
+    .doc-uploading { display:flex; align-items:center; gap:8px; padding:9px 12px; background:rgba(var(--accent-rgb),.05); border:1px solid rgba(var(--accent-rgb),.15); border-radius:9px; font-size:.8rem; color:var(--text-muted); margin-bottom:6px; }
 
     /* LINK-AFTER-CREATE PROMPT */
     .lac-wrap { text-align:center; padding:8px 0 4px; }
@@ -342,7 +342,7 @@
                   <span class="by-pill"    data-g="src" data-v="Website"            onclick="window._byToggle(this,'t')">موقع</span>
                   <span class="by-pill"    data-g="src" data-v="PersonalRelations"  onclick="window._byToggle(this,'c')">علاقات شخصية</span>
                   <span class="by-pill"    data-g="src" data-v="ProjectBoard"       onclick="window._byToggle(this,'c')">لوحة</span>
-                  <span class="by-pill"    data-g="src" data-v="PreviousClient"     onclick="window._byToggle(this,'a')">عميل سابق</span>
+                  <span class="by-pill"    data-g="src" data-v="PreviousClient"     onclick="window._byToggle(this,'a')">مشتري سابق</span>
                 </div>
               </div>
               <div class="by-fr">
@@ -492,7 +492,7 @@
         return (window.__translateError && window.__translateError(msg)) || msg || 'حدث خطأ غير متوقع';
       }
 
-      const SRC_L = { BuildingGuard:'حارس عمارة', ProjectOwner:'مالك مشروع', PreviousClient:'عميل سابق', RealEstateCompany:'شركة عقارية', ExternalAgent:'مندوب خارجي', IndividualBroker:'وسيط فرد', ProjectBoard:'لوحة مشروع', PersonalRelations:'علاقات شخصية', BuyoutApp:'تطبيق بيوت', HarajApp:'تطبيق حراج', AqarApp:'تطبيق عقار', Website:'موقع إلكتروني', Snapchat:'سناب شات', Instagram:'انستجرام', TikTok:'تيكتوك' };
+      const SRC_L = { BuildingGuard:'حارس عمارة', ProjectOwner:'مالك مشروع', PreviousClient:'مشتري سابق', RealEstateCompany:'شركة عقارية', ExternalAgent:'مندوب خارجي', IndividualBroker:'وسيط فرد', ProjectBoard:'لوحة مشروع', PersonalRelations:'علاقات شخصية', BuyoutApp:'تطبيق بيوت', HarajApp:'تطبيق حراج', AqarApp:'تطبيق عقار', Website:'موقع إلكتروني', Snapchat:'سناب شات', Instagram:'انستجرام', TikTok:'تيكتوك' };
       const PM_L  = { Cash:'كاش', Bank:'بنك' };
       const MS_L  = { Single:'أعزب', Married:'متزوج' };
       const srcL = s => SRC_L[s]||s||'—';
@@ -588,7 +588,7 @@
         else list.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
         S.filtered = list;
         const cnt = document.getElementById('by-cnt');
-        if (cnt) cnt.innerHTML = `<strong>${list.length}</strong> عميل`;
+        if (cnt) cnt.innerHTML = `<strong>${list.length}</strong> مشتري`;
         renderList();
       }
       let _st = null;
@@ -722,7 +722,7 @@
           S.docs      = arr(docd);
           S.filtered  = [...S.data];
           const cnt = document.getElementById('by-cnt');
-          if (cnt) cnt.innerHTML = `<strong>${S.data.length}</strong> عميل`;
+          if (cnt) cnt.innerHTML = `<strong>${S.data.length}</strong> مشتري`;
           _restoreBuyersState();
           applyF();
         } catch(e) {
@@ -762,7 +762,7 @@
           <div class="by-sec">
             <div class="by-sec-t"><i class="ri-map-pin-2-line"></i>المصدر وطريقة السداد</div>
             <div class="fr">
-              <div class="fg"><label class="fl">مصدر العميل <span class="opt">(اختياري)</span></label>
+              <div class="fg"><label class="fl">مصدر المشتري <span class="opt">(اختياري)</span></label>
                 <select id="${prefix}-src" class="fsel"><option value="">— اختر —</option>${srcOpts(b.clientSource||'')}</select>
               </div>
               <div class="fg"><label class="fl">طريقة السداد <span class="opt">(اختياري)</span></label>
@@ -1075,7 +1075,7 @@
           const t=isRoof(u.type)?'روف':'شقة'; const loc=unitLoc(u);
           prev.style.display='block';
           prev.innerHTML=`<div style="display:flex;align-items:center;gap:10px">
-            <div style="width:36px;height:36px;border-radius:8px;background:rgba(78,141,245,.1);border:1px solid rgba(78,141,245,.2);display:flex;align-items:center;justify-content:center;font-size:.76rem;font-weight:800;color:var(--accent);flex-shrink:0">${u.unitNumber}</div>
+            <div style="width:36px;height:36px;border-radius:8px;background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.2);display:flex;align-items:center;justify-content:center;font-size:.76rem;font-weight:800;color:var(--accent);flex-shrink:0">${u.unitNumber}</div>
             <div style="flex:1">
               <div style="font-weight:800;font-size:.86rem;color:var(--light)">وحدة ${esc(String(u.unitNumber))} <span class="unit-tbadge ${isRoof(u.type)?'roof':'apt'}">${t}</span></div>
               <div style="font-size:.72rem;color:var(--text-muted);margin-top:2px">${esc(loc||'—')}</div>
@@ -1139,7 +1139,7 @@
             <div class="dg-grid">
               <div class="db-block"><div class="db-label">رقم الجوال</div><div class="db-val" style="direction:ltr;text-align:right">${esc(b.phoneNumber||'—')}</div></div>
               <div class="db-block"><div class="db-label">رقم الهوية</div><div class="db-val" style="font-family:monospace">${esc(b.nationalId||'—')}</div></div>
-              <div class="db-block"><div class="db-label">مصدر العميل</div><div class="db-val">${esc(b.clientSourceAr||srcL(b.clientSource)||'—')}</div></div>
+              <div class="db-block"><div class="db-label">مصدر المشتري</div><div class="db-val">${esc(b.clientSourceAr||srcL(b.clientSource)||'—')}</div></div>
               <div class="db-block"><div class="db-label">طريقة السداد</div><div class="db-val">${esc(b.paymentMethodAr||pmL(b.paymentMethod)||'—')}</div></div>
               <div class="db-block"><div class="db-label">الراتب</div><div class="db-val">${b.salary!=null?window.fmtMoney(b.salary):'—'}</div></div>
               <div class="db-block"><div class="db-label">الحالة الاجتماعية</div><div class="db-val">${esc(b.maritalStatusAr||msL(b.maritalStatus)||'—')}${b.familyMembersCount?` (${b.familyMembersCount} أفراد)`:''}</div></div>
@@ -1153,7 +1153,7 @@
             </div>`,
             `<button class="btn-primary" onclick="window._byClose();window._byLink(${b.id},'${esc(b.fullName)}')"><i class="ri-link"></i>ربط وحدة</button>
             <button class="btn-warn" onclick="window._byClose();window._byResetPw(${b.id},'${esc(b.fullName)}')"><i class="ri-lock-password-line"></i>تغيير كلمة المرور</button>
-            <button class="btn-ghost" style="background:rgba(78,141,245,.1);color:var(--accent);border-color:rgba(78,141,245,.25)" onclick="window._byClose();window._byEdit(${b.id})"><i class="ri-edit-line"></i>تعديل</button>
+            <button class="btn-ghost" style="background:rgba(var(--accent-rgb),.1);color:var(--accent);border-color:rgba(var(--accent-rgb),.25)" onclick="window._byClose();window._byEdit(${b.id})"><i class="ri-edit-line"></i>تعديل</button>
             <button class="btn-ghost" onclick="window._byClose()">إغلاق</button>`
           );
         } catch { toast('فشل تحميل بيانات المشتري','err'); }
@@ -1163,7 +1163,7 @@
       window._byResetPw = function(id, name) {
         openModal('<i class="ri-lock-password-line"></i> تغيير كلمة المرور',
           `<div class="rp-wrap">
-            <div class="rp-note"><i class="ri-information-line"></i>تغيير كلمة مرور العميل: <strong>${esc(name)}</strong></div>
+            <div class="rp-note"><i class="ri-information-line"></i>تغيير كلمة مرور المشتري: <strong>${esc(name)}</strong></div>
             <div class="fg"><label class="fl">كلمة المرور الجديدة *</label>
               <input id="rp-pw" class="fi" type="password" placeholder="6 أحرف على الأقل">
               <div class="ferr" id="err-rp-pw"><i class="ri-error-warning-line"></i><span></span></div>
@@ -1210,7 +1210,7 @@
       /* CSV */
       window._byCSV = function() {
         if (!S.filtered.length) { toast('لا توجد بيانات للتصدير','err'); return; }
-        const headers = ['الاسم','رقم الجوال','رقم الهوية','مصدر العميل','طريقة السداد','جهة العمل','المسمى الوظيفي','الراتب','الحالة الاجتماعية','أفراد الأسرة','الحالة','عدد الوحدات','وحدات مباعة','وحدات محجوزة','لديه وثيقة','تاريخ التسجيل'];
+        const headers = ['الاسم','رقم الجوال','رقم الهوية','مصدر المشتري','طريقة السداد','جهة العمل','المسمى الوظيفي','الراتب','الحالة الاجتماعية','أفراد الأسرة','الحالة','عدد الوحدات','وحدات مباعة','وحدات محجوزة','لديه وثيقة','تاريخ التسجيل'];
         const rows = S.filtered.map(b=>{
           const u=buyerUnits(b.id), sold=u.filter(x=>toSt(x.status)===3).length, res=u.filter(x=>toSt(x.status)===2).length;
           const st={sold:'مباع',reserved:'محجوز',new:'جديد'}[buyerSt(b.id)]||'';

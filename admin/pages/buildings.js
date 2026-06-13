@@ -44,10 +44,10 @@
   const _css = `
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --bg:#0d1421;--surface:#131c2e;--surface2:#0f1827;--surface3:#192640;
+      --bg:var(--primary-deep);--surface:var(--card-bg);--surface2:var(--primary-deep);--surface3:var(--card-hover);
       --border:rgba(var(--fg-rgb), .07);--border-h:rgba(var(--fg-rgb), .14);
-      --text:#dde8ff;--text2:#a0b8d8;--muted:#4a6580;--muted2:#2e4560;
-      --accent:#4e8df5;--accent-dim:rgba(78,141,245,.12);--accent-bd:rgba(78,141,245,.28);
+      --text:var(--light);--text2:var(--text-muted);--muted:var(--text-muted);--muted2:var(--text-muted);
+      --accent:#4e8df5;--accent-dim:rgba(var(--accent-rgb),.12);--accent-bd:rgba(var(--accent-rgb),.28);
       --success:#34c759;--success-dim:rgba(52,199,89,.11);--success-bd:rgba(52,199,89,.28);
       --warning:#ffcc00;--warning-dim:rgba(255,204,0,.11);--warning-bd:rgba(255,204,0,.3);
       --danger:#ff3b30;--danger-dim:rgba(255,59,48,.09);--danger-bd:rgba(255,59,48,.22);
@@ -82,7 +82,7 @@
     .cs-proj-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:var(--tr);overflow:hidden;animation:cs-fadeUp .45s ease both;display:flex;flex-direction:column}
     .cs-proj-card:hover{border-color:var(--accent-bd);transform:translateY(-3px);box-shadow:0 10px 32px rgba(0,0,0,.3)}
     .cs-proj-top{padding:16px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-    .cs-proj-letter{width:44px;height:44px;border-radius:11px;flex-shrink:0;background:linear-gradient(135deg,var(--accent-dim),rgba(78,141,245,.05));border:1px solid var(--accent-bd);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:var(--accent)}
+    .cs-proj-letter{width:44px;height:44px;border-radius:11px;flex-shrink:0;background:linear-gradient(135deg,var(--accent-dim),rgba(var(--accent-rgb),.05));border:1px solid var(--accent-bd);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:var(--accent)}
     .cs-proj-name{font-size:.96rem;font-weight:800;color:var(--text);line-height:1.3}
     .cs-proj-code{font-size:.72rem;color:var(--muted);margin-top:3px}
     .cs-proj-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:.67rem;font-weight:700;flex-shrink:0}
@@ -94,7 +94,7 @@
     .cs-proj-prog-fill{height:100%;border-radius:6px;animation:cs-barGrow .9s ease both}
     .cs-proj-prog-fill.wip{background:linear-gradient(90deg,var(--warning),rgba(255,204,0,.6))}
     .cs-proj-prog-fill.done{background:linear-gradient(90deg,var(--success),rgba(52,199,89,.6))}
-    .cs-proj-prog-fill.acc{background:linear-gradient(90deg,var(--accent),rgba(78,141,245,.6))}
+    .cs-proj-prog-fill.acc{background:linear-gradient(90deg,var(--accent),rgba(var(--accent-rgb),.6))}
     .cs-proj-foot{padding:10px 18px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 
     /* Stages View */
@@ -113,9 +113,9 @@
     .cs-banner-pct{font-size:1.6rem;font-weight:900;color:var(--accent);line-height:1}
     .cs-banner-pct-lbl{font-size:.65rem;color:var(--muted);font-weight:600;margin-top:2px}
     .cs-banner-prog-track{height:8px;background:rgba(var(--fg-rgb), .05);border-radius:8px;overflow:hidden}
-    .cs-banner-prog-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#2563eb,#60a5fa,#34d399);animation:cs-barGrow 1s ease both}
+    .cs-banner-prog-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#2563eb,var(--accent),#34d399);animation:cs-barGrow 1s ease both}
     .cs-banner-prog-lbl{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-top:5px}
-    .cs-eng-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:.7rem;font-weight:700;background:rgba(78,141,245,.1);color:var(--accent);border:1px solid var(--accent-bd)}
+    .cs-eng-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:.7rem;font-weight:700;background:rgba(var(--accent-rgb),.1);color:var(--accent);border:1px solid var(--accent-bd)}
 
     /* Stage Cards — Timeline style */
     .cs-timeline{display:flex;flex-direction:column;gap:0;position:relative}
@@ -150,7 +150,7 @@
     .cs-stage-card.open .cs-stage-body{display:block}
 
     /* Checklist */
-    .cs-checklist{margin:12px 0;background:rgba(78,141,245,.05);border:1px solid var(--accent-bd);border-radius:var(--r-sm);padding:12px 14px}
+    .cs-checklist{margin:12px 0;background:rgba(var(--accent-rgb),.05);border:1px solid var(--accent-bd);border-radius:var(--r-sm);padding:12px 14px}
     .cs-check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:5px;margin-top:8px}
     .cs-check-item{display:flex;align-items:center;gap:6px;font-size:.74rem;color:var(--text2)}
     .cs-check-item.chk{color:var(--success)}
@@ -179,7 +179,7 @@
     .cs-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-sm);border:none;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;transition:var(--tr);white-space:nowrap}
     .cs-btn:disabled{opacity:.4;cursor:not-allowed}
     .cs-btn-p{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-bd)}
-    .cs-btn-p:hover:not(:disabled){background:rgba(78,141,245,.22)}
+    .cs-btn-p:hover:not(:disabled){background:rgba(var(--accent-rgb),.22)}
     .cs-btn-s{background:var(--success-dim);color:var(--success);border:1px solid var(--success-bd)}
     .cs-btn-s:hover:not(:disabled){background:rgba(52,199,89,.22)}
     .cs-btn-g{background:rgba(var(--fg-rgb), .04);color:var(--text2);border:1px solid var(--border-h)}
@@ -193,10 +193,10 @@
     /* Modal */
     #cs-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(10px);padding:12px}
     #cs-modal.open{display:flex;animation:cs-fadeIn .18s ease}
-    .cs-mbox{background:#0f1a2e;border:1px solid var(--border-h);border-radius:18px;max-width:660px;width:100%;max-height:92vh;overflow-y:auto;animation:cs-popIn .22s ease;box-shadow:0 36px 80px rgba(0,0,0,.7)}
+    .cs-mbox{background:var(--card-bg);border:1px solid var(--border-h);border-radius:18px;max-width:660px;width:100%;max-height:92vh;overflow-y:auto;animation:cs-popIn .22s ease;box-shadow:0 36px 80px rgba(0,0,0,.7)}
     .cs-mbox::-webkit-scrollbar{width:5px}
     .cs-mbox::-webkit-scrollbar-thumb{background:rgba(var(--fg-rgb), .08);border-radius:4px}
-    .cs-mhead{padding:15px 18px 13px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:10px;position:sticky;top:0;background:#0f1a2e;z-index:2;border-radius:18px 18px 0 0}
+    .cs-mhead{padding:15px 18px 13px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:10px;position:sticky;top:0;background:var(--card-bg);z-index:2;border-radius:18px 18px 0 0}
     .cs-mhead-title{font-size:.95rem;font-weight:800;color:var(--text)}
     .cs-mhead-sub{font-size:.72rem;color:var(--muted);margin-top:3px}
     .cs-mcls{background:rgba(var(--fg-rgb), .05);border:1px solid var(--border);color:var(--muted);cursor:pointer;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:.95rem;transition:var(--tr);flex-shrink:0}

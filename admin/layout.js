@@ -1,4 +1,4 @@
-﻿const API_BASE = window.location.origin;
+const API_BASE = window.location.origin;
 
 /* ══════════════════════════════════════
    1. AUTH CHECK
@@ -9,11 +9,11 @@ function checkAuth() {
     const token = d.token || d.authToken
                || localStorage.getItem('token')
                || localStorage.getItem('authToken');
-    if (!token)          { window.location.replace('/login');  return false; }
-    if (d.role !== 'Admin') { window.location.replace('/Unauth'); return false; }
+    if (!token)          { window.location.replace('../login.html');  return false; }
+    if (d.role !== 'Admin') { window.location.replace('../login.html'); return false; }
     return true;
   } catch {
-    window.location.replace('/login');
+    window.location.replace('../login.html');
     return false;
   }
 }
@@ -325,7 +325,7 @@ const LAYOUT_CONFIG = {
       id: 'grp-users', label: 'المستخدمين', icon: 'ri-group-line',
       children: [
         { id: 'users',  label: 'الفريق',  icon: 'ri-user-settings-line' },
-        { id: 'buyers', label: 'العملاء', icon: 'ri-group-line'         },
+        { id: 'buyers', label: 'المشترين', icon: 'ri-group-line'         },
       ]
     },
     {
@@ -384,7 +384,7 @@ function handleLogout() {
   try { sessionStorage.clear(); } catch {}   // امسح آخر صفحة حتى يبدأ من الداشبورد دايماً
   document.body.style.transition = 'opacity 0.3s ease';
   document.body.style.opacity = '0';
-  setTimeout(() => { location.href = '/login'; }, 300);
+  setTimeout(() => { location.href = '../login.html'; }, 300);
 }
 
 /* ══════════════════════════════════════

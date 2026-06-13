@@ -30,10 +30,10 @@
     #res-page ::-webkit-scrollbar { width:5px; height:5px; }
     #res-page ::-webkit-scrollbar-track { background:var(--primary-deep); }
     #res-page ::-webkit-scrollbar-thumb { background:rgba(var(--fg-rgb), 0.12); border-radius:6px; }
-    #res-page select option { background-color:#0d2040; color:#dde8ff; }
-    #res-page select { color-scheme:dark; transition:all 0.25s ease; color:#dde8ff; }
+    #res-page select option { background-color:var(--card-bg); color:var(--light); }
+    #res-page select { color-scheme:dark; transition:all 0.25s ease; color:var(--light); }
     #res-page select:disabled { opacity:0.5; cursor:not-allowed; }
-    .res-custom-select-wrap select { transition:border-color 0.25s, background 0.25s; color:#dde8ff; }
+    .res-custom-select-wrap select { transition:border-color 0.25s, background 0.25s; color:var(--light); }
     #res-page select:focus { animation:res-dropdown-open 0.18s cubic-bezier(0.4,0,0.2,1); }
     @keyframes res-dropdown-open { from{opacity:0.7;transform:scaleY(0.97);}to{opacity:1;transform:scaleY(1);} }
 
@@ -51,15 +51,15 @@
     .res-csv-btn { display:flex; align-items:center; gap:7px; padding:9px 18px; border-radius:10px; background:rgba(52,199,89,0.12); border:1px solid rgba(52,199,89,0.3); color:var(--success); font-family:inherit; font-size:0.85rem; font-weight:700; cursor:pointer; transition:var(--transition); white-space:nowrap; }
     .res-csv-btn:hover { background:rgba(52,199,89,0.22); transform:translateY(-1px); box-shadow:0 6px 20px rgba(52,199,89,0.2); }
     .res-add-btn { display:flex; align-items:center; gap:7px; padding:9px 20px; border-radius:10px; background:var(--accent); color:#fff; border:none; font-family:inherit; font-size:0.88rem; font-weight:700; cursor:pointer; transition:var(--transition); white-space:nowrap; }
-    .res-add-btn:hover { background:#3a7de4; transform:translateY(-2px); box-shadow:0 8px 24px rgba(78,141,245,0.35); }
+    .res-add-btn:hover { background:var(--accent-dark); transform:translateY(-2px); box-shadow:0 8px 24px rgba(var(--accent-rgb),0.35); }
 
     .res-dropdown-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px; animation:res-fadeUp 0.35s 0.05s ease both; }
     .res-custom-select-wrap { position:relative; background:var(--card-bg); border:1px solid var(--border); border-radius:12px; transition:var(--transition); }
     .res-custom-select-wrap:hover { border-color:var(--border-hover); }
     .res-custom-select-wrap .res-select-icon { position:absolute; right:16px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:1.1rem; pointer-events:none; z-index:1; }
     .res-custom-select-wrap .res-chevron { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:1rem; pointer-events:none; }
-    .res-custom-select-wrap select { width:100%; padding:13px 44px 13px 38px; background:transparent; border:none; outline:none; color:#dde8ff; font-family:'Tajawal',sans-serif; font-size:0.92rem; font-weight:600; cursor:pointer; appearance:none; }
-    .res-custom-select-wrap:focus-within { border-color:var(--accent); box-shadow:0 0 0 3px rgba(78,141,245,0.1); }
+    .res-custom-select-wrap select { width:100%; padding:13px 44px 13px 38px; background:transparent; border:none; outline:none; color:var(--light); font-family:'Tajawal',sans-serif; font-size:0.92rem; font-weight:600; cursor:pointer; appearance:none; }
+    .res-custom-select-wrap:focus-within { border-color:var(--accent); box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.1); }
 
     .res-filter-search-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px; animation:res-fadeUp 0.35s 0.1s ease both; }
     .res-filter-pills { display:flex; gap:7px; flex-wrap:wrap; }
@@ -71,7 +71,7 @@
 
     .res-search-wrap { position:relative; display:flex; align-items:center; flex:1; min-width:200px; max-width:380px; margin-right:auto; }
     .res-search-input { background:rgba(var(--fg-rgb), 0.06); border:1.5px solid var(--border); color:var(--light); font-family:inherit; font-size:0.9rem; padding:10px 14px 10px 40px; border-radius:12px; width:100%; transition:var(--transition); }
-    .res-search-input:focus { outline:none; background:rgba(var(--fg-rgb), 0.1); border-color:var(--accent); box-shadow:0 0 0 3px rgba(78,141,245,0.12); }
+    .res-search-input:focus { outline:none; background:rgba(var(--fg-rgb), 0.1); border-color:var(--accent); box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.12); }
     .res-search-input::placeholder { color:var(--text-muted); }
     .res-search-icon { position:absolute; left:13px; color:var(--text-muted); font-size:1.05rem; pointer-events:none; }
 
@@ -95,35 +95,35 @@
     .badge-sold::before { background:var(--danger); }
 
     .res-buyer-cell { display:flex; align-items:center; gap:9px; }
-    .res-buyer-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#4e8df5,#2a6dd4); display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:800; color:#fff; flex-shrink:0; }
+    .res-buyer-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-dark)); display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:800; color:#fff; flex-shrink:0; }
     .res-buyer-name { font-weight:600; font-size:0.87rem; color:var(--light); }
     .res-buyer-empty { color:var(--text-muted); font-size:0.85rem; }
 
-    /* ── زرار عرض تفاصيل العميل (في الجدول وفي المودال) ── */
+    /* ── زرار عرض تفاصيل المشتري (في الجدول وفي المودال) ── */
     .res-buyer-detail-btn {
       display:inline-flex; align-items:center; gap:4px;
       padding:3px 9px; border-radius:7px; font-size:0.72rem; font-weight:700;
-      background:rgba(78,141,245,0.12); color:var(--accent);
-      border:1px solid rgba(78,141,245,0.25);
+      background:rgba(var(--accent-rgb),0.12); color:var(--accent);
+      border:1px solid rgba(var(--accent-rgb),0.25);
       cursor:pointer; transition:var(--transition); white-space:nowrap;
       font-family:inherit;
     }
     .res-buyer-detail-btn:hover {
-      background:rgba(78,141,245,0.25); border-color:var(--accent);
+      background:rgba(var(--accent-rgb),0.25); border-color:var(--accent);
       transform:translateY(-1px);
     }
     .res-buyer-detail-btn i { font-size:0.8rem; }
 
-    /* ── بطاقة العميل داخل مودال التفاصيل ── */
+    /* ── بطاقة المشتري داخل مودال التفاصيل ── */
     .res-buyer-card {
       display:flex; align-items:center; gap:14px;
-      padding:14px 16px; background:rgba(78,141,245,0.07);
-      border:1px solid rgba(78,141,245,0.18); border-radius:12px;
+      padding:14px 16px; background:rgba(var(--accent-rgb),0.07);
+      border:1px solid rgba(var(--accent-rgb),0.18); border-radius:12px;
       margin-bottom:4px;
     }
     .res-buyer-card-avatar {
       width:44px; height:44px; border-radius:50%;
-      background:linear-gradient(135deg,#4e8df5,#3a7de4);
+      background:linear-gradient(135deg,var(--accent),var(--accent-dark));
       display:flex; align-items:center; justify-content:center;
       font-size:1rem; font-weight:800; color:var(--light); flex-shrink:0;
     }
@@ -139,8 +139,8 @@
     .res-action-btn:hover { transform:translateY(-1px); }
     .res-action-btn[data-tip]:hover::after { content:attr(data-tip); position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:rgba(var(--bg-rgb),0.97); color:var(--light); font-size:0.7rem; font-weight:600; padding:4px 8px; border-radius:6px; white-space:nowrap; pointer-events:none; border:1px solid rgba(var(--fg-rgb), 0.1); z-index:99; font-family:'Tajawal',sans-serif; }
     .res-action-btn.view:hover { background:rgba(var(--fg-rgb), 0.08); border-color:rgba(var(--fg-rgb), 0.22); color:var(--light); }
-    .res-action-btn.edit { border-color:rgba(78,141,245,0.25); color:var(--accent); }
-    .res-action-btn.edit:hover { background:rgba(78,141,245,0.18); border-color:var(--accent); box-shadow:0 4px 12px rgba(78,141,245,0.2); }
+    .res-action-btn.edit { border-color:rgba(var(--accent-rgb),0.25); color:var(--accent); }
+    .res-action-btn.edit:hover { background:rgba(var(--accent-rgb),0.18); border-color:var(--accent); box-shadow:0 4px 12px rgba(var(--accent-rgb),0.2); }
     .res-action-btn.del { border-color:rgba(255,59,48,0.2); color:var(--danger); }
     .res-action-btn.del:hover { background:rgba(255,59,48,0.15); border-color:var(--danger); box-shadow:0 4px 12px rgba(255,59,48,0.18); }
 
@@ -169,7 +169,7 @@
       backdrop-filter:blur(3px);
     }
     .res-modal-content { background:var(--card-bg); backdrop-filter:blur(24px); border:1px solid rgba(var(--fg-rgb), 0.1); border-radius:20px; max-width:560px; width:93%; max-height:88vh; overflow-y:auto; box-shadow:0 30px 60px rgba(0,0,0,0.5),inset 0 1px 0 rgba(var(--fg-rgb), 0.07); animation:res-slideDown 0.22s ease; }
-    .res-buyer-modal-content { background:var(--card-bg); border:1px solid rgba(78,141,245,0.25); border-radius:20px; max-width:480px; width:93%; max-height:85vh; overflow-y:auto; box-shadow:0 30px 60px rgba(0,0,0,0.6); animation:res-slideDown 0.22s ease; }
+    .res-buyer-modal-content { background:var(--card-bg); border:1px solid rgba(var(--accent-rgb),0.25); border-radius:20px; max-width:480px; width:93%; max-height:85vh; overflow-y:auto; box-shadow:0 30px 60px rgba(0,0,0,0.6); animation:res-slideDown 0.22s ease; }
     .res-modal-header { padding:22px 26px 16px; border-bottom:1px solid rgba(var(--fg-rgb), 0.08); display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; background:var(--card-bg); z-index:2; }
     #res-modal-title, #res-buyer-modal-title { font-size:1.1rem; font-weight:800; color:var(--light); }
     .res-modal-close { background:none; border:none; color:var(--text-muted); font-size:1.35rem; cursor:pointer; transition:all 0.25s; }
@@ -181,17 +181,17 @@
     .res-form-label { display:block; font-size:0.84rem; font-weight:700; margin-bottom:6px; color:var(--light); }
     .res-form-input,.res-form-select { width:100%; padding:10px 13px; border-radius:10px; background:var(--card-bg); border:1.5px solid rgba(var(--fg-rgb), 0.12); color:var(--light); font-family:inherit; font-size:0.89rem; transition:all 0.25s ease; }
     .res-form-select { appearance:none; background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238fa3c0' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat:no-repeat; background-position:left 10px center; background-size:16px; padding-left:34px; cursor:pointer; color-scheme:dark; }
-    .res-form-select option { background-color:#0a1e42; color:#dde8ff; }
-    .res-form-input:focus,.res-form-select:focus { outline:none; background:#0f2450; border-color:var(--accent); box-shadow:0 0 0 3px rgba(78,141,245,0.13); }
+    .res-form-select option { background-color:var(--card-bg); color:var(--light); }
+    .res-form-input:focus,.res-form-select:focus { outline:none; background:var(--card-bg); border-color:var(--accent); box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.13); }
     .res-form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     .res-section-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); margin-bottom:10px; font-weight:700; }
     .res-form-section { padding:14px 16px; border-radius:10px; margin-bottom:14px; }
     .res-form-section.unit-sec { background:rgba(var(--fg-rgb), 0.04); border:1px solid var(--border); }
-    .res-form-section.book-sec { background:rgba(78,141,245,0.05); border:1px solid rgba(78,141,245,0.15); }
+    .res-form-section.book-sec { background:rgba(var(--accent-rgb),0.05); border:1px solid rgba(var(--accent-rgb),0.15); }
     .res-form-section.book-sec .res-section-label { color:var(--accent); opacity:0.9; }
 
-    .res-btn-primary { display:flex; align-items:center; gap:6px; padding:10px 22px; border-radius:10px; background:linear-gradient(135deg,#4e8df5 0%,#3472dc 100%); color:#fff; border:none; font-family:inherit; font-size:0.88rem; font-weight:700; cursor:pointer; transition:all 0.25s; box-shadow:0 4px 14px rgba(78,141,245,0.28); }
-    .res-btn-primary:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 22px rgba(78,141,245,0.38); }
+    .res-btn-primary { display:flex; align-items:center; gap:6px; padding:10px 22px; border-radius:10px; background:linear-gradient(135deg,var(--accent) 0%,var(--accent) 100%); color:#fff; border:none; font-family:inherit; font-size:0.88rem; font-weight:700; cursor:pointer; transition:all 0.25s; box-shadow:0 4px 14px rgba(var(--accent-rgb),0.28); }
+    .res-btn-primary:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 22px rgba(var(--accent-rgb),0.38); }
     .res-btn-primary:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
     .res-btn-secondary { padding:10px 20px; border-radius:10px; background:rgba(var(--fg-rgb), 0.05); color:var(--light); border:1px solid rgba(var(--fg-rgb), 0.12); font-family:inherit; font-size:0.88rem; font-weight:600; cursor:pointer; transition:all 0.25s; }
     .res-btn-secondary:hover { background:rgba(var(--fg-rgb), 0.09); }
@@ -227,7 +227,7 @@
     .res-pill.p-locked.active { background:rgba(143,163,192,0.10); border-color:var(--text-muted); color:var(--text-muted); }
 
     /* ── fixed bottom bulk bar (مثل projects) ── */
-    #res-fixed-bulk-bar { display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:600;background:var(--card-bg);border:1px solid rgba(78,141,245,.35);border-radius:14px;padding:10px 16px;backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,.5);align-items:center;gap:8px;flex-wrap:nowrap;overflow-x:auto;animation:res-bulk-in .28s cubic-bezier(.16,1,.3,1);max-width:calc(100vw - 48px); }
+    #res-fixed-bulk-bar { display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:600;background:var(--card-bg);border:1px solid rgba(var(--accent-rgb),.35);border-radius:14px;padding:10px 16px;backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,.5);align-items:center;gap:8px;flex-wrap:nowrap;overflow-x:auto;animation:res-bulk-in .28s cubic-bezier(.16,1,.3,1);max-width:calc(100vw - 48px); }
     #res-fixed-bulk-bar.show { display:flex; }
     .res-bulk-count-lbl { font-size:.88rem;font-weight:800;color:var(--light);white-space:nowrap; }
     .res-bulk-divider { width:1px;height:24px;background:rgba(var(--fg-rgb), .1);flex-shrink:0; }
@@ -237,34 +237,34 @@
     .res-bulk-st-btn.resrv  { background:rgba(255,204,0,.12);  color:var(--warning);  border-color:rgba(255,204,0,.35);  } .res-bulk-st-btn.resrv:hover  { background:rgba(255,204,0,.25);  }
     .res-bulk-st-btn.closed { background:rgba(143,163,192,.12);color:var(--text-muted);border-color:rgba(143,163,192,.35);} .res-bulk-st-btn.closed:hover { background:rgba(143,163,192,.2); }
     .res-bulk-cancel { padding:7px 13px;border-radius:8px;font-family:inherit;font-size:.8rem;font-weight:700;cursor:pointer;border:1px solid var(--border);background:rgba(var(--fg-rgb), .05);color:var(--text-muted);transition:var(--transition);display:inline-flex;align-items:center;gap:4px; } .res-bulk-cancel:hover { color:var(--light); }
-    .res-bulk-apply-btn { display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:7px;font-family:inherit;font-size:.76rem;font-weight:700;cursor:pointer;border:1px solid rgba(78,141,245,.35);background:rgba(78,141,245,.12);color:var(--accent);transition:var(--transition);white-space:nowrap; } .res-bulk-apply-btn:hover { background:rgba(78,141,245,.25); }
-    .res-bulk-sel-all  { display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:7px;font-family:inherit;font-size:.76rem;font-weight:700;cursor:pointer;border:1px solid rgba(78,141,245,.35);background:rgba(78,141,245,.12);color:var(--accent);transition:var(--transition);white-space:nowrap; } .res-bulk-sel-all:hover  { background:rgba(78,141,245,.25); }
+    .res-bulk-apply-btn { display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:7px;font-family:inherit;font-size:.76rem;font-weight:700;cursor:pointer;border:1px solid rgba(var(--accent-rgb),.35);background:rgba(var(--accent-rgb),.12);color:var(--accent);transition:var(--transition);white-space:nowrap; } .res-bulk-apply-btn:hover { background:rgba(var(--accent-rgb),.25); }
+    .res-bulk-sel-all  { display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:7px;font-family:inherit;font-size:.76rem;font-weight:700;cursor:pointer;border:1px solid rgba(var(--accent-rgb),.35);background:rgba(var(--accent-rgb),.12);color:var(--accent);transition:var(--transition);white-space:nowrap; } .res-bulk-sel-all:hover  { background:rgba(var(--accent-rgb),.25); }
     .res-bulk-desel-all{ display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:7px;font-family:inherit;font-size:.76rem;font-weight:700;cursor:pointer;border:1px solid var(--border);background:rgba(var(--fg-rgb), .05);color:var(--text-muted);transition:var(--transition);white-space:nowrap; } .res-bulk-desel-all:hover { background:rgba(var(--fg-rgb), .1);color:var(--light); }
     /* row selection */
-    #res-page tbody tr.sel-row { background:rgba(78,141,245,0.09)!important; }
+    #res-page tbody tr.sel-row { background:rgba(var(--accent-rgb),0.09)!important; }
     #res-page tbody tr { cursor:pointer; }
     .res-row-checkbox { width:15px;height:15px;cursor:pointer;accent-color:var(--accent); }
     /* keep old standalone btn */
-    .res-sel-all-btn { padding:6px 14px;border-radius:8px;border:1px solid rgba(78,141,245,0.3);background:rgba(78,141,245,0.08);color:var(--accent);font-family:inherit;font-size:0.82rem;font-weight:700;cursor:pointer;transition:var(--transition);white-space:nowrap; }
-    .res-sel-all-btn:hover { background:rgba(78,141,245,0.18); }
+    .res-sel-all-btn { padding:6px 14px;border-radius:8px;border:1px solid rgba(var(--accent-rgb),0.3);background:rgba(var(--accent-rgb),0.08);color:var(--accent);font-family:inherit;font-size:0.82rem;font-weight:700;cursor:pointer;transition:var(--transition);white-space:nowrap; }
+    .res-sel-all-btn:hover { background:rgba(var(--accent-rgb),0.18); }
 
     /* ── Custom Searchable Dropdown ── */
     .csd-wrap { position:relative; }
-    .csd-input { width:100%; padding:10px 34px 10px 13px; border-radius:10px; background:var(--card-bg); border:1.5px solid rgba(var(--fg-rgb), 0.12); color:#dde8ff; font-family:'Tajawal',sans-serif; font-size:0.89rem; transition:all 0.25s ease; outline:none; }
-    .csd-input:focus { background:#0f2450; border-color:var(--accent); box-shadow:0 0 0 3px rgba(78,141,245,0.13); }
+    .csd-input { width:100%; padding:10px 34px 10px 13px; border-radius:10px; background:var(--card-bg); border:1.5px solid rgba(var(--fg-rgb), 0.12); color:var(--light); font-family:'Tajawal',sans-serif; font-size:0.89rem; transition:all 0.25s ease; outline:none; }
+    .csd-input:focus { background:var(--card-bg); border-color:var(--accent); box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.13); }
     .csd-input::placeholder { color:var(--text-muted); }
     .csd-arrow { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text-muted); pointer-events:none; font-size:1.05rem; }
-    .csd-dropdown { position:absolute; top:calc(100% + 4px); left:0; right:0; background:var(--card-bg); border:1.5px solid rgba(78,141,245,0.35); border-radius:10px; max-height:210px; overflow-y:auto; z-index:500; box-shadow:0 8px 28px rgba(0,0,0,0.55); display:none; }
+    .csd-dropdown { position:absolute; top:calc(100% + 4px); left:0; right:0; background:var(--card-bg); border:1.5px solid rgba(var(--accent-rgb),0.35); border-radius:10px; max-height:210px; overflow-y:auto; z-index:500; box-shadow:0 8px 28px rgba(0,0,0,0.55); display:none; }
     .csd-dropdown.open { display:block; animation:res-slideDown 0.16s ease; }
-    .csd-option { padding:9px 14px; font-size:0.88rem; color:#dde8ff; cursor:pointer; transition:background 0.15s; }
-    .csd-option:hover { background:rgba(78,141,245,0.18); }
-    .csd-option.selected { background:rgba(78,141,245,0.12); color:var(--accent); font-weight:700; }
+    .csd-option { padding:9px 14px; font-size:0.88rem; color:var(--light); cursor:pointer; transition:background 0.15s; }
+    .csd-option:hover { background:rgba(var(--accent-rgb),0.18); }
+    .csd-option.selected { background:rgba(var(--accent-rgb),0.12); color:var(--accent); font-weight:700; }
     .csd-option.hidden { display:none; }
     .csd-empty { padding:10px 14px; font-size:0.85rem; color:var(--text-muted); text-align:center; }
 
     /* ── Standalone select-all button ── */
-    .res-sel-standalone-btn { display:flex; align-items:center; gap:6px; padding:7px 16px; border-radius:20px; border:1px solid rgba(78,141,245,0.35); background:rgba(78,141,245,0.08); color:var(--accent); font-family:inherit; font-size:0.82rem; font-weight:700; cursor:pointer; transition:var(--transition); white-space:nowrap; }
-    .res-sel-standalone-btn:hover { background:rgba(78,141,245,0.18); border-color:var(--accent); }
+    .res-sel-standalone-btn { display:flex; align-items:center; gap:6px; padding:7px 16px; border-radius:20px; border:1px solid rgba(var(--accent-rgb),0.35); background:rgba(var(--accent-rgb),0.08); color:var(--accent); font-family:inherit; font-size:0.82rem; font-weight:700; cursor:pointer; transition:var(--transition); white-space:nowrap; }
+    .res-sel-standalone-btn:hover { background:rgba(var(--accent-rgb),0.18); border-color:var(--accent); }
   `;
 
   window.__pages['reservations'] = {
@@ -290,7 +290,7 @@
           <div id="res-buyer-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1100;align-items:center;justify-content:center;backdrop-filter:blur(3px)">
             <div class="res-buyer-modal-content">
               <div class="res-modal-header" style="border-radius:20px 20px 0 0;background:var(--card-bg)">
-                <h2 id="res-buyer-modal-title">تفاصيل العميل</h2>
+                <h2 id="res-buyer-modal-title">تفاصيل المشتري</h2>
                 <button class="res-modal-close" onclick="window.closeBuyerModal()"><i class="ri-close-line"></i></button>
               </div>
               <div id="res-buyer-modal-content"></div>
@@ -338,22 +338,22 @@
             <div class="res-search-wrap">
               <i class="res-search-icon ri-search-line"></i>
               <input type="text" id="searchInput" class="res-search-input"
-                     placeholder="ابحث برقم الوحدة، العميل، المبنى..."
+                     placeholder="ابحث برقم الوحدة، المشتري، المبنى..."
                      oninput="window.handleSearch()">
             </div>
           </div>
 
-          <div class="res-date-filter-row" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:12px 14px;background:rgba(78,141,245,0.05);border:1px solid rgba(78,141,245,0.15);border-radius:12px;animation:res-fadeUp 0.35s 0.12s ease both">
+          <div class="res-date-filter-row" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:12px 14px;background:rgba(var(--accent-rgb),0.05);border:1px solid rgba(var(--accent-rgb),0.15);border-radius:12px;animation:res-fadeUp 0.35s 0.12s ease both">
             <i class="ri-calendar-line" style="color:var(--accent);font-size:1rem;flex-shrink:0"></i>
             <span style="font-size:0.8rem;font-weight:700;color:var(--text-muted);white-space:nowrap">فلتر التاريخ (ميلادي):</span>
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:1">
               <div style="display:flex;align-items:center;gap:6px">
                 <label style="font-size:0.78rem;color:var(--text-muted);white-space:nowrap">من</label>
-                <input type="date" id="res-dateFrom" oninput="window.applyFilter()" style="background:var(--card-bg);border:1.5px solid rgba(var(--fg-rgb), 0.12);color:#dde8ff;font-family:'Tajawal',sans-serif;font-size:0.84rem;padding:7px 10px;border-radius:8px;outline:none;transition:all 0.2s;color-scheme:dark;cursor:pointer">
+                <input type="date" id="res-dateFrom" oninput="window.applyFilter()" style="background:var(--card-bg);border:1.5px solid rgba(var(--fg-rgb), 0.12);color:var(--light);font-family:'Tajawal',sans-serif;font-size:0.84rem;padding:7px 10px;border-radius:8px;outline:none;transition:all 0.2s;color-scheme:dark;cursor:pointer">
               </div>
               <div style="display:flex;align-items:center;gap:6px">
                 <label style="font-size:0.78rem;color:var(--text-muted);white-space:nowrap">إلى</label>
-                <input type="date" id="res-dateTo" oninput="window.applyFilter()" style="background:var(--card-bg);border:1.5px solid rgba(var(--fg-rgb), 0.12);color:#dde8ff;font-family:'Tajawal',sans-serif;font-size:0.84rem;padding:7px 10px;border-radius:8px;outline:none;transition:all 0.2s;color-scheme:dark;cursor:pointer">
+                <input type="date" id="res-dateTo" oninput="window.applyFilter()" style="background:var(--card-bg);border:1.5px solid rgba(var(--fg-rgb), 0.12);color:var(--light);font-family:'Tajawal',sans-serif;font-size:0.84rem;padding:7px 10px;border-radius:8px;outline:none;transition:all 0.2s;color-scheme:dark;cursor:pointer">
               </div>
               <button onclick="window.clearDateFilter()" id="res-dateClearBtn" style="display:none;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;background:rgba(255,59,48,0.1);border:1px solid rgba(255,59,48,0.25);color:#ff3b30;font-family:'Tajawal',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap">
                 <i class="ri-close-circle-line"></i> مسح التاريخ
@@ -692,7 +692,7 @@
               <th>الوحدة</th>
               <th>الموقع</th>
               <th>الحالة</th>
-              <th>العميل</th>
+              <th>المشتري</th>
               <th>السعر الإجمالي</th>
               <th onclick="window._resToggleDateSort()" style="cursor:pointer;user-select:none;white-space:nowrap">
                 تاريخ الحجز <i class="ri-arrow-${S.dateSort==='desc'?'down':'up'}-line" style="font-size:.75rem;opacity:.6"></i>
@@ -711,7 +711,7 @@
                 </td>
                 <td>
                   <div style="display:flex;align-items:center;gap:8px">
-                    <div style="width:36px;height:36px;border-radius:9px;background:rgba(78,141,245,0.1);border:1px solid rgba(78,141,245,0.2);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;color:var(--accent);flex-shrink:0">${u.unitNumber||'—'}</div>
+                    <div style="width:36px;height:36px;border-radius:9px;background:rgba(var(--accent-rgb),0.1);border:1px solid rgba(var(--accent-rgb),0.2);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;color:var(--accent);flex-shrink:0">${u.unitNumber||'—'}</div>
                     <span style="font-size:0.75rem;color:var(--text-muted);font-weight:600">${typeLabel(u.type)}</span>
                   </div>
                 </td>
@@ -736,7 +736,7 @@
                   <div class="res-row-actions">
                     <button class="res-action-btn view" data-tip="تفاصيل" onclick="window.openDetailsModal(${u.id})"><i class="ri-eye-line"></i></button>
                     <button class="res-action-btn edit" data-tip="تعديل" onclick="window.openEditModal(${u.id})"><i class="ri-edit-line"></i></button>
-                    ${u.booking?`<button class="res-action-btn del" data-tip="إلغاء الحجز" onclick="window.deleteBooking(${u.booking.id},'${u.unitNumber}')"><i class="ri-delete-bin-line"></i></button>`:''}
+                    ${(u.booking && window.__canDelete?.())?`<button class="res-action-btn del" data-tip="إلغاء الحجز" onclick="window.deleteBooking(${u.booking.id},'${u.unitNumber}')"><i class="ri-delete-bin-line"></i></button>`:''}
                   </div>
                 </td>
               </tr>`;
@@ -774,17 +774,17 @@
         }
       }
 
-      /* ════ openBuyerDetailModal — مودال تفاصيل العميل المنبثق ════ */
+      /* ════ openBuyerDetailModal — مودال تفاصيل المشتري المنبثق ════ */
       window.openBuyerDetailModal=function(buyerId){
         const buyer=S.buyers.find(b=>Number(b.id)===Number(buyerId));
-        if(!buyer){toast('لم يتم العثور على بيانات العميل','error');return;}
+        if(!buyer){toast('لم يتم العثور على بيانات المشتري','error');return;}
         const fullName=bNameStr(buyer);
         const buyerUnits=S.units.filter(u=>Number(u.buyerId)===Number(buyerId)&&toStatus(u.status)!==1&&toStatus(u.status)!==4);
-        document.getElementById('res-buyer-modal-title').textContent=`تفاصيل العميل`;
+        document.getElementById('res-buyer-modal-title').textContent=`تفاصيل المشتري`;
         document.getElementById('res-buyer-modal-content').innerHTML=`
           <div class="res-modal-body">
-            <div style="display:flex;align-items:center;gap:16px;padding:18px;background:rgba(78,141,245,.08);border-radius:14px;border:1px solid rgba(78,141,245,.2);margin-bottom:20px">
-              <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#4e8df5,#3a7de4);display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:800;color:#fff;flex-shrink:0">
+            <div style="display:flex;align-items:center;gap:16px;padding:18px;background:rgba(var(--accent-rgb),.08);border-radius:14px;border:1px solid rgba(var(--accent-rgb),.2);margin-bottom:20px">
+              <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-dark));display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:800;color:#fff;flex-shrink:0">
                 ${initials(fullName)}
               </div>
               <div>
@@ -842,7 +842,7 @@
                  <i class="ri-user-search-line"></i> تفاصيل
                </button>
              </div>`
-          : `<div style="text-align:center;padding:14px;color:var(--text-muted);background:rgba(var(--fg-rgb), .02);border-radius:10px;font-size:0.85rem">لا يوجد عميل مرتبط</div>`;
+          : `<div style="text-align:center;padding:14px;color:var(--text-muted);background:rgba(var(--fg-rgb), .02);border-radius:10px;font-size:0.85rem">لا يوجد مشتري مرتبط</div>`;
 
         openModal(`تفاصيل الوحدة: ${u.unitNumber}`,`
           <div class="res-modal-body">
@@ -868,7 +868,7 @@
 
             <div style="margin-bottom:8px">
               <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px">
-                <i class="ri-user-line" style="color:var(--accent)"></i> العميل
+                <i class="ri-user-line" style="color:var(--accent)"></i> المشتري
               </div>
               ${buyerSection}
             </div>
@@ -901,10 +901,10 @@
               </div>
             </div>
             <div class="res-form-section book-sec" id="f-buyer-section" style="${needsBuyer?'':'display:none'}">
-              <div class="res-section-label">العميل</div>
+              <div class="res-section-label">المشتري</div>
               <div class="res-form-group">
-                <label class="res-form-label">تخصيص العميل <span id="f-buyer-required" style="color:var(--danger);${needsBuyer?'':'display:none'}">*</span></label>
-                ${_buildCSD('f-buyer', buyerCSDOptions, '— ابحث عن العميل —')}
+                <label class="res-form-label">تخصيص المشتري <span id="f-buyer-required" style="color:var(--danger);${needsBuyer?'':'display:none'}">*</span></label>
+                ${_buildCSD('f-buyer', buyerCSDOptions, '— ابحث عن المشتري —')}
               </div>
             </div>
           </div>
@@ -950,7 +950,7 @@
         const buyerId=v('f-buyer')||null;
         const needsBuyer=status===2||status===3;
         if(status===3&&(!price||price<=0)){toast('يجب تحديد سعر البيع للوحدة قبل إتمام عملية البيع','error');return;}
-        if(needsBuyer&&!buyerId){toast('يجب تخصيص عميل للوحدة قبل إتمام الحجز أو البيع','error');return;}
+        if(needsBuyer&&!buyerId){toast('يجب تخصيص مشتري للوحدة قبل إتمام الحجز أو البيع','error');return;}
         setBusy('submitBtn',true,'حفظ التعديلات');
         try{
           // نداء واحد ذرّي: الباك-إند يتولّى الحالة + الربط + الـ booking + العدّادات
@@ -1223,7 +1223,7 @@
 
       window._resBulkChangeStatus=async function(newStatus){
         if(!S.sel.size){toast('اختر وحدات أولاً','error');return;}
-        if(newStatus===3){toast('لا يمكن البيع الجماعي — يجب تحديد سعر وعميل لكل وحدة بشكل منفرد','error');return;}
+        if(newStatus===3){toast('لا يمكن البيع الجماعي — يجب تحديد سعر ومشتري لكل وحدة بشكل منفرد','error');return;}
         const ids=[...S.sel];
         const label=({1:'متاح',2:'محجوز',4:'مقفول'})[newStatus]||'';
         /* تحذير popups عند إعادة وحدات محجوزة/مباعة إلى حالة أخرى */
@@ -1239,7 +1239,7 @@
               <div class="res-confirm-icon" style="font-size:2.5rem">⚠️</div>
               <p class="res-confirm-msg">
                 من الوحدات المحددة: ${details.join(' و ')} ستُعاد إلى <strong>"${label}"</strong>
-                ${newStatus===1?'<br>وسيتم تحرير ارتباطها بالعميل ':''}
+                ${newStatus===1?'<br>وسيتم تحرير ارتباطها بالمشتري ':''}
                 <br><span style="font-size:0.8rem;opacity:0.7">تأكد أنك ألغيت الحجوزات المرتبطة أولاً</span>
               </p>
               <div class="res-confirm-actions">

@@ -93,7 +93,7 @@
     .sp-tp-accent { position: absolute; bottom: 15px; left: 24px; width: 20px; height: 7px; border-radius: 2px; }
     .sp-theme-name { font-size: 0.92rem; font-weight: 800; color: var(--light); display: flex; align-items: center; gap: 8px; }
     .sp-theme-tag { font-size: 0.62rem; font-weight: 800; padding: 2px 8px; border-radius: 7px; text-transform: uppercase; letter-spacing: .4px; }
-    .sp-theme-tag.dark  { background: rgba(78,141,245,.18); color: #7ab3ff; }
+    .sp-theme-tag.dark  { background: rgba(var(--accent-rgb),.18); color: var(--accent); }
     .sp-theme-tag.light { background: rgba(245,200,66,.18); color: #ffd84d; }
 
     /* Warranty rows */
@@ -275,7 +275,7 @@
 
           <div class="sp-note">
             <i class="ri-information-line"></i>
-            <div>تغييرات اللون تُطبَّق فوراً لكل المستخدمين عند الحفظ. يظهر العرض الصحيح للضمانات للعملاء وكل المستخدمين حسب المدد المحددة هنا.</div>
+            <div>تغييرات اللون تُطبَّق فوراً لكل المستخدمين عند الحفظ. يظهر العرض الصحيح للضمانات للمشترين وكل المستخدمين حسب المدد المحددة هنا.</div>
           </div>
 
           <div class="sp-foot">

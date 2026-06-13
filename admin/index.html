@@ -8,8 +8,8 @@
   <title>أساس — نسخة تجريبية | Demo</title>
   <!-- ══ DEMO MODE: mock backend (must load before any app script) ══ -->
   <script>window.__DEMO_ROLE='Admin';</script>
-  <script src="mock/seed.js?v=18"></script>
-  <script src="mock/mock-api.js?v=18"></script>
+  <script src="mock/seed.js?v=19"></script>
+  <script src="mock/mock-api.js?v=19"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap"/>
@@ -1173,8 +1173,8 @@
           sub:`${total?Math.round(resrv/total*100):0}% من ${isDateFiltered?'وحدات الفترة':'الإجمالي'}`},
         {cls:'red',   icon:'ri-price-tag-3-line',     num:sold,     lbl:'مباع',
           sub:`${salesPct}% من ${isDateFiltered?'وحدات الفترة':'الإجمالي'}`},
-        {cls:'green', icon:'ri-group-line',           num:BY.length, lbl:'العملاء'+_fSuffix,
-          sub:isDateFiltered?`من إجمالي ${_origTotals.BY} عميل`:(BY.length===1?'عميل واحد':BY.length+' عميل')},
+        {cls:'green', icon:'ri-group-line',           num:BY.length, lbl:'المشترين'+_fSuffix,
+          sub:isDateFiltered?`من إجمالي ${_origTotals.BY} مشتري`:(BY.length===1?'مشتري واحد':BY.length+' مشتري')},
         {cls:'purple', icon:'ri-pie-chart-2-line', num:occ, raw:occ+'%', lbl:'نسبة الإشغال',
           sub:`${(resrv+sold).toLocaleString('en-US')} وحدة محجوزة أو مباعة`},
       ];
@@ -1211,9 +1211,9 @@
            val:bkPeriodTotal?fmtMoney(bkPeriodTotal):'لا توجد حجوزات',
            sub:`${bkF.length} حجز في الفترة المختارة`},
           {cls:'sales',   icon:'ri-group-line',
-           lbl:'عملاء جدد في الفترة',
+           lbl:'مشترين جدد في الفترة',
            val:n(byF.length),
-           sub:`من إجمالي ${n(_origTotals.BY)} عميل`},
+           sub:`من إجمالي ${n(_origTotals.BY)} مشتري`},
           {cls:'avg',     icon:'ri-bar-chart-line',
            lbl:'متوسط قيمة الحجز',
            val:bkAvg?fmtMoney(Math.round(bkAvg)):'—',
@@ -1799,7 +1799,7 @@
       const salesRows=topSales.some(x=>x.val>0)?topSales.map(x=>`<div class="bx-pr"><div class="bx-pr-hd"><b>${esc(x.n)}</b><span>${x.val?fmtMoney(x.val):'—'}</span></div><div class="bx-track"><div class="bx-fill" data-w="${Math.round(x.val/maxSales*100)}%" style="background:linear-gradient(90deg,var(--success),#1a9e42)"></div></div></div>`).join(''):'<div class="bx-empty">لا توجد مبيعات بعد</div>';
 
       /* ── Table: آخر الحجوزات ── */
-      const bkTable=recent.length?`<div style="overflow-x:auto"><table class="bx2-table"><thead><tr><th>العميل</th><th>الوحدة</th><th>السعر</th><th>التاريخ</th></tr></thead><tbody>${recent.map(bk=>{ const by=bm[String(bk.buyerId||bk.BuyerId||'')],u=um[String(bk.unitId||bk.UnitId||'')]; const nm=by?(by.fullName||((by.firstName||'')+' '+(by.lastName||''))).trim():'—'; const un=u?(u.unitNumber||u.UnitNumber||'—'):'—'; const pr=Number(bk.price||bk.totalPrice||u?.price||0); return `<tr><td style="font-weight:700">${esc(nm)}</td><td style="color:var(--text-muted)">وحدة ${esc(String(un))}</td><td style="color:var(--success);font-weight:700;white-space:nowrap">${pr?fmtMoney(pr):'—'}</td><td style="color:var(--text-muted);white-space:nowrap">${fmtDate(bk.createdAt)}</td></tr>`; }).join('')}</tbody></table></div>`:'<div class="bx-empty">لا توجد حجوزات في هذه الفترة</div>';
+      const bkTable=recent.length?`<div style="overflow-x:auto"><table class="bx2-table"><thead><tr><th>المشتري</th><th>الوحدة</th><th>السعر</th><th>التاريخ</th></tr></thead><tbody>${recent.map(bk=>{ const by=bm[String(bk.buyerId||bk.BuyerId||'')],u=um[String(bk.unitId||bk.UnitId||'')]; const nm=by?(by.fullName||((by.firstName||'')+' '+(by.lastName||''))).trim():'—'; const un=u?(u.unitNumber||u.UnitNumber||'—'):'—'; const pr=Number(bk.price||bk.totalPrice||u?.price||0); return `<tr><td style="font-weight:700">${esc(nm)}</td><td style="color:var(--text-muted)">وحدة ${esc(String(un))}</td><td style="color:var(--success);font-weight:700;white-space:nowrap">${pr?fmtMoney(pr):'—'}</td><td style="color:var(--text-muted);white-space:nowrap">${fmtDate(bk.createdAt)}</td></tr>`; }).join('')}</tbody></table></div>`:'<div class="bx-empty">لا توجد حجوزات في هذه الفترة</div>';
 
       /* title + toolbar */
       const greet='لوحة المعلومات';
@@ -1830,7 +1830,7 @@
           <div class="bx2-rm"><div class="rv" data-count="${avail}" style="color:var(--success)">0</div><div class="rl"><i style="background:var(--success)"></i>متاح</div></div>
           <div class="bx2-rm"><div class="rv" data-count="${resrv}" style="color:var(--warning)">0</div><div class="rl"><i style="background:var(--warning)"></i>محجوز</div></div>
           <div class="bx2-rm"><div class="rv" data-count="${sold}" style="color:var(--danger)">0</div><div class="rl"><i style="background:var(--danger)"></i>مباع</div></div>
-          <div class="bx2-rm"><div class="rv" data-count="${BY.length}">0</div><div class="rl"><i style="background:var(--success)"></i>العملاء</div></div>
+          <div class="bx2-rm"><div class="rv" data-count="${BY.length}">0</div><div class="rl"><i style="background:var(--success)"></i>المشترين</div></div>
           <div class="bx2-rm"><div class="rv" data-count="${P.length}">0</div><div class="rl"><i style="background:var(--accent)"></i>المشاريع · ${B.length} مبنى</div></div>
         </div>
 

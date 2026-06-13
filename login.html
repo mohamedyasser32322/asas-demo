@@ -1,7 +1,7 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<script src="mock/mock-api.js?v=18"></script>
+<script src="mock/mock-api.js?v=19"></script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <title>نظام إدارة العقارات</title>
@@ -178,8 +178,8 @@
   /* Autofill styling */
   .inp:-webkit-autofill,
   .inp:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0 100px #112952 inset !important;
-    -webkit-text-fill-color: #fff !important;
+    -webkit-box-shadow: 0 0 0 100px var(--card-bg) inset !important;
+    -webkit-text-fill-color: var(--light) !important;
     caret-color: #fff;
   }
 
@@ -576,7 +576,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
       </svg>
-      عميل
+      مشتري
     </button>
   </div>
 
@@ -666,7 +666,7 @@
     .demo-quick-title{font-size:.8rem;font-weight:700;color:rgba(var(--fg-rgb),.6);text-align:center;margin-bottom:12px;display:flex;align-items:center;gap:7px;justify-content:center}
     .demo-quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
     .demo-role{display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:.86rem;font-weight:700;color:var(--fg,#eaf0fb);background:rgba(var(--fg-rgb),.05);border:1px solid rgba(var(--fg-rgb),.12);transition:.18s;text-align:right}
-    .demo-role:hover{background:rgba(78,141,245,.16);border-color:rgba(78,141,245,.5);transform:translateY(-2px)}
+    .demo-role:hover{background:rgba(var(--accent-rgb),.16);border-color:rgba(var(--accent-rgb),.5);transform:translateY(-2px)}
     .demo-role .ic{font-size:1.15rem;line-height:1}
   </style>
   <div class="demo-quick">
@@ -675,7 +675,7 @@
       <button type="button" class="demo-role" onclick="demoLogin('Admin')"><span class="ic">🛡️</span> مدير النظام</button>
       <button type="button" class="demo-role" onclick="demoLogin('BookingManager')"><span class="ic">📅</span> مدير الحجوزات</button>
       <button type="button" class="demo-role" onclick="demoLogin('SiteEngineer')"><span class="ic">🏗️</span> مهندس الموقع</button>
-      <button type="button" class="demo-role" onclick="demoLogin('Buyer')"><span class="ic">👤</span> عميل</button>
+      <button type="button" class="demo-role" onclick="demoLogin('Buyer')"><span class="ic">👤</span> مشتري</button>
     </div>
   </div>
   <script>

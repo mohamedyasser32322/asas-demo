@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════
     ROUTER.JS — BookingManager SPA
     نظام إدارة العقارات
    ═══════════════════════════════════════════════ */
@@ -10,7 +10,7 @@
     'dashboard':    { file: null,                    label: 'لوحة التحكم' },
     'projects':     { file: 'pages/projects.js',     label: 'المشاريع'    },
     'reservations': { file: 'pages/reservations.js', label: 'الحجوزات'    },
-    'buyers':       { file: 'pages/buyers.js',       label: 'العملاء'     },
+    'buyers':       { file: 'pages/buyers.js',       label: 'المشترين'     },
     'sellrequests': { file: 'pages/sellrequests.js', label: 'طلبات البيع' },
     'tickets':      { file: 'pages/tickets.js',      label: 'تذاكر الصيانة' },
   };
@@ -71,7 +71,7 @@
 
     // ── Auth guard ──
     if (!getToken()) {
-      window.location.href = '/login';
+      window.location.href = '../login.html';
       return;
     }
 

@@ -12,7 +12,11 @@
   </style>
   <script>
     // Start the demo like the real system: setup (branding) → login → role.
-    setTimeout(function () { location.replace('setup.html'); }, 50);
+    // السيتب يتعمل مرة واحدة بس؛ بعد كده الجذر يروح على الدخول مباشرة (تبديل الأدوار مايرجعش للسيتب).
+    setTimeout(function () {
+      var done = localStorage.getItem('asas_setup_done');
+      location.replace(done ? 'login.html' : 'setup.html');
+    }, 50);
   </script>
 </head>
 <body>

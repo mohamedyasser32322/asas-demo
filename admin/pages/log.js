@@ -4,10 +4,10 @@
 
   const _css = `
     :root {
-      --log-bg:#060f1e;--log-surface:#0b1a2e;--log-card:#0f2244;--log-card2:#132a54;
+      --log-bg:var(--primary-deep);--log-surface:var(--card-bg);--log-card:var(--card-bg);--log-card2:var(--card-bg);
       --log-border:rgba(var(--fg-rgb), 0.07);--log-border2:rgba(var(--fg-rgb), 0.15);
-      --log-text:#e8edf5;--log-muted:#5a7499;--log-muted2:#8099bb;
-      --log-accent:#3b7ff5;--log-accent2:#5b9bff;
+      --log-text:var(--light);--log-muted:var(--text-muted);--log-muted2:var(--text-muted);
+      --log-accent:var(--accent);--log-accent2:var(--accent);
       --log-green:#22c55e;--log-yellow:#eab308;--log-red:#ef4444;--log-purple:#8b5cf6;
     }
     @keyframes log-fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
@@ -38,9 +38,9 @@
     .log-search-input{width:100%;background:var(--log-card);border:1.5px solid var(--log-border);color:var(--log-text);font-family:'Tajawal',sans-serif;font-size:.86rem;padding:9px 38px 9px 13px;border-radius:9px;transition:.18s}
     .log-search-input:focus{outline:none;border-color:var(--log-accent);background:var(--log-card2)}
     .log-search-input::placeholder{color:var(--log-muted)}
-    .log-fsel{background:var(--log-card);border:1.5px solid var(--log-border);color:#e8edf5;font-family:'Tajawal',sans-serif;font-size:.82rem;padding:9px 12px 9px 30px;border-radius:9px;cursor:pointer;transition:border-color .18s,background .18s;appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235a7499' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:left 6px center;background-size:13px;min-width:135px;color-scheme:dark}
+    .log-fsel{background:var(--log-card);border:1.5px solid var(--log-border);color:var(--light);font-family:'Tajawal',sans-serif;font-size:.82rem;padding:9px 12px 9px 30px;border-radius:9px;cursor:pointer;transition:border-color .18s,background .18s;appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235a7499' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:left 6px center;background-size:13px;min-width:135px;color-scheme:dark}
     .log-fsel:focus{outline:none;border-color:var(--log-accent);background:var(--log-card2)}
-    .log-fsel option{background:var(--card-bg);color:#e8edf5}
+    .log-fsel option{background:var(--card-bg);color:var(--light)}
     .log-cnt-badge{margin-left:auto;font-size:.76rem;color:var(--log-muted2);background:var(--log-card);border:1px solid var(--log-border);padding:5px 11px;border-radius:8px;white-space:nowrap}
     .log-refresh-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 17px;border-radius:9px;font-family:'Tajawal',sans-serif;font-size:.84rem;font-weight:700;cursor:pointer;transition:.18s;border:1.5px solid rgba(59,127,245,.35);background:rgba(59,127,245,.14);color:var(--log-accent2)}
     .log-refresh-btn:hover{background:rgba(59,127,245,.24);border-color:var(--log-accent2)}
@@ -141,7 +141,7 @@
     .log-info-row:last-child{border-bottom:none}
     .log-i-lbl{font-size:.73rem;color:var(--log-muted2);flex-shrink:0;padding-top:1px}
     .log-i-val{font-size:.84rem;font-weight:700;text-align:left;word-break:break-word}
-    .log-i-val.mono{font-family:monospace;font-size:.77rem;color:#7eb8ff}
+    .log-i-val.mono{font-family:monospace;font-size:.77rem;color:var(--accent)}
 
     #log-toast-container{position:fixed;bottom:18px;left:18px;z-index:2000;display:flex;flex-direction:column;gap:7px;pointer-events:none}
     .log-toast{display:flex;align-items:center;gap:9px;padding:11px 15px;border-radius:10px;background:rgba(8,18,42,.97);border:1px solid rgba(var(--fg-rgb), .09);color:var(--log-text);font-size:.83rem;font-weight:600;animation:log-fadeUp .28s ease;box-shadow:0 8px 28px rgba(0,0,0,.45);pointer-events:all}
@@ -170,7 +170,7 @@
 
       const container = document.getElementById('app-main');
       container.innerHTML = `
-        <div id="log-page" style="padding:20px 28px 80px;max-width:1400px;margin:0 auto;color:var(--log-text,#e8edf5)">
+        <div id="log-page" style="padding:20px 28px 80px;max-width:1400px;margin:0 auto;color:var(--log-text,var(--light))">
 
           <div id="log-toast-container"></div>
 
@@ -305,7 +305,7 @@
       const ENTITY_AR = {
         project:'مشروع',projects:'مشروع',building:'مبنى',buildings:'مبنى',
         floor:'دور',floors:'دور',unit:'وحدة',units:'وحدة',
-        booking:'حجز',bookings:'حجز',buyer:'عميل',buyers:'عميل',
+        booking:'حجز',bookings:'حجز',buyer:'مشتري',buyers:'مشتري',
         user:'مستخدم',users:'مستخدم',notification:'إشعار',notifications:'إشعارات',
         constructionstage:'مرحلة بناء',buildingimage:'صورة مبنى',
         stageimage:'صورة مرحلة',auth:'المصادقة',activitylog:'سجل النشاط',
@@ -321,7 +321,7 @@
         projectName:'المشروع',buildingId:'رقم العمارة',name:'الاسم',location:'الموقع',
         totalUnits:'إجمالي الوحدات',floorCount:'عدد الأدوار',unitCount:'عدد الوحدات',
         unitNumber:'رقم الوحدة',floorId:'رقم الدور',area:'المساحة',price:'السعر',
-        unitId:'رقم الوحدة',buyerId:'رقم العميل',bookingDate:'تاريخ الحجز',
+        unitId:'رقم الوحدة',buyerId:'رقم المشتري',bookingDate:'تاريخ الحجز',
         firstName:'الاسم الأول',lastName:'الاسم الأخير',email:'البريد الإلكتروني',
         phone:'الهاتف',roleId:'الدور الوظيفي',projectId:'رقم المشروع',
         floorNumber:'رقم الدور',caption:'التعليق',description:'الوصف',phoneNumber:'الهاتف',
@@ -372,10 +372,10 @@
         if (log.userId) return `مستخدم #${log.userId}`;
         // ── أنشطة مرتبطة بالمشتري — استخرج اسمه من الوصف ──
         const desc = (log.description || '').trim();
-        const m1 = desc.match(/من العميل\s+(.+?)(?:\s*$|\s+—|\s+\(|$)/);
-        if (m1) return `العميل: ${m1[1].trim()}`;
+        const m1 = desc.match(/من المشتري\s+(.+?)(?:\s*$|\s+—|\s+\(|$)/);
+        if (m1) return `المشتري: ${m1[1].trim()}`;
         const entity = (log.entityName || log.entity || '').toLowerCase();
-        if (entity.includes('تذكرة') || entity.includes('مرفق')) return 'العميل';
+        if (entity.includes('تذكرة') || entity.includes('مرفق')) return 'المشتري';
         return 'مجهول';
       }
       function initials(n) {

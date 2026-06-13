@@ -16,7 +16,7 @@
     /* header */
     .sr-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px;flex-wrap:wrap}
     .sr-title{font-size:1.35rem;font-weight:800;color:var(--light);display:flex;align-items:center;gap:9px}
-    .sr-title i{color:#4e8df5;font-size:1.4rem}
+    .sr-title i{color:var(--accent);font-size:1.4rem}
     .sr-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700;background:rgba(255,59,48,.12);color:#ff3b30;border:1px solid rgba(255,59,48,.28);margin-right:4px}
     .sr-badge.zero{background:rgba(52,199,89,.1);color:#34c759;border-color:rgba(52,199,89,.25)}
 
@@ -24,10 +24,10 @@
     .sr-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
     .sr-filter-btn{padding:7px 16px;border-radius:9px;border:1px solid rgba(var(--fg-rgb), .1);background:rgba(var(--fg-rgb), .04);color:var(--text-muted);font-family:'Tajawal',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s}
     .sr-filter-btn:hover{background:rgba(var(--fg-rgb), .08);color:var(--light)}
-    .sr-filter-btn.active{background:rgba(78,141,245,.15);color:#4e8df5;border-color:rgba(78,141,245,.35)}
+    .sr-filter-btn.active{background:rgba(var(--accent-rgb),.15);color:var(--accent);border-color:rgba(var(--accent-rgb),.35)}
     .sr-sel-filter{padding:6px 12px;border-radius:9px;border:1px solid rgba(var(--fg-rgb), .1);background:rgba(var(--fg-rgb), .04);color:var(--text-muted);font-family:'Tajawal',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;outline:none;direction:rtl}
     .sr-sel-filter:hover{background:rgba(var(--fg-rgb), .08);color:var(--light)}
-    .sr-sel-filter:focus{border-color:rgba(78,141,245,.35);color:#4e8df5}
+    .sr-sel-filter:focus{border-color:rgba(var(--accent-rgb),.35);color:var(--accent)}
     .sr-sel-filter option{background:var(--primary);color:var(--light)}
 
     /* table wrapper */
@@ -36,21 +36,21 @@
     .sr-table th{padding:13px 16px;text-align:right;font-size:.76rem;font-weight:700;color:var(--text-muted);border-bottom:1px solid rgba(var(--fg-rgb), .07);white-space:nowrap;background:var(--primary)}
     .sr-table td{padding:13px 16px;font-size:.83rem;color:var(--light);border-bottom:1px solid rgba(var(--fg-rgb), .05);vertical-align:middle}
     .sr-table tr:last-child td{border-bottom:none}
-    .sr-table tr.unread td{background:rgba(78,141,245,.04)}
+    .sr-table tr.unread td{background:rgba(var(--accent-rgb),.04)}
     .sr-table tr:hover td{background:rgba(var(--fg-rgb), .03)}
 
     /* unread dot */
-    .sr-unread-dot{width:8px;height:8px;border-radius:50%;background:#4e8df5;display:inline-block;margin-left:6px;animation:sr-pulse 2s infinite;flex-shrink:0}
+    .sr-unread-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;margin-left:6px;animation:sr-pulse 2s infinite;flex-shrink:0}
 
     /* buyer name cell */
     .sr-buyer-cell{display:flex;align-items:center;gap:8px}
-    .sr-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#f5c842,#e6a800);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;color:#0a1a30;flex-shrink:0}
+    .sr-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#f5c842,#e6a800);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;color:var(--primary-deep);flex-shrink:0}
 
     /* price */
     .sr-price{font-weight:700;color:#34c759;white-space:nowrap}
 
     /* stage badge */
-    .sr-stage{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:.73rem;font-weight:700;background:rgba(78,141,245,.1);color:#7ab3ff;border:1px solid rgba(78,141,245,.18)}
+    .sr-stage{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:.73rem;font-weight:700;background:rgba(var(--accent-rgb),.1);color:var(--accent);border:1px solid rgba(var(--accent-rgb),.18)}
 
     /* date */
     .sr-date{color:var(--text-muted);font-size:.78rem;white-space:nowrap}
@@ -63,9 +63,9 @@
     .sr-read-label i{color:#34c759}
 
     /* empty / loading */
-    .sr-empty{text-align:center;padding:60px 20px;color:#4a6580}
+    .sr-empty{text-align:center;padding:60px 20px;color:var(--text-muted)}
     .sr-empty i{font-size:2.5rem;display:block;margin-bottom:12px;opacity:.3}
-    .sr-spinner{width:36px;height:36px;border:3px solid rgba(var(--fg-rgb), .07);border-top-color:#4e8df5;border-radius:50%;animation:sr-spin .75s linear infinite;margin:60px auto}
+    .sr-spinner{width:36px;height:36px;border:3px solid rgba(var(--fg-rgb), .07);border-top-color:var(--accent);border-radius:50%;animation:sr-spin .75s linear infinite;margin:60px auto}
 
     /* ── MODAL ── */
     #sr-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
@@ -84,8 +84,8 @@
     .sr-dv{font-size:.9rem;font-weight:700;color:var(--light)}
     .sr-modal-sep{font-size:.68rem;font-weight:800;color:rgba(143,163,192,.6);text-transform:uppercase;letter-spacing:.6px;margin:14px 0 10px;display:flex;align-items:center;gap:7px}
     .sr-modal-sep span{flex:1;height:1px;background:rgba(var(--fg-rgb), .07)}
-    .sr-buyer-card{display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(78,141,245,.07);border:1px solid rgba(78,141,245,.18);border-radius:12px;margin-bottom:14px}
-    .sr-buyer-av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f5c842,#e6a800);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:#0a1a30;flex-shrink:0}
+    .sr-buyer-card{display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(var(--accent-rgb),.07);border:1px solid rgba(var(--accent-rgb),.18);border-radius:12px;margin-bottom:14px}
+    .sr-buyer-av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f5c842,#e6a800);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:var(--primary-deep);flex-shrink:0}
     .sr-buyer-nm{font-size:.95rem;font-weight:800;color:var(--light)}
     .sr-buyer-ph{font-size:.78rem;color:var(--text-muted);margin-top:2px;direction:ltr;display:inline-block}
 
@@ -153,7 +153,7 @@
             <table class="sr-table">
               <thead>
                 <tr>
-                  <th>العميل</th>
+                  <th>المشتري</th>
                   <th>الوحدة</th>
                   <th>المشروع</th>
                   <th>سعر الشراء</th>
@@ -262,11 +262,11 @@
               </div>
             </td>
             <td>
-              <div style="font-weight:700;color:#4e8df5">وحدة ${esc(r.unitNumber||'—')}</div>
+              <div style="font-weight:700;color:var(--accent)">وحدة ${esc(r.unitNumber||'—')}</div>
             </td>
-            <td><span style="font-size:.85rem;color:#b8cde8">${esc(r.projectName||'—')}</span></td>
+            <td><span style="font-size:.85rem;color:var(--light)">${esc(r.projectName||'—')}</span></td>
             <td><span class="sr-price">${fmtPrice(r.unitPrice)}</span></td>
-            <td>${r.expectedPrice ? `<span class="sr-price" style="color:#f5c842;border:1px solid rgba(245,200,66,.25);background:rgba(245,200,66,.08);padding:2px 8px;border-radius:8px;font-size:.8rem">${fmtPrice(r.expectedPrice)}</span>` : '<span style="color:#4a6580;font-size:.78rem">—</span>'}</td>
+            <td>${r.expectedPrice ? `<span class="sr-price" style="color:#f5c842;border:1px solid rgba(245,200,66,.25);background:rgba(245,200,66,.08);padding:2px 8px;border-radius:8px;font-size:.8rem">${fmtPrice(r.expectedPrice)}</span>` : '<span style="color:var(--text-muted);font-size:.78rem">—</span>'}</td>
             <td><span class="sr-date">${fmtDate(r.bookingDate)}</span></td>
             <td><span class="sr-stage">${esc(r.stageLabel||r.stageKey||'—')}</span></td>
             <td><span class="sr-date">${fmtDate(r.createdAt)}</span></td>
@@ -333,7 +333,7 @@
           <div class="sr-dg">
             <div class="sr-db">
               <div class="sr-dl">رقم الوحدة</div>
-              <div class="sr-dv" style="color:#4e8df5">وحدة ${esc(r.unitNumber||'—')}</div>
+              <div class="sr-dv" style="color:var(--accent)">وحدة ${esc(r.unitNumber||'—')}</div>
             </div>
             <div class="sr-db">
               <div class="sr-dl">النوع</div>
@@ -365,7 +365,7 @@
             </div>
             <div class="sr-db">
               <div class="sr-dl">المرحلة</div>
-              <div class="sr-dv" style="color:#7ab3ff">${esc(r.stageLabel||r.stageKey||'—')}</div>
+              <div class="sr-dv" style="color:var(--accent)">${esc(r.stageLabel||r.stageKey||'—')}</div>
             </div>
             <div class="sr-db">
               <div class="sr-dl">الحالة</div>
@@ -399,10 +399,10 @@
 
           <div class="sr-modal-sep"><span></span><i class="ri-sticky-note-line"></i> ملاحظات <span></span></div>
           <div class="sr-db full" style="background:rgba(255,204,0,.05);border-color:rgba(255,204,0,.18)">
-            <div class="sr-dl">ملاحظات العميل</div>
+            <div class="sr-dl">ملاحظات المشتري</div>
             ${r.notes
               ? `<div style="font-size:.88rem;color:var(--light);line-height:1.7;margin-top:4px">${esc(r.notes)}</div>`
-              : `<div style="font-size:.85rem;color:#4a6580;margin-top:4px;font-style:italic">لا يوجد ملاحظات</div>`
+              : `<div style="font-size:.85rem;color:var(--text-muted);margin-top:4px;font-style:italic">لا يوجد ملاحظات</div>`
             }
           </div>
         `;

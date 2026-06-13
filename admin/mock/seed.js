@@ -92,16 +92,20 @@
   let bId = 0, flId = 0, uId = 0, stId = 0;
   projectsMeta.forEach((pm, pi) => {
     const pid = pi + 1;
+    const isReady = pi === 0;   // أول مشروع (برج الياسمين) مكتمل/جاهز للتسليم — الباقي قيد الإنشاء
     DB.projects.push({
       id: pid, name: pm.name, projectName: pm.name, projectCode: pm.code,
-      status: 'UnderConstruction', projectStatus: 'قيد الإنشاء', isActive: true, location: pm.loc,
+      status: isReady ? 'Completed' : 'UnderConstruction',
+      projectStatus: isReady ? 'مكتمل' : 'قيد الإنشاء', isActive: true, location: pm.loc,
       description: 'مشروع سكني متكامل بموقع مميز ومرافق حديثة.',
-      createdAt: ago(rnd(120, 400)), expectedDeliveryDate: ahead(rnd(120, 600)),
-      readyDate: ahead(rnd(120, 600)), projectReadyDate: ahead(rnd(120, 600))
+      createdAt: ago(rnd(120, 400)),
+      expectedDeliveryDate: isReady ? ago(rnd(20, 90))  : ahead(rnd(120, 600)),
+      readyDate:            isReady ? ago(rnd(20, 90))  : ahead(rnd(120, 600)),
+      projectReadyDate:     isReady ? ago(rnd(20, 90))  : ahead(rnd(120, 600))
     });
     // Construction stages (tracked per project — canonical keys the UI expects)
     const STAGE_KEYS = ['SitePreparation', 'Foundation', 'Structure', 'MasonryAndWalls', 'InitialFinishing', 'FinalFinishing', 'Handover'];
-    const doneCount = rnd(2, 6);
+    const doneCount = isReady ? STAGE_KEYS.length : rnd(2, 6);   // المشروع الجاهز كل مراحله مكتملة
     STAGE_KEYS.forEach((key, si) => {
       stId++;
       const done = si < doneCount;
@@ -120,7 +124,8 @@
       bId++;
       const bname = pm.name + ' - مبنى ' + b, bcode = pm.code + '-B' + b;
       DB.buildings.push({
-        id: bId, projectId: pid, projectName: pm.name, buildingName: bname, buildingCode: bcode,
+        id: bId, projectId: pid, projectName: pm.name,
+        name: bname, buildingName: bname, buildingCode: bcode,
         createdAt: ago(rnd(100, 300)), expectedDeliveryDate: ahead(rnd(120, 500))
       });
       const nF = rnd(4, 6);

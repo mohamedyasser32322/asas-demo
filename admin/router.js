@@ -115,7 +115,7 @@
     
     // 1. التأكد من تسجيل الدخول
     if (!authData || !authData.token) {
-        window.location.href = '/login';
+        window.location.href = '../login.html';
         return;
     }
 

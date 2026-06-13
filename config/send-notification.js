@@ -194,12 +194,12 @@
     });
 
     if (filtered.length === 0) {
-      wrap.innerHTML = `<div class="snd-users-empty">${_buyers.length ? 'لا توجد نتائج' : 'لا يوجد عملاء'}</div>`;
+      wrap.innerHTML = `<div class="snd-users-empty">${_buyers.length ? 'لا توجد نتائج' : 'لا يوجد مشترين'}</div>`;
       return;
     }
 
     wrap.innerHTML = filtered.map(b => {
-      const name = b.fullName || `عميل #${b.id}`;
+      const name = b.fullName || `مشتري #${b.id}`;
       const phone = b.phoneNumber || '';
       const checked = _selectedBuyerIds.has(b.id) ? 'checked' : '';
       return `
@@ -319,10 +319,10 @@
                   <i class="ri-group-line"></i> كل الموظفين
                 </button>
                 <button class="snd-tab" data-tab="buyer" onclick="window._sndSetTarget('buyer')">
-                  <i class="ri-user-star-line"></i> عميل محدد
+                  <i class="ri-user-star-line"></i> مشتري محدد
                 </button>
                 <button class="snd-tab" data-tab="allBuyers" onclick="window._sndSetTarget('allBuyers')">
-                  <i class="ri-megaphone-line"></i> كل العملاء
+                  <i class="ri-megaphone-line"></i> كل المشترين
                 </button>
               </div>
             </div>
@@ -353,7 +353,7 @@
               <div class="snd-broadcast-box">
                 <i class="ri-alert-line"></i>
                 <div class="snd-broadcast-box-text">
-                  <strong>تنبيه:</strong> سيتم إرسال الإشعار لـ <strong>كل الموظفين</strong> في النظام (ما عدا حسابك) — دون العملاء.
+                  <strong>تنبيه:</strong> سيتم إرسال الإشعار لـ <strong>كل الموظفين</strong> في النظام (ما عدا حسابك) — دون المشترين.
                 </div>
               </div>
             </div>
@@ -361,7 +361,7 @@
             <!-- Specific buyer -->
             <div class="snd-target-content" data-content="buyer">
               <div class="snd-field">
-                <label>اختر العملاء</label>
+                <label>اختر المشترين</label>
                 <input type="text" class="snd-select" id="snd-buyer-search" placeholder="بحث بالاسم أو الجوال..." style="margin-bottom:8px">
                 <div class="snd-users-list" id="snd-buyers-list"></div>
               </div>
@@ -372,7 +372,7 @@
               <div class="snd-broadcast-box">
                 <i class="ri-alert-line"></i>
                 <div class="snd-broadcast-box-text">
-                  <strong>تنبيه:</strong> سيتم إرسال الإشعار لـ <strong>كل العملاء</strong> المسجّلين في النظام.
+                  <strong>تنبيه:</strong> سيتم إرسال الإشعار لـ <strong>كل المشترين</strong> المسجّلين في النظام.
                 </div>
               </div>
             </div>
@@ -452,7 +452,7 @@
     } else if (_activeTarget === 'buyer') {
       const ids = Array.from(_selectedBuyerIds);
       if (ids.length === 0) {
-        window.__showToast?.('اختر عميل واحد على الأقل', 'warning');
+        window.__showToast?.('اختر مشتري واحد على الأقل', 'warning');
         return;
       }
       payload.recipientBuyerIds = ids;

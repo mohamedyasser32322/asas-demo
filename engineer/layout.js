@@ -9,11 +9,11 @@ const API_BASE = window.location.origin;
 function checkAuth() {
   try {
     const d = JSON.parse(localStorage.getItem('authData') || '{}');
-    if (!getToken())                  { window.location.replace('/login');  return false; }
-    if (d.role !== 'SiteEngineer')    { window.location.replace('/Unauth'); return false; }
+    if (!getToken())                  { window.location.replace('../login.html');  return false; }
+    if (d.role !== 'SiteEngineer')    { window.location.replace('../login.html'); return false; }
     return true;
   } catch {
-    window.location.replace('/login');
+    window.location.replace('../login.html');
     return false;
   }
 }
@@ -34,6 +34,7 @@ window.apiFetch = async function(endpoint, options = {}) {
   try {
     const response = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
     if (response.status === 401) { handleLogout(); return null; }
+    if (response.status === 403) { window.location.replace('../login.html'); return null; }
     return response;
   } catch (err) { console.error('API Error:', err); return null; }
 };
@@ -190,7 +191,7 @@ function getUserData() {
 function handleLogout() {
   ['authData', 'token', 'authToken', 'rememberMe', 'savedEmail'].forEach(k => localStorage.removeItem(k));
   try { sessionStorage.clear(); } catch {}
-  location.href = '/login';
+  location.href = '../login.html';
 }
 window.handleLogout = handleLogout;
 

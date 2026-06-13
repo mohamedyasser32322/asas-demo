@@ -64,8 +64,8 @@
     /* Auth guard */
     let authData;
     try { authData = JSON.parse(localStorage.getItem('authData')); } catch {}
-    if (!authData || !authData.token) { window.location.href = '/login'; return; }
-    if (authData.role !== 'Buyer')    { window.location.href = '/Unauth'; return; }
+    if (!authData || !authData.token) { window.location.href = '../login.html'; return; }
+    if (authData.role !== 'Buyer')    { window.location.href = '../login.html'; return; }
 
     if (pageId === currentPage) return;
     currentPage = pageId;

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<script src="mock/mock-api.js?v=18"></script>
+<script src="mock/mock-api.js?v=19"></script>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>إعداد النظام</title>
@@ -321,7 +321,7 @@
        FULL PREVIEW MODAL
        ════════════════════════════════════════ */
     #pv-mask {
-      position: fixed; inset: 0; z-index: 99998;
+      position: fixed; inset: 0; z-index: 100003;
       background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
       display: none; align-items: center; justify-content: center;
       padding: 20px;
@@ -892,6 +892,7 @@
           <option value="ر.ق|en-US">ريال قطري (ر.ق)</option>
           <option value="ر.ع|en-US">ريال عُماني (ر.ع)</option>
           <option value="د.أ|en-US">دينار أردني (د.أ)</option>
+          <option value="ل.س|en-US">ليرة سورية (ل.س)</option>
           <option value="$|en-US">دولار أمريكي ($)</option>
           <option value="€|en-US">يورو (€)</option>
         </select>
@@ -1039,7 +1040,7 @@
         </div>
 
         <div class="pv-form-card">
-          <h3>نموذج إضافة عميل</h3>
+          <h3>نموذج إضافة مشتري</h3>
           <div class="pv-form-grid">
             <div class="pv-fld">
               <label>الاسم الرباعي</label>
@@ -1340,6 +1341,7 @@
 
       /* انتقال إطلاق فخم ← لوحة الدخول (تسليم متصل) */
       localStorage.setItem('asas_theme', selectedTheme);   // تطبّقه صفحة الدخول فورًا
+      localStorage.setItem('asas_setup_done', '1');        // السيتب يتعمل مرة واحدة — مايتكررش عند تبديل الدور
       document.getElementById('launch-company').textContent = payload.companyName || 'نظامك';
       document.getElementById('launch').classList.add('show');
       setTimeout(() => document.getElementById('launch').classList.add('zoom'), 2700);
