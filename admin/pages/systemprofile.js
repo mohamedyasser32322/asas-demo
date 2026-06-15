@@ -217,10 +217,11 @@
           </div>
 
           <div class="sp-card">
-            <div class="sp-card-title"><i class="ri-building-4-line"></i> اسم النظام</div>
+            <div class="sp-card-title"><i class="ri-building-4-line"></i> اسم النظام <span id="sp-name-counter" style="color:var(--text-muted);font-weight:600;font-size:.78rem;margin-inline-start:6px">(${(cfg.companyName || '').length}/25)</span></div>
             <div class="sp-card-desc">يظهر في الهيدر وعنوان المتصفح وكل صفحات النظام</div>
             <input type="text" class="sp-input" id="sp-name" maxlength="25" autocomplete="off"
-              value="${(cfg.companyName || '').replace(/"/g, '&quot;')}" placeholder="اسم الشركة"/>
+              value="${(cfg.companyName || '').slice(0,25).replace(/"/g, '&quot;')}" placeholder="اسم الشركة"
+              oninput="if(this.value.length>25)this.value=this.value.slice(0,25);document.getElementById('sp-name-counter').textContent='('+this.value.length+'/25)'"/>
           </div>
 
           <div class="sp-card">
