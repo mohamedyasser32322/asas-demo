@@ -364,7 +364,7 @@ function injectStyles() {
       padding:18px 18px 14px; border-bottom:1px solid rgba(var(--fg-rgb), 0.07);
       display:flex; align-items:center; justify-content:space-between; flex-shrink:0;
     }
-    .lyt-d-logo { font-size:1.05rem; font-weight:800; color:#fff; }
+    .lyt-d-logo { font-size:1.05rem; font-weight:800; color:#fff; max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .lyt-d-close {
       width:30px; height:30px; border-radius:8px;
       background:rgba(var(--fg-rgb), 0.05); border:1px solid rgba(var(--fg-rgb), 0.08);

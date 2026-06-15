@@ -74,10 +74,16 @@
     // ── Notifications ──
     if (res === 'notifications') {
       const sub = (seg[1] || '').toLowerCase();
-      if (sub === 'unread-count') return jsonRes(0);
-      if (sub === 'read-all') return okRes();
+      const list = DB().notifications || [];
+      if (sub === 'unread-count') return jsonRes({ count: list.filter(n => !n.isRead).length });
+      if (sub === 'read-all') { list.forEach(n => n.isRead = true); return okRes(); }
+      if (/^\d+$/.test(seg[1] || '') && (seg[2] || '').toLowerCase() === 'read') {
+        const n = list.find(x => x.id === +seg[1]); if (n) n.isRead = true;
+        return okRes();
+      }
       if (method === 'POST' || method === 'PUT') return okRes();
-      return jsonRes([]);
+      const sorted = [...list].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      return jsonRes({ items: sorted, total: sorted.length });
     }
 
     // ── Endpoints with no demo data → safe empties ──

@@ -423,7 +423,7 @@ function injectStyles() {
 
     /* ── Right: logo ── */
     .header-right { display:flex !important; align-items:center !important; flex-shrink:1 !important; padding-inline-start:6px !important; }
-    .header-right .header-logo { font-size: 1.15rem !important; font-weight: 800 !important; color: #fff !important; text-decoration: none !important; white-space: nowrap !important; }
+    .header-right .header-logo { font-size: 1.15rem !important; font-weight: 800 !important; color: #fff !important; text-decoration: none !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; max-width: 260px !important; display: inline-block !important; }
 
     /* ── Center: nav ── */
     .header-nav {
@@ -749,6 +749,10 @@ function injectStyles() {
       font-weight: 800;
       color: #fff;
       letter-spacing: -0.2px;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .lyt-d-close {
       width: 30px; height: 30px;

@@ -48,7 +48,7 @@
     /* HEADER */
     #app-header { position:fixed; top:0; right:0; left:0; height:var(--header-h); z-index:900; background:rgba(var(--bg-rgb),.97); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; gap:16px; }
     .header-right { display:flex; align-items:center; gap:16px; flex-shrink:0; min-width:0; }
-    .header-logo { font-size:1.15rem; font-weight:800; color:var(--light); letter-spacing:-.3px; white-space:nowrap; cursor:pointer; transition:var(--tr); text-decoration:none; }
+    .header-logo { font-size:1.15rem; font-weight:800; color:var(--light); letter-spacing:-.3px; white-space:nowrap; cursor:pointer; transition:var(--tr); text-decoration:none; max-width:220px; overflow:hidden; text-overflow:ellipsis; }
     .header-logo:hover { opacity:.75; }
     .header-divider { width:1px; height:26px; background:var(--border); flex-shrink:0; }
     .header-page-label { display:flex; flex-direction:column; gap:2px; overflow:hidden; }
@@ -81,7 +81,7 @@
     #mobile-drawer { position:fixed; top:0; right:0; bottom:0; width:280px; max-width:85vw; z-index:1001; background:rgba(var(--bg-rgb),.98); border-left:1px solid var(--border); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .32s cubic-bezier(.4,0,.2,1); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); overflow-y:auto; }
     #mobile-drawer.open { transform:translateX(0); }
     .drawer-header { padding:20px 20px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
-    .drawer-logo { font-size:1.1rem; font-weight:800; color:var(--light); }
+    .drawer-logo { font-size:1.1rem; font-weight:800; color:var(--light); max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .drawer-close { width:32px; height:32px; border-radius:8px; background:rgba(var(--fg-rgb), .06); border:1px solid var(--border); color:var(--text-muted); cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:var(--tr); }
     .drawer-close:hover { color:var(--light); background:rgba(var(--fg-rgb), .1); }
     .drawer-user { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }

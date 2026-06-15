@@ -219,7 +219,7 @@
           <div class="sp-card">
             <div class="sp-card-title"><i class="ri-building-4-line"></i> اسم النظام</div>
             <div class="sp-card-desc">يظهر في الهيدر وعنوان المتصفح وكل صفحات النظام</div>
-            <input type="text" class="sp-input" id="sp-name" maxlength="80" autocomplete="off"
+            <input type="text" class="sp-input" id="sp-name" maxlength="25" autocomplete="off"
               value="${(cfg.companyName || '').replace(/"/g, '&quot;')}" placeholder="اسم الشركة"/>
           </div>
 

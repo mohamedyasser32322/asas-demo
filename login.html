@@ -100,7 +100,11 @@
     box-shadow: 0 8px 22px rgba(var(--accent-rgb),.28);
   }
   .logo-mark svg { width: 25px; height: 25px; fill: #fff; }
-  .logo { font-size: clamp(1.35rem,5vw,1.65rem); font-weight: 800; letter-spacing:-.5px; margin-bottom: 5px; }
+  .logo {
+    font-size: clamp(1.35rem,5vw,1.65rem); font-weight: 800; letter-spacing:-.5px;
+    margin: 0 auto 5px; max-width: 100%;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
   .header p { color: var(--muted); font-size: clamp(.82rem,3vw,.9rem); }
 
   /* ══ TOGGLE ══ */

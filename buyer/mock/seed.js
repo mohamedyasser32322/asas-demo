@@ -271,5 +271,46 @@
     { id: 3, fileName: 'ضمان السباكة والصرف.pdf', fileUrl: 'https://www.africau.edu/images/default/sample.pdf', fileSizeBytes: 268000 }
   ];
 
+  // ── Role-specific notifications (mix: 2 unread + باقي مقروء) ──
+  const HOUR = 3600000;
+  const agoH = h => new Date(now - h * HOUR).toISOString();
+  const NOTIFS_BY_ROLE = {
+    Admin: [
+      { title: 'تذكرة صيانة جديدة',     message: 'أحمد الحربي فتح تذكرة "تسريب سباكة" — وحدة A-102، برج الياسمين.', createdAt: agoH(2),         isRead: false },
+      { title: 'طلب بيع بانتظار المراجعة', message: 'سارة العتيبي طلبت بيع وحدتها C-305 في مجمع الواحة. راجع التفاصيل وحدد القرار.', createdAt: agoH(5),         isRead: false },
+      { title: 'مستخدم جديد',            message: 'ماجد الحارثي أضاف مهندس موقع جديد: ندى الرشيد.',                     createdAt: ago(1),           isRead: true  },
+      { title: 'اكتمال مشروع',           message: 'تم تسليم جميع وحدات برج الياسمين (24/24). المشروع الآن في وضع "مكتمل".', createdAt: ago(3),           isRead: true  },
+      { title: 'تحديث مرحلة إنشائية',    message: 'مهندس الموقع رفع صور المرحلة 4 من 8 — مجمع الواحة السكني.',          createdAt: ago(5),           isRead: true  },
+      { title: 'إيقاف حساب',             message: 'تم إيقاف حساب المستخدمة "ندى الرشيد" مؤقتًا. تحتاج مراجعتك للسبب.',    createdAt: ago(7),           isRead: true  }
+    ],
+    BookingManager: [
+      { title: 'حجز جديد',               message: 'سارة العتيبي حجزت الوحدة B-204 في برج الياسمين. بانتظار رفع العقد.',  createdAt: agoH(3),         isRead: false },
+      { title: 'طلب بيع للموافقة',       message: 'طلب بيع جديد على الوحدة C-305 — يحتاج موافقتك قبل التنفيذ.',          createdAt: agoH(6),         isRead: false },
+      { title: 'دفعة مقدم مؤكدة',        message: 'تم تأكيد استلام دفعة مقدم الحجز للوحدة D-501 بنجاح.',                createdAt: ago(1),           isRead: true  },
+      { title: 'عقد مرفوع',              message: 'تم رفع عقد الحجز للوحدة A-102 — جاهز للتوقيع.',                       createdAt: ago(2),           isRead: true  },
+      { title: 'إلغاء حجز',              message: 'عمر القحطاني ألغى حجز الوحدة B-110. عاد المخزون لـ "متاحة".',         createdAt: ago(4),           isRead: true  },
+      { title: 'تذكير عقود',             message: '3 حجوزات تجاوزت 7 أيام بدون توقيع عقد. راجع قائمة الحجوزات.',           createdAt: ago(6),           isRead: true  }
+    ],
+    SiteEngineer: [
+      { title: 'تذكرة جديدة موكلة إليك', message: 'تذكرة #1248 — "تسريب سباكة" في الوحدة A-203، برج الياسمين. الأولوية: عالية.', createdAt: agoH(1),         isRead: false },
+      { title: 'تحديث صور المرحلة',      message: 'تذكير: ارفع صور المرحلة 4 — مجمع الواحة السكني قبل نهاية اليوم.',     createdAt: agoH(8),         isRead: false },
+      { title: 'تذكرة قيد المراجعة',     message: 'تذكرة #1245 معلّقة بانتظار توضيح إضافي من المشتري.',                  createdAt: ago(1),           isRead: true  },
+      { title: 'اعتماد مرحلة',           message: 'تم اعتماد المرحلة 3 من مشروع أبراج اللؤلؤة. يمكنك بدء المرحلة 4.',     createdAt: ago(3),           isRead: true  },
+      { title: 'تذكرة قيد المعالجة',     message: 'تم تحديث حالة التذكرة #1230 إلى "قيد المعالجة" بنجاح.',                createdAt: ago(5),           isRead: true  }
+    ],
+    Buyer: [
+      { title: 'تحديث تذكرتك',           message: 'تذكرة الصيانة "تسريب سباكة" — تم حلها بنجاح ✓. يمكنك إعادة فتحها خلال 7 أيام إذا لزم.', createdAt: agoH(2),         isRead: false },
+      { title: 'تقدّم في مشروعك',         message: 'تم إنجاز مرحلة "التشطيبات الداخلية" بنسبة 80% — برج الياسمين. تابع الصور في صفحة وحدتك.', createdAt: agoH(9),         isRead: false },
+      { title: 'تذكير قسط',              message: 'موعد القسط الشهري بعد 7 أيام (1,250 ر.س). اضغط لمراجعة التفاصيل.',     createdAt: ago(1),           isRead: true  },
+      { title: 'تم استلام عقدك',         message: 'تم استلام عقد الحجز الموقّع للوحدة A-102. شكرًا لتعاونك.',              createdAt: ago(3),           isRead: true  },
+      { title: 'معلومات الضمان',         message: 'ضمان أعمال السباكة لوحدتك ساري لمدة 18 شهرًا من تاريخ التسليم.',         createdAt: ago(7),           isRead: true  }
+    ]
+  };
+  const notifList = NOTIFS_BY_ROLE[ROLE] || NOTIFS_BY_ROLE.Admin;
+  DB.notifications = notifList.map((n, i) => ({
+    id: i + 1, title: n.title, message: n.message,
+    createdAt: n.createdAt, isRead: n.isRead
+  }));
+
   window.__MOCK_DB = DB;
 })();
